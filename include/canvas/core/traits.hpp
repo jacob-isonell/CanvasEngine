@@ -32,6 +32,15 @@
 
 ICANVAS_NAMESPACE_BEGIN
 
+template<typename T>
+using underlying_type = std::underlying_type_t<T>;
+
+template<typename T>
+[[nodiscard]]
+constexpr underlying_type<T> to_underlying(T val) noexcept {
+	return static_cast<underlying_type<T>>(val);
+}
+
 namespace traits {
 
 using std::same_as;

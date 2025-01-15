@@ -31,3 +31,4 @@
 #include <canvas/core/extern_config.hpp>
 #include <canvas/core/traits.hpp>
 #include <canvas/core/time.hpp>
+#include <canvas/core/error.hpp>
