@@ -26,9 +26,11 @@
 
 #pragma once
 
-#include <canvas/core/extern_config.hpp>
+#include <canvas/core/macros.hpp>
 #include <type_traits>
 #include <concepts>
+#include <compare>
+#include <utility>
 
 ICANVAS_NAMESPACE_BEGIN
 
@@ -77,12 +79,12 @@ using std::relation;
 using std::equivalence_relation;
 using std::strict_weak_order;
 
-ICANVAS_INTERNAL_NAMESPACE_BEGIN
+ICANVAS_NAMESPACE_INTERNAL_BEGIN
 
 template<typename B>
 concept boolean_testable_impl = std::convertible_to<B, bool>;
 
-ICANVAS_INTERNAL_NAMESPACE_END
+ICANVAS_NAMESPACE_INTERNAL_END
 
 template<typename B>
 concept boolean_testable =

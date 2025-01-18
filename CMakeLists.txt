@@ -134,10 +134,3 @@ add_custom_command(TARGET CanvasEngine PRE_BUILD
 COMMAND ${CMAKE_COMMAND} -E copy_directory
 	"${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
 )
-
-function(CanvasSetUsrConfigHeaders header_path)
-	target_compile_definitions(CanvasEngine
-	PUBLIC
-		"CANVAS_USR_CONFIG=\"${header_path}\""
-	)
-endfunction()

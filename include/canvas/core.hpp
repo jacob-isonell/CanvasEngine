@@ -28,7 +28,7 @@
 
 #include <canvas/cmake_configs.hpp>
 #include <canvas/core/macros.hpp>
-#include <canvas/core/extern_config.hpp>
+#include <canvas/core/utility.hpp>
 #include <canvas/core/traits.hpp>
 #include <canvas/core/time.hpp>
 #include <canvas/core/error.hpp>

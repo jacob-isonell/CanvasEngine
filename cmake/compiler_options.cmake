@@ -94,7 +94,7 @@ if (ICANVAS_DEVMODE)
 		"$<$<C_COMPILER_ID:GNU,Clang>:-Wsign-conversion>"
 		"$<$<C_COMPILER_ID:GNU,Clang>:-Wsign-compare>"
 		"$<$<C_COMPILER_ID:GNU,Clang>:-Wno-format-nonliteral>"
-		"$<$<C_COMPILER_ID:GNU,Clang>:-Wno-#pragma-messages>"
+		# "$<$<C_COMPILER_ID:GNU,Clang>:-Wno-#pragma-messages>"
 		
 		"$<$<AND:$<C_COMPILER_ID:GNU,Clang>,$<COMPILE_LANGUAGE:C>>:-Wmissing-prototypes>"
 		"$<$<AND:$<C_COMPILER_ID:GNU,Clang>,$<COMPILE_LANGUAGE:C>>:-Wstrict-prototypes>"

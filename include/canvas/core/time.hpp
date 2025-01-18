@@ -221,7 +221,7 @@ inline string to_string(const time& t) {
 }
 #endif
 
-ICANVAS_INTERNAL_NAMESPACE_BEGIN
+ICANVAS_NAMESPACE_INTERNAL_BEGIN
 
 using stopwatch_clock = std::conditional_t<
 	std::chrono::high_resolution_clock::is_steady,
@@ -229,7 +229,7 @@ using stopwatch_clock = std::conditional_t<
 	std::chrono::steady_clock
 >;
 
-ICANVAS_INTERNAL_NAMESPACE_END
+ICANVAS_NAMESPACE_INTERNAL_END
 
 template<typename Clock>
 class basic_stopwatch {
@@ -336,3 +336,14 @@ stopwatch_stopscope(basic_stopwatch<Clock>&) -> stopwatch_stopscope<Clock>;
 using stopwatch = basic_stopwatch<internal::stopwatch_clock>;
 
 ICANVAS_NAMESPACE_END
+
+template<typename CharTy>
+struct std::formatter<canvas::time, CharTy> : std::formatter<std::chrono::duration<float>, CharTy> {
+private:
+	using base = std::formatter<std::chrono::duration<float>, CharTy>;
+	
+public:
+	auto format(const canvas::time& t, auto& ctx) {
+		return base::format(t.as<std::chrono::duration<float>>(), ctx);
+	}
+};

@@ -1,5 +1,5 @@
 /**
- * @file extern_config.template.hpp
+ * @file init.hpp
  * @author Jacob Isonell (isonelljacob@gmail.com)
  * @brief 
  * @version 0.1
@@ -26,22 +26,10 @@
 
 #pragma once
 
-/**
- * This is an example template file for providing customization for CanvasEngine
- * at compile time. Copy this file to your project, modify it, then use the CMake
- * function `CanvasSetUsrConfigHeaders` defined by CanvasEngine with the path
- * to your local copy. You can replace the defined types with your own implementations.
- * But they should still have the same expected behaviour.
- */
+#include <canvas/core/macros.hpp>
 
-#include <string>
-#include <vector>
+ICANVAS_NAMESPACE_BEGIN
 
-namespace canvas {
-	
-	template<typename T>
-	using tstring = std::basic_string<T>;
-	
-	template<typename T>
-	using dynamic_array = std::vector<T>;
-}
+
+
+ICANVAS_NAMESPACE_END

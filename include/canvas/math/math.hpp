@@ -1,5 +1,5 @@
 /**
- * @file canvas.hpp
+ * @file vector.hpp
  * @author Jacob Isonell (isonelljacob@gmail.com)
  * @brief 
  * @version 0.1
@@ -26,29 +26,47 @@
 
 #pragma once
 
-#include <canvas/core/macros.hpp>
+#include <canvas/core/traits.hpp>
+#include <cmath>
+#include <numeric>
+#include <numbers>
 
-#if defined(CANVAS_USR_CONFIG)
-#include CANVAS_USR_CONFIG
-#else
-#include <string>
-#include <vector>
+ICANVAS_NAMESPACE_MATH_BEGIN
 
-ICANVAS_NAMESPACE_BEGIN
+namespace numbers {
 
-template<typename T>
-using tstring = std::basic_string<T>;
+using namespace std::numbers;
 
-template<typename T>
-using darray = std::vector<T>;
+template<traits::floating_point T>
+inline constexpr T tau_v = 6.283185307179586476925286766559005768;
 
-ICANVAS_NAMESPACE_END
+inline constexpr double tau = tau_v<double>;
 
-#endif
+} // namespace numbers
 
-ICANVAS_NAMESPACE_BEGIN
+using std::abs;
+using std::fmod;
+using std::min;
+using std::max;
+using std::lerp;
+using std::exp;
+using std::pow;
+using std::sqrt;
+using std::cbrt;
+using std::hypot;
+using std::sin;
+using std::cos;
+using std::tan;
+using std::asin;
+using std::acos;
+using std::atan;
+using std::atan2;
+using std::ceil;
+using std::floor;
+using std::trunc;
+using std::round;
 
-using string = tstring<char>;
-using wstring = tstring<wchar_t>;
+constexpr auto ln = [](auto f) { return std::log(f); };
+constexpr auto log = [](auto f) { return std::log10(f); };
 
-ICANVAS_NAMESPACE_END
+ICANVAS_NAMESPACE_MATH_END

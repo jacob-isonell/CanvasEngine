@@ -337,23 +337,33 @@
 #define CANVAS_DLLEXPORT ICANVAS_DEFAULT_VIS
 #endif
 
+#define ICANVAS_IMPL_NAMESPACE_BEGIN(name) \
+	namespace name { \
+	ICANVAS_WARN_PUSH
+
+#define ICANVAS_IMPL_NAMESPACE_END \
+	ICANVAS_WARN_POP \
+	}
+
 #define ICANVAS_NAMESPACE canvas
-#define ICANVAS_NAMESPACE_BEGIN \
-	namespace ICANVAS_NAMESPACE { \
-	ICANVAS_WARN_PUSH
+#define ICANVAS_NAMESPACE_BEGIN ICANVAS_IMPL_NAMESPACE_BEGIN(canvas)
+#define ICANVAS_NAMESPACE_END ICANVAS_IMPL_NAMESPACE_END
 
-#define ICANVAS_NAMESPACE_END \
-	ICANVAS_WARN_POP            \
-	}
+#define ICANVAS_NAMESPACE_MATH ICANVAS_NAMESPACE::math
+#define ICANVAS_NAMESPACE_MATH_BEGIN ICANVAS_IMPL_NAMESPACE_BEGIN(ICANVAS_NAMESPACE_MATH)
+#define ICANVAS_NAMESPACE_MATH_END ICANVAS_IMPL_NAMESPACE_END
 
-#define ICANVAS_INTERNAL_NAMESPACE internal
-#define ICANVAS_INTERNAL_NAMESPACE_BEGIN \
-	namespace ICANVAS_INTERNAL_NAMESPACE { \
-	ICANVAS_WARN_PUSH
+#define ICANVAS_NAMESPACE_GRAPHICS ICANVAS_NAMESPACE::graphics
+#define ICANVAS_NAMESPACE_GRAPHICS_BEGIN ICANVAS_IMPL_NAMESPACE_BEGIN(ICANVAS_NAMESPACE_GRAPHICS)
+#define ICANVAS_NAMESPACE_GRAPHICS_END ICANVAS_IMPL_NAMESPACE_END
 
-#define ICANVAS_INTERNAL_NAMESPACE_END \
-	ICANVAS_WARN_POP            \
-	}
+#define ICANVAS_NAMESPACE_NETWORK ICANVAS_NAMESPACE::network
+#define ICANVAS_NAMESPACE_NETWORK_BEGIN ICANVAS_IMPL_NAMESPACE_BEGIN(ICANVAS_NAMESPACE_NETWORK)
+#define ICANVAS_NAMESPACE_NETWORK_END ICANVAS_IMPL_NAMESPACE_END
+
+#define ICANVAS_NAMESPACE_INTERNAL internal
+#define ICANVAS_NAMESPACE_INTERNAL_BEGIN ICANVAS_IMPL_NAMESPACE_BEGIN(internal) using namespace ::canvas::internal;
+#define ICANVAS_NAMESPACE_INTERNAL_END ICANVAS_IMPL_NAMESPACE_END
 
 #if CANVAS_SHARED
 #if defined(ICANVAS_BUILD)
@@ -405,6 +415,22 @@
 #include <cstdint>
 #include <cstdlib>
 #include <csignal>
+#include <concepts>
+#include <utility>
+#include <exception>
+#include <stdexcept>
+
+#if (defined(__cpp_exceptions) && 199711L <= __cpp_exceptions) || defined(CANVAS_ENABLE_EXCEPTIONS)
+#define ICANVAS_EXCEPTIONS 1
+#else
+#define ICANVAS_EXCEPTIONS 0
+#endif
+
+#if (defined(__cpp_rtti) && 199711L <= __cpp_rtti) || defined(CANVAS_ENABLE_RTTI)
+#define ICANVAS_RTTI 1
+#else
+#define ICANVAS_RTTI 0
+#endif
 
 ICANVAS_NAMESPACE_BEGIN
 
@@ -458,5 +484,29 @@ inline void unreachable() noexcept {
 	std::abort();
 #endif
 }
+
+ICANVAS_NAMESPACE_INTERNAL_BEGIN
+
+template<typename T, typename ... Args>
+[[noreturn]]
+constexpr void dothrow([[maybe_unused]] Args&&... args) {
+#if ICANVAS_EXCEPTIONS
+	throw T { std::forward<Args>(args)... };
+#else
+	std::terminate();
+#endif
+}
+
+template<typename T, typename ... Args>
+[[noreturn]]
+constexpr void dothrow_debug([[maybe_unused]] Args&&... args) {
+#if CANVAS_DEBUG
+	dothrow<T>(std::forward<Args>(args)...);
+#else
+	unreachable();
+#endif
+}
+
+ICANVAS_NAMESPACE_INTERNAL_END
 
 ICANVAS_NAMESPACE_END

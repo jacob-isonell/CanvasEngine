@@ -30,6 +30,7 @@
 #include <initializer_list>
 #include <utility>
 #include <variant>
+#include <format>
 
 ICANVAS_NAMESPACE_BEGIN
 
@@ -172,3 +173,45 @@ constexpr bool operator==(const expected<T>& lhs, const expected<U>& rhs) {
 }
 
 ICANVAS_NAMESPACE_END
+
+template<>
+struct std::formatter<canvas::error, char> : std::formatter<std::string_view, char> {
+private:
+	using base = std::formatter<std::string_view, char>;
+	
+public:
+	template<typename Ctx>
+	Ctx::iterator format(canvas::error e, Ctx& ctx) const {
+		return base::format(s_to_string(e), ctx);
+	}
+	
+private:
+	static constexpr std::string_view s_to_string(canvas::error e) noexcept {
+		switch (e) {
+		default:
+		case canvas::error::eunknown: return "eunknown";
+		case canvas::error::eok:      return "eok";
+		}
+	}
+};
+
+template<>
+struct std::formatter<canvas::error, wchar_t> : std::formatter<std::wstring_view, wchar_t> {
+private:
+	using base = std::formatter<std::wstring_view, wchar_t>;
+	
+public:
+	template<typename Ctx>
+	Ctx::iterator format(canvas::error e, Ctx& ctx) const {
+		return base::format(s_to_string(e), ctx);
+	}
+	
+private:
+	static constexpr std::wstring_view s_to_string(canvas::error e) noexcept {
+		switch (e) {
+		default:
+		case canvas::error::eunknown: return L"eunknown";
+		case canvas::error::eok:      return L"eok";
+		}
+	}
+};
