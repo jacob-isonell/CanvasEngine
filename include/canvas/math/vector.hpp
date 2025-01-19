@@ -57,6 +57,9 @@ struct vector_impl;
 template<typename T>
 concept vector_type = std::derived_from<T, vector_impl<T>>;
 
+template<typename T, std::size_t N>
+concept vector_sized = vector_type<T> && vector_traits_count<T> == N;
+
 template<vector_type Vec, typename Func>
 constexpr Vec vector_operate(const Vec& lhs, const Vec& rhs, Func&& func) {
 	Vec out;
@@ -209,13 +212,19 @@ public:
 	
 	static constexpr std::size_t element_count = Elements;
 	
-	std::array<FloatingType, Elements> m_data;
+	FloatingType m_data[Elements];
 	
 	constexpr FloatingType& operator[](std::size_t n) {
+		if (Elements <= n) {
+			internal::dothrow_debug<std::out_of_range>("out_of_range");
+		}
 		return m_data[n];
 	}
 	
 	constexpr const FloatingType& operator[](std::size_t n) const {
+		if (Elements <= n) {
+			internal::dothrow_debug<std::out_of_range>("out_of_range");
+		}
 		return m_data[n];
 	}
 };
@@ -354,5 +363,33 @@ template<internal::vector_type Vec>
 auto magnitude(const Vec& vec) {
 	return vec.magnitude();
 }
+
+template<internal::vector_sized<3> Vec>
+constexpr Vec cross(const Vec& lhs, const Vec& rhs) {
+	return Vec {
+		.x = {(lhs[1] * rhs[2]) - (lhs[2] * rhs[1])},
+		.y = {(lhs[2] * rhs[0]) - (lhs[0] * rhs[2])},
+		.z = {(lhs[0] * rhs[1]) - (lhs[1] * rhs[0])}
+	};
+}
+
+template<typename FloatingType, std::size_t N>
+constexpr auto make_vector(const FloatingType (&arr)[N]) {
+	vector<FloatingType, N> out;
+	for (std::size_t i : std::views::iota((std::size_t)0, N)) {
+		out[i] = arr[i];
+	}
+	return out;
+}
+
+using vec1f32_t = vector<float, 1>;
+using vec2f32_t = vector<float, 2>;
+using vec3f32_t = vector<float, 3>;
+using vec4f32_t = vector<float, 4>;
+
+using vec1f64_t = vector<double, 1>;
+using vec2f64_t = vector<double, 2>;
+using vec3f64_t = vector<double, 3>;
+using vec4f64_t = vector<double, 4>;
 
 ICANVAS_NAMESPACE_MATH_END
