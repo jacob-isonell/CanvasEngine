@@ -27,6 +27,7 @@
 #pragma once
 
 #include <canvas/core/traits.hpp>
+#include <canvas/core/utility.hpp>
 #include <initializer_list>
 #include <utility>
 #include <variant>
@@ -34,12 +35,102 @@
 
 ICANVAS_NAMESPACE_BEGIN
 
-enum class error : i32 {
-	eok      = 0,
-	eunknown = -1,
-	enomem   = -2,
-	enoimpl  = -3
+enum class err : i32 {
+	eok = -1,      // Not an error
+	eunknown,      // Unknown/unspecified error
+	eperm,         // Operation not permitted
+	eaccess,       // Permission denied
+	einval,        // Invalid argument
+	eio,           // Input/Output error
+	enomem,        // No available memory
+	enodevmem,     // No available device memory
+	enosys,        // Function not implemented
+	erange,        // Result too big
+	etimedout,     // Operation Timed out
+	econntimedout, // Connection timed out
+	econnrefused,  // Connection refused
+	ebusy,         // Device or resource busy
+	ebadfile,      // Invalid file handle
+	eisdir,        // File path is a directory
+	eisfile,       // File path is a file
 };
+
+struct error {
+public:
+	constexpr error() noexcept = default;
+	constexpr error(const error&) noexcept = default;
+	constexpr error& operator=(const error&) noexcept = default;
+	
+	constexpr error(err e) noexcept
+		: m_err(e) {
+	}
+	
+	constexpr operator err() const noexcept {
+		return m_err;
+	}
+	
+	constexpr bool operator==(const error&) const noexcept = default;
+	constexpr bool operator==(err e) const noexcept {
+		return m_err == e;
+	}
+	
+	constexpr explicit operator bool() const noexcept {
+		return to_underlying(m_err) < 0;
+	}
+	
+	constexpr bool operator!() const noexcept {
+		return !(bool)(*this);
+	}
+	
+	constexpr bool ok() const noexcept {
+		return (bool)(*this);
+	}
+	
+	constexpr bool fail() const noexcept {
+		return !(bool)(*this);
+	}
+	
+private:
+	err m_err = err::eok;
+};
+
+ICANVAS_NAMESPACE_INTERNAL_BEGIN
+
+#define ICANVAS_ETOSTR_CASE(id, str) \
+	case id: out = ICANVAS_STRLITERAL(str).template view<CharTy>(); break
+
+template<typename CharTy>
+constexpr void to_string_error(auto& out, err e) {
+	switch (e) {
+	default:
+	ICANVAS_ETOSTR_CASE(err::eunknown,     "Unknown/unspecified error");
+	ICANVAS_ETOSTR_CASE(err::eok,          "Not an error");
+	ICANVAS_ETOSTR_CASE(err::enomem,       "No available memory");
+	ICANVAS_ETOSTR_CASE(err::enoimpl,      "Not implemented");
+	ICANVAS_ETOSTR_CASE(err::eio,          "Input/Output error");
+	ICANVAS_ETOSTR_CASE(err::erange,       "Result too big");
+	ICANVAS_ETOSTR_CASE(err::etimedout,    "Timed out");
+	ICANVAS_ETOSTR_CASE(err::econnrefused, "Connection refused");
+	ICANVAS_ETOSTR_CASE(err::elocked,      "Resource is locked");
+	}
+}
+
+ICANVAS_NAMESPACE_INTERNAL_END
+
+using std::to_string;
+using std::to_wstring;
+
+constexpr auto to_string(err e) {
+	std::string_view out { };
+	internal::to_string_error<decltype(out)::value_type>(out, e);
+	return out;
+}
+
+constexpr auto to_wstring(err e) {
+	std::wstring_view out { };
+	internal::to_string_error<decltype(out)::value_type>(out, e);
+	return out;
+}
 
 template<typename T>
 class expected {
@@ -53,8 +144,18 @@ public:
 	constexpr expected& operator=(expected&&) = default;
 	constexpr expected& operator=(const expected&) = default;
 	
-	constexpr expected(error_type e) noexcept
+	constexpr expected(error_type e)
 		: m_error(e), m_values() {
+		if (m_error) {
+			internal::dothrow_debug<std::logic_error>("invalid error code");
+		}
+	}
+	
+	constexpr expected(err e)
+		: m_error(e), m_values() {
+		if (m_error) {
+			internal::dothrow_debug<std::logic_error>("invalid error code");
+		}
 	}
 	
 	template<typename U = T>
@@ -78,9 +179,15 @@ public:
 		return *this;
 	}
 	
+	constexpr expected& operator=(err e) {
+		m_error = e;
+		m_values = decltype(m_values) { std::in_place_index<0> };
+		return *this;
+	}
+	
 	template<typename U = T>
 	constexpr expected& operator=(U&& arg) {
-		m_error = error_type::eok;
+		m_error = err::eok;
 		m_values = decltype(m_values) { std::in_place_index<1>, std::forward<U>(arg) };
 		return *this;
 	}
@@ -92,7 +199,7 @@ public:
 	
 	[[nodiscard]]
 	constexpr bool has_value() const noexcept {
-		return 0 <= to_underlying(m_error);
+		return m_error.ok();
 	}
 	
 	constexpr const T* operator->() const noexcept {
@@ -135,12 +242,12 @@ public:
 		return std::move(**this);
 	}
 
-	template< class U >
+	template<typename U = T>
 	constexpr T value_or(U&& default_value) const& {
 		return has_value() ? **this : static_cast<T>(std::forward<U>(default_value));
 	}
 	
-	template< class U >
+	template<typename U = T>
 	constexpr T value_or(U&& default_value) && {
 		return has_value() ? std::move(**this) : static_cast<T>(std::forward<U>(default_value));
 	}
@@ -155,7 +262,7 @@ public:
 	}
 	
 private:
-	error_type m_error = error_type::eok;
+	error_type m_error = err::eok;
 	std::variant<std::monostate, T> m_values;
 };
 
@@ -175,43 +282,25 @@ constexpr bool operator==(const expected<T>& lhs, const expected<U>& rhs) {
 ICANVAS_NAMESPACE_END
 
 template<>
-struct std::formatter<canvas::error, char> : std::formatter<std::string_view, char> {
+struct std::formatter<canvas::err, char> : std::formatter<std::string_view, char> {
 private:
 	using base = std::formatter<std::string_view, char>;
 	
 public:
 	template<typename Ctx>
-	Ctx::iterator format(canvas::error e, Ctx& ctx) const {
-		return base::format(s_to_string(e), ctx);
-	}
-	
-private:
-	static constexpr std::string_view s_to_string(canvas::error e) noexcept {
-		switch (e) {
-		default:
-		case canvas::error::eunknown: return "eunknown";
-		case canvas::error::eok:      return "eok";
-		}
+	Ctx::iterator format(canvas::err e, Ctx& ctx) const {
+		return base::format(canvas::to_string(e), ctx);
 	}
 };
 
 template<>
-struct std::formatter<canvas::error, wchar_t> : std::formatter<std::wstring_view, wchar_t> {
+struct std::formatter<canvas::err, wchar_t> : std::formatter<std::wstring_view, wchar_t> {
 private:
 	using base = std::formatter<std::wstring_view, wchar_t>;
 	
 public:
 	template<typename Ctx>
-	Ctx::iterator format(canvas::error e, Ctx& ctx) const {
-		return base::format(s_to_string(e), ctx);
-	}
-	
-private:
-	static constexpr std::wstring_view s_to_string(canvas::error e) noexcept {
-		switch (e) {
-		default:
-		case canvas::error::eunknown: return L"eunknown";
-		case canvas::error::eok:      return L"eok";
-		}
+	Ctx::iterator format(canvas::err e, Ctx& ctx) const {
+		return base::format(canvas::to_wstring(e), ctx);
 	}
 };

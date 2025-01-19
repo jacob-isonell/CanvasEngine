@@ -1,5 +1,5 @@
 /**
- * @file graphics.hpp
+ * @file layers.hpp
  * @author Jacob Isonell (isonelljacob@gmail.com)
  * @brief 
  * @version 0.1
@@ -26,10 +26,20 @@
 
 #pragma once
 
-#include <canvas/core.hpp>
-#include <canvas/math.hpp>
-#include <canvas/graphics/graphics.hpp>
+#include <canvas/graphics/vulkan/vulkan.hpp>
+#include <canvas/core/error.hpp>
+#include <vector>
 
-#if CANVAS_GRAPHICS_ENABLE_VULKAN
-#include <canvas/graphics/vulkan.hpp>
-#endif
+ICANVAS_NAMESPACE_GRAPHICS_VULKAN_BEGIN
+
+struct layer_info {
+	char name[256];
+	u32 specification_version;
+	u32 implementation_version;
+	char description[256];
+};
+
+CANVAS_API
+expected<std::vector<layer_info>> query_instance_layers();
+
+ICANVAS_NAMESPACE_GRAPHICS_VULKAN_END

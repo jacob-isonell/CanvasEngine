@@ -1,5 +1,5 @@
 /**
- * @file init.hpp
+ * @file vulkan.hpp
  * @author Jacob Isonell (isonelljacob@gmail.com)
  * @brief 
  * @version 0.1
@@ -26,10 +26,12 @@
 
 #pragma once
 
-#include <canvas/core/macros.hpp>
+#include <canvas/graphics/graphics.hpp>
 
-ICANVAS_NAMESPACE_BEGIN
+#if !CANVAS_GRAPHICS_ENABLE_VULKAN
+#error VulkanAPI support is disabled with this build of CanvasEngine
+#endif
 
+ICANVAS_NAMESPACE_GRAPHICS_VULKAN_BEGIN
 
-
-ICANVAS_NAMESPACE_END
+ICANVAS_NAMESPACE_GRAPHICS_VULKAN_END

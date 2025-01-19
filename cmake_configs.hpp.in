@@ -38,20 +38,8 @@
 /** @brief The build date of CanvasEngine as a long integer. YYYYmmL */
 #define CANVAS_BUILD @CANVAS_BUILD_DATE@L
 
-/** @brief Indicates that this build of CanvasEngine support stacktracing. If
- * this evaluates to `0` then all the stacktrace function will always fail. */
-#cmakedefine01 CANVAS_ENABLE_STACKTRACE
-
-/** @brief Evaluates to `1` if this build CanvasEngine supports setting custom
- * allocators. Otherwise evaluates to `0`. */
-#cmakedefine01 CANVAS_ENABLE_ALLOCATORS
-
-/** @brief If this is set then all log calls are disabled. */
-#cmakedefine01 CANVAS_DISABLE_LOGS
-
-/** @brief If this symbol is defined then CanvasEngine is set to perform runtime
- * assertions. */
-#cmakedefine CANVAS_ENABLE_ASSERTS
+/** @brief Causes CanvasEngine to issue non-critical status/event log messages to stdout. */
+#cmakedefine01 CANVAS_ENABLE_LOGS
 
 /** @brief Macro constant that evaluates to `1` if CanvasEngine is built as a
  * shared library. */

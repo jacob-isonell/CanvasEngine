@@ -1,5 +1,5 @@
 /**
- * @file graphics.hpp
+ * @file graphics.cpp
  * @author Jacob Isonell (isonelljacob@gmail.com)
  * @brief 
  * @version 0.1
@@ -24,12 +24,22 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
-#include <canvas/core.hpp>
-#include <canvas/math.hpp>
 #include <canvas/graphics/graphics.hpp>
 
-#if CANVAS_GRAPHICS_ENABLE_VULKAN
-#include <canvas/graphics/vulkan.hpp>
-#endif
+ICANVAS_NAMESPACE_GRAPHICS_BEGIN
+
+static backend s_selected_backend = backend::vulkan;
+
+CANVAS_API
+err set_backend(backend selected_backend) noexcept {
+	s_selected_backend = selected_backend;
+	return err::eok;
+}
+
+CANVAS_API
+[[nodiscard]]
+backend get_backend() noexcept {
+	return s_selected_backend;
+}
+
+ICANVAS_NAMESPACE_GRAPHICS_END

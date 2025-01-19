@@ -1,5 +1,5 @@
 /**
- * @file graphics.hpp
+ * @file vulkan.hpp
  * @author Jacob Isonell (isonelljacob@gmail.com)
  * @brief 
  * @version 0.1
@@ -26,10 +26,6 @@
 
 #pragma once
 
-#include <canvas/core.hpp>
-#include <canvas/math.hpp>
-#include <canvas/graphics/graphics.hpp>
-
-#if CANVAS_GRAPHICS_ENABLE_VULKAN
-#include <canvas/graphics/vulkan.hpp>
-#endif
+#include <canvas/graphics/vulkan/vulkan.hpp>
+#include <canvas/graphics/vulkan/layers.hpp>
+#include <canvas/graphics/vulkan/extensions.hpp>

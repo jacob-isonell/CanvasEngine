@@ -84,6 +84,21 @@ constexpr Mat matrix_operate(const Mat& lhs, const Mat& rhs, Func&& func) {
 	return out;
 }
 
+template<matrix_type Mat> requires (matrix_traits<Mat>::rows == matrix_traits<Mat>::columns)
+constexpr Mat matrix_identity() {
+	using value_type = typename matrix_traits<Mat>::type;
+	
+	Mat out { };
+	for (std::size_t row : matrix_row_range<Mat>) {
+		for (std::size_t column : matrix_column_range<Mat>) {
+			if (row == column) {
+				out[column][row] = value_type { 1.0 };
+			}
+		}
+	}
+	return out;
+}
+
 ICANVAS_NAMESPACE_INTERNAL_END
 
 template<internal::matrix_type Mat>
@@ -110,9 +125,22 @@ constexpr Mat operator/(const Mat& lhs, const typename internal::matrix_traits<M
 	});
 }
 
+template<internal::matrix_type Mat>
+constexpr Mat operator*(const Mat& lhs, const Mat& rhs) {
+	Mat out { };
+	for (std::size_t row : internal::matrix_row_range<Mat>) {
+		for (std::size_t column : internal::matrix_column_range<Mat>) {
+			out[column][row] = dot(lhs.row(row), rhs.column(column));
+		}
+	}
+	return out;
+}
+
 template<typename FloatingType, std::size_t Rows, std::size_t Columns>
 struct matrix {
-	vector<FloatingType, Rows> axies[Columns];
+	vector<FloatingType, Columns> axies[Rows];
+	
+	static const matrix identity;
 	
 	constexpr matrix& operator+=(const matrix& other) { return *this = *this + other; }
 	constexpr matrix& operator-=(const matrix& other) { return *this = *this - other; }
@@ -120,19 +148,54 @@ struct matrix {
 	constexpr matrix& operator/=(const FloatingType& other) { return *this = *this / other; }
 	
 	constexpr auto& operator[](std::size_t n) {
-		if (Columns <= n) {
+		if (Rows <= n) {
 			internal::dothrow_debug<std::out_of_range>("out_of_range");
 		}
 		return axies[n];
 	}
 	
 	constexpr const auto& operator[](std::size_t n) const {
-		if (Columns <= n) {
+		if (Rows <= n) {
 			internal::dothrow_debug<std::out_of_range>("out_of_range");
 		}
 		return axies[n];
 	}
+	
+	constexpr auto row(std::size_t n) const {
+		return (*this)[n];
+	}
+	
+	constexpr void row(std::size_t n, const vector<FloatingType, Rows>& in) const {
+		(*this)[n] = in;
+	}
+	
+	constexpr auto column(std::size_t n) const {
+		if (Columns <= n) {
+			internal::dothrow_debug<std::out_of_range>("out_of_range");
+		}
+		
+		vector<FloatingType, Rows> out { };
+		for (std::size_t i : internal::matrix_column_range<matrix>) {
+			out[i] = (*this)[n][i];
+		}
+		return out;
+	}
+	
+	constexpr void column(std::size_t n, const vector<FloatingType, Columns>& in) {
+		if (Columns <= n) {
+			internal::dothrow_debug<std::out_of_range>("out_of_range");
+		}
+		
+		for (std::size_t i : internal::matrix_column_range<matrix>) {
+			(*this)[n][i] = in[i];
+		}
+	}
 };
+
+template<typename FloatingType, std::size_t Rows, std::size_t Columns>
+inline constexpr const matrix<FloatingType, Rows, Columns>
+	matrix<FloatingType, Rows, Columns>::identity
+		= internal::matrix_identity<matrix<FloatingType, Rows, Columns>>();
 
 using mat2x2f32_t = matrix<float, 2, 2>;
 using mat2x3f32_t = matrix<float, 2, 3>;

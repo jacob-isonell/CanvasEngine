@@ -27,6 +27,9 @@
 #pragma once
 
 #include <canvas/core.hpp>
+#include <canvas/math.hpp>
+#if CANVAS_GRAPHICS
 #include <canvas/graphics.hpp>
+#endif
 #include <canvas/audio.hpp>
 #include <canvas/network.hpp>

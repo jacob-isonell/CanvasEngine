@@ -69,7 +69,6 @@ CanvasEngine uses CMake as its build system so building it is as simple as confi
 The following configuration options control the behaviour of CanvasEngine and what components gets built.
 
  * `CANVAS_LIBRARY_KIND (string)`: Determines the library type to build. Setting this to `SHARED` produces a shared library file, Setting this to `STATIC` produces a static library file. If left empty then `BUILD_SHARED_LIBS` is used to determine the library type to produce.
- * `CANVAS_ENABLE_STACKTRACE (boolean)`: Enables support for stacktracing.
  * `CANVAS_GRAPHICS (boolean)`: Builds the graphics component.
  * `CANVAS_GRAPHICS_SUPPORT_X11 (boolean)`: Enables support for X11 library on linux.
  * `CANVAS_GRAPHICS_SUPPORT_WAYLAND (boolean)`: Enables support for Wayland library on Linux.

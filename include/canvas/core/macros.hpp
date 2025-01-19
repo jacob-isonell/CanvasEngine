@@ -357,6 +357,10 @@
 #define ICANVAS_NAMESPACE_GRAPHICS_BEGIN ICANVAS_IMPL_NAMESPACE_BEGIN(ICANVAS_NAMESPACE_GRAPHICS)
 #define ICANVAS_NAMESPACE_GRAPHICS_END ICANVAS_IMPL_NAMESPACE_END
 
+#define ICANVAS_NAMESPACE_GRAPHICS_VULKAN ICANVAS_NAMESPACE_GRAPHICS::vulkan
+#define ICANVAS_NAMESPACE_GRAPHICS_VULKAN_BEGIN ICANVAS_IMPL_NAMESPACE_BEGIN(ICANVAS_NAMESPACE_GRAPHICS_VULKAN)
+#define ICANVAS_NAMESPACE_GRAPHICS_VULKAN_END ICANVAS_IMPL_NAMESPACE_END
+
 #define ICANVAS_NAMESPACE_NETWORK ICANVAS_NAMESPACE::network
 #define ICANVAS_NAMESPACE_NETWORK_BEGIN ICANVAS_IMPL_NAMESPACE_BEGIN(ICANVAS_NAMESPACE_NETWORK)
 #define ICANVAS_NAMESPACE_NETWORK_END ICANVAS_IMPL_NAMESPACE_END
@@ -484,6 +488,20 @@ inline void unreachable() noexcept {
 	std::abort();
 #endif
 }
+
+struct ignore_t {
+	template<typename ... Args>
+	constexpr const ignore_t& operator()(const Args&...) const noexcept {
+		return *this;
+	}
+	
+	template<typename T>
+	constexpr const ignore_t& operator=(const T&) const noexcept {
+		return *this;
+	}
+};
+
+constexpr ignore_t ignore { };
 
 ICANVAS_NAMESPACE_INTERNAL_BEGIN
 

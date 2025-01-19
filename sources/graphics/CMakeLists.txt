@@ -15,9 +15,9 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 CanvasAddCompileSource(
-	"test.cpp"
+	"graphics.cpp"
 )
 
-if (CANVAS_GRAPHICS)
-	add_subdirectory("graphics")
+if (CANVAS_GRAPHICS_ENABLE_VULKAN)
+	add_subdirectory("vulkan")
 endif ()

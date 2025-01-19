@@ -26,10 +26,23 @@
 
 #pragma once
 
-#include <canvas/core.hpp>
-#include <canvas/math.hpp>
-#include <canvas/graphics/graphics.hpp>
+#include <canvas/core/error.hpp>
 
-#if CANVAS_GRAPHICS_ENABLE_VULKAN
-#include <canvas/graphics/vulkan.hpp>
+#if !CANVAS_GRAPHICS
+#error graphics support is disabled with this build of CanvasEngine
 #endif
+
+ICANVAS_NAMESPACE_GRAPHICS_BEGIN
+
+enum class backend {
+	vulkan
+};
+
+CANVAS_API
+err set_backend(backend selected_backend) noexcept;
+
+CANVAS_API
+[[nodiscard]]
+backend get_backend() noexcept;
+
+ICANVAS_NAMESPACE_GRAPHICS_END
