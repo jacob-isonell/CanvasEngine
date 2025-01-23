@@ -49,17 +49,12 @@ private:
 		u32 _minor,
 		u32 _patch
 	) {
-		return s_storage {
-			.patch = _patch,
-			.minor = _minor,
-			.major = _major,
-			.variant = _variant
-		};
-		/*const u32 temp = (patch & 4095)
-			| ((minor << 12) & 1023)
-			| ((major << 22) & 127)
-			| ((variant << 29) & 7);
-		return std::bit_cast<s_storage>(temp);*/
+		s_storage out;
+		out.patch = _patch & 4095;
+		out.minor = _minor & 1023;
+		out.major = _major & 127;
+		out.variant = _variant & 7;
+		return out;
 	}
 	
 	s_storage m_value {0,0,0,0};

@@ -46,7 +46,7 @@ struct compressed_pair {
 template<typename T, typename U>
 compressed_pair(T, U) -> compressed_pair<T, U>;
 
-template<typename T, typename First, typename Second>
+template<typename T, typename First, typename Second> requires (!std::same_as<First, Second>)
 constexpr auto& get(compressed_pair<First, Second>& pair) noexcept {
 	static_assert(
 		std::same_as<T, First> || std::same_as<T, Second>,
@@ -60,7 +60,7 @@ constexpr auto& get(compressed_pair<First, Second>& pair) noexcept {
 	}
 }
 
-template<typename T, typename First, typename Second>
+template<typename T, typename First, typename Second> requires (!std::same_as<First, Second>)
 constexpr const auto& get(const compressed_pair<First, Second>& pair) noexcept {
 	static_assert(
 		std::same_as<T, First> || std::same_as<T, Second>,
@@ -74,7 +74,7 @@ constexpr const auto& get(const compressed_pair<First, Second>& pair) noexcept {
 	}
 }
 
-template<typename T, typename First, typename Second>
+template<typename T, typename First, typename Second> requires (!std::same_as<First, Second>)
 constexpr auto&& get(compressed_pair<First, Second>&& pair) noexcept {
 	static_assert(
 		std::same_as<T, First> || std::same_as<T, Second>,
@@ -88,7 +88,7 @@ constexpr auto&& get(compressed_pair<First, Second>&& pair) noexcept {
 	}
 }
 
-template<typename T, typename First, typename Second>
+template<typename T, typename First, typename Second> requires (!std::same_as<First, Second>)
 constexpr const auto&& get(const compressed_pair<First, Second>&& pair) noexcept {
 	static_assert(
 		std::same_as<T, First> || std::same_as<T, Second>,

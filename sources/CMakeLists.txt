@@ -15,7 +15,7 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 CanvasAddCompileSource(
-	"test.cpp"
+	"print.cpp"
 )
 
 if (CANVAS_GRAPHICS)
