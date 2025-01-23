@@ -26,5 +26,12 @@
 
 #pragma once
 
-#include <canvas/core.hpp>
-#include <canvas/audio/audio.hpp>
+#include <canvas/core/error.hpp>
+
+#if !CANVAS_AUDIO
+#error The audio library is disabled with this build of CanvasEngine
+#endif
+
+namespace canvas::audio {
+	
+} // !namespace canvas::audio

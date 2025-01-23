@@ -61,3 +61,9 @@
 
 /** @brief undocumented @todo document this! */
 #cmakedefine01 CANVAS_GRAPHICS_ENABLE_GTK
+
+/** @brief undocumented @todo document this! */
+#cmakedefine01 CANVAS_AUDIO
+
+/** @brief undocumented @todo document this! */
+#cmakedefine01 CANVAS_NETWORK

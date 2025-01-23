@@ -29,7 +29,7 @@
 #include <canvas/core/error.hpp>
 
 #if !CANVAS_GRAPHICS
-#error graphics support is disabled with this build of CanvasEngine
+#error The graphics library is disabled with this build of CanvasEngine
 #endif
 
 namespace canvas::graphics {

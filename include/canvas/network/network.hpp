@@ -1,5 +1,5 @@
 /**
- * @file audio.hpp
+ * @file network.hpp
  * @author Jacob Isonell (isonelljacob@gmail.com)
  * @brief 
  * @version 0.1
@@ -26,5 +26,12 @@
 
 #pragma once
 
-#include <canvas/core.hpp>
-#include <canvas/audio/audio.hpp>
+#include <canvas/core/error.hpp>
+
+#if !CANVAS_NETWORK
+#error The network library is disabled with this build of CanvasEngine
+#endif
+
+namespace canvas::network {
+	
+} // !namespace canvas::network

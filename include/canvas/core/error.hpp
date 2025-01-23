@@ -28,6 +28,7 @@
 
 #include <canvas/core/utility.hpp>
 #include <variant>
+#include <format>
 
 namespace canvas {
 

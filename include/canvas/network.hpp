@@ -1,5 +1,5 @@
 /**
- * @file extern_config.hpp
+ * @file network.hpp
  * @author Jacob Isonell (isonelljacob@gmail.com)
  * @brief 
  * @version 0.1
@@ -27,3 +27,4 @@
 #pragma once
 
 #include <canvas/core.hpp>
+#include <canvas/network/network.hpp>

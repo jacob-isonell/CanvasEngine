@@ -28,6 +28,14 @@
 
 #include <canvas/cmake_configs.hpp>
 
+// Currently the audio library is not implemented
+#undef CANVAS_AUDIO
+#define CANVAS_AUDIO 0
+
+// Currently the network library is not implemented
+#undef CANVAS_NETWORK
+#define CANVAS_NETWORK 0
+
 #if !defined(ICANVAS_BUILD)
 #	define ICANVAS_BUILD 1
 #endif
@@ -365,18 +373,15 @@
 #include <cstdint>
 #include <cstdlib>
 #include <csignal>
-#include <initializer_list>
 #include <concepts>
 #include <memory>
+#include <compare>
 #include <utility>
 #include <algorithm>
 #include <functional>
 #include <ranges>
 #include <array>
-#include <format>
-#include <iterator>
-#include <iostream>
-#include <string_view>
+#include <bit>
 
 #if (defined(__cpp_exceptions) && 199711L <= __cpp_exceptions) || defined(CANVAS_ENABLE_EXCEPTIONS)
 #define ICANVAS_EXCEPTIONS 1
@@ -585,64 +590,6 @@ struct ignore_t {
 
 constexpr ignore_t ignore { };
 
-inline void vprint(std::ostream& stream, std::string_view fmt, std::format_args args) {
-	std::vformat_to(std::ostream_iterator<char>(stream), fmt, args);
-}
-
-inline void vprintln(std::ostream& stream, std::string_view fmt, std::format_args args) {
-	std::vformat_to(std::ostream_iterator<char>(stream), fmt, args);
-	stream.put('\n');
-}
-
-inline void vprint(std::wostream& stream, std::wstring_view fmt, std::wformat_args args) {
-	std::vformat_to(std::ostream_iterator<wchar_t, wchar_t>(stream), fmt, args);
-}
-
-inline void vprintln(std::wostream& stream, std::wstring_view fmt, std::wformat_args args) {
-	std::vformat_to(std::ostream_iterator<wchar_t, wchar_t>(stream), fmt, args);
-	stream.put(L'\n');
-}
-
-template<typename ... Args>
-inline void print(std::ostream& stream, std::format_string<Args...> fmt, Args&&... args) {
-	vprint(stream, fmt.get(), std::make_format_args(args...));
-}
-
-template<typename ... Args>
-inline void println(std::ostream& stream, std::format_string<Args...> fmt, Args&&... args) {
-	vprintln(stream, fmt.get(), std::make_format_args(args...));
-}
-
-template<typename ... Args>
-inline void print(std::format_string<Args...> fmt, Args&&... args) {
-	vprint(std::cout, fmt.get(), std::make_format_args(args...));
-}
-
-template<typename ... Args>
-inline void println(std::format_string<Args...> fmt, Args&&... args) {
-	vprintln(std::cout, fmt.get(), std::make_format_args(args...));
-}
-
-template<typename ... Args>
-inline void print(std::ostream& stream, std::wformat_string<Args...> fmt, Args&&... args) {
-	vprint(stream, fmt.get(), std::make_wformat_args(args...));
-}
-
-template<typename ... Args>
-inline void println(std::ostream& stream, std::wformat_string<Args...> fmt, Args&&... args) {
-	vprintln(stream, fmt.get(), std::make_wformat_args(args...));
-}
-
-template<typename ... Args>
-inline void print(std::wformat_string<Args...> fmt, Args&&... args) {
-	vprint(std::wcout, fmt.get(), std::make_wformat_args(args...));
-}
-
-template<typename ... Args>
-inline void println(std::wformat_string<Args...> fmt, Args&&... args) {
-	vprintln(std::wcout, fmt.get(), std::make_wformat_args(args...));
-}
-
 namespace internal {
 using namespace ::canvas::internal;
 using namespace ::canvas::literals;
@@ -686,7 +633,7 @@ struct min_t {
 		auto it = out_it;
 		
 		while (++it != end) {
-			if (std::invoke(
+			if (std::invoke(comp,
 				std::invoke(proj, *it),
 				std::invoke(proj, *out_it)
 			)) {
@@ -709,7 +656,7 @@ struct min_t {
 		auto it = out_it;
 		
 		while (++it != end) {
-			if (std::invoke(
+			if (std::invoke(comp,
 				std::invoke(proj, *it),
 				std::invoke(proj, *out_it)
 			)) {
@@ -758,7 +705,7 @@ struct max_t {
 		auto it = out_it;
 		
 		while (++it != end) {
-			if (std::invoke(
+			if (std::invoke(comp,
 				std::invoke(proj, *out_it),
 				std::invoke(proj, *it)
 			)) {
@@ -781,7 +728,7 @@ struct max_t {
 		auto it = out_it;
 		
 		while (++it != end) {
-			if (std::invoke(
+			if (std::invoke(comp,
 				std::invoke(proj, *out_it),
 				std::invoke(proj, *it)
 			)) {

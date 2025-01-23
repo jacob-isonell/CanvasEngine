@@ -34,4 +34,87 @@
 
 namespace canvas::graphics::vulkan {
 
+struct alignas(u32) version_t {
+private:
+	struct alignas(u32) s_storage {
+		unsigned int patch   : 12;
+		unsigned int minor   : 10;
+		unsigned int major   : 7;
+		unsigned int variant : 3;
+	};
+	
+	static constexpr s_storage s_construct(
+		u32 _variant,
+		u32 _major,
+		u32 _minor,
+		u32 _patch
+	) {
+		return s_storage {
+			.patch = _patch,
+			.minor = _minor,
+			.major = _major,
+			.variant = _variant
+		};
+		/*const u32 temp = (patch & 4095)
+			| ((minor << 12) & 1023)
+			| ((major << 22) & 127)
+			| ((variant << 29) & 7);
+		return std::bit_cast<s_storage>(temp);*/
+	}
+	
+	s_storage m_value {0,0,0,0};
+public:
+	constexpr version_t() noexcept = default;
+	constexpr version_t(const version_t&) noexcept = default;
+	constexpr version_t& operator=(const version_t&) noexcept = default;
+	
+	[[nodiscard]] constexpr bool operator==(const version_t& other) const noexcept {
+		return std::bit_cast<u32>(m_value) == std::bit_cast<u32>(other.m_value);
+	}
+	
+	[[nodiscard]] constexpr auto operator<=>(const version_t& other) const noexcept {
+		return std::bit_cast<u32>(m_value) <=> std::bit_cast<u32>(other.m_value);
+	}
+	
+	[[nodiscard]] constexpr bool operator==(u32 val) const noexcept {
+		return *this == version_t{val};
+	}
+	
+	[[nodiscard]] constexpr auto operator<=>(u32 val) const noexcept {
+		return *this <=> version_t{val};
+	}
+	
+	constexpr version_t(u32 value) noexcept
+		: m_value(std::bit_cast<s_storage>(value)) {
+	}
+	
+	constexpr version_t(u32 _major, u32 _minor) noexcept
+		: m_value(s_construct(0,_major,_minor,0)) {
+	}
+	
+	constexpr version_t(u32 _variant, u32 _major, u32 _minor, u32 _patch) noexcept
+		: m_value(s_construct(_variant,_major,_minor,_patch)) {
+	}
+	
+	[[nodiscard]] constexpr explicit operator u32() const noexcept {
+		return std::bit_cast<u32>(m_value);
+	}
+	
+	[[nodiscard]] constexpr u32 variant() const noexcept { return m_value.variant; }
+	[[nodiscard]] constexpr u32   major() const noexcept { return m_value.major; }
+	[[nodiscard]] constexpr u32   minor() const noexcept { return m_value.minor; }
+	[[nodiscard]] constexpr u32   patch() const noexcept { return m_value.patch; }
+	
+	constexpr void variant(u32 value) noexcept { m_value = s_construct(value, major(), minor(), patch()); }
+	constexpr void   major(u32 value) noexcept { m_value = s_construct(variant(), value, minor(), patch()); }
+	constexpr void   minor(u32 value) noexcept { m_value = s_construct(variant(), major(), value, patch()); }
+	constexpr void   patch(u32 value) noexcept { m_value = s_construct(variant(), major(), minor(), value); }
+};
+
+inline constexpr version_t version_1_0{0,1,0,0};
+inline constexpr version_t version_1_1{0,1,1,0};
+inline constexpr version_t version_1_2{0,1,2,0};
+inline constexpr version_t version_1_3{0,1,3,0};
+inline constexpr version_t version_1_4{0,1,4,0};
+
 } // !namespace canvas::graphics::vulkan

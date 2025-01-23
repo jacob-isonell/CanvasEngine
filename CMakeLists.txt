@@ -32,7 +32,9 @@ include(CMakeDependentOption)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 option(ICANVAS_DEVMODE "Enable warning flags for development" OFF)
-option(CANVAS_GRAPHICS "Enable the graphics subsystem" ON)
+option(CANVAS_GRAPHICS "Enable the graphics library" ON)
+option(CANVAS_AUDIO "Enable the audio library" ON)
+option(CANVAS_NETWORK "Enable the network library" ON)
 option(CANVAS_ENABLE_LOGS "Causes CanvasEngine to issue non-critical status/event messages to stdout" OFF)
 set(CANVAS_LIBRARY_KIND "" CACHE STRING "Set the library type to STATIC, SHARED or empty to use the value of BUILD_SHARED_LIBS")
 
