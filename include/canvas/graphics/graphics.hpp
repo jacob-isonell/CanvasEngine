@@ -32,17 +32,17 @@
 #error graphics support is disabled with this build of CanvasEngine
 #endif
 
-ICANVAS_NAMESPACE_GRAPHICS_BEGIN
+namespace canvas::graphics {
 
-enum class backend {
+enum struct backend {
 	vulkan
 };
 
 CANVAS_API
 err set_backend(backend selected_backend) noexcept;
 
-CANVAS_API
 [[nodiscard]]
+CANVAS_API
 backend get_backend() noexcept;
 
-ICANVAS_NAMESPACE_GRAPHICS_END
+} // !namespace canvas::graphics

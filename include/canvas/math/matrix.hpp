@@ -28,12 +28,13 @@
 
 #include <canvas/math/vector.hpp>
 
-ICANVAS_NAMESPACE_MATH_BEGIN
+namespace canvas::math {
 
 template<typename FloatingType, std::size_t Rows, std::size_t Columns>
 struct matrix;
 
-ICANVAS_NAMESPACE_INTERNAL_BEGIN
+namespace internal {
+using namespace ::canvas::internal;
 
 template<typename T>
 struct is_matrix_type : std::false_type {
@@ -99,7 +100,7 @@ constexpr Mat matrix_identity() {
 	return out;
 }
 
-ICANVAS_NAMESPACE_INTERNAL_END
+} // !namespace internal
 
 template<internal::matrix_type Mat>
 constexpr Mat operator+(const Mat& lhs, const Mat& rhs) {
@@ -149,14 +150,14 @@ struct matrix {
 	
 	constexpr auto& operator[](std::size_t n) {
 		if (Rows <= n) {
-			internal::dothrow_debug<std::out_of_range>("out_of_range");
+			internal::dothrow<std::out_of_range>("out_of_range");
 		}
 		return axies[n];
 	}
 	
 	constexpr const auto& operator[](std::size_t n) const {
 		if (Rows <= n) {
-			internal::dothrow_debug<std::out_of_range>("out_of_range");
+			internal::dothrow<std::out_of_range>("out_of_range");
 		}
 		return axies[n];
 	}
@@ -216,4 +217,4 @@ using mat4x2f64_t = matrix<double, 4, 2>;
 using mat4x3f64_t = matrix<double, 4, 3>;
 using mat4x4f64_t = matrix<double, 4, 4>;
 
-ICANVAS_NAMESPACE_MATH_END
+} // !namespace canvas::math

@@ -2,9 +2,9 @@
 <p align="center">A game engine framework written in C++20
 	<br />
 	&#x2022;
-	<a style="width: 100%; text-align: center" href="https://github.com/lTechno/CanvasEngineDev/labels/bug">Report Bug</a>
+	<a style="width: 100%; text-align: center" href="https://github.com/jacob-isonell/CanvasEngine/labels/bug">Report Bug</a>
 	&#x2022;
-	<a style="width: 100%; text-align: center" href="https://github.com/lTechno/CanvasEngineDev/labels/enhancement">Request Feature</a>
+	<a style="width: 100%; text-align: center" href="https://github.com/jacob-isonell/CanvasEngine/labels/enhancement">Request Feature</a>
 	&#x2022;
 </p>
 
@@ -33,6 +33,10 @@
 
 CanvasEngine is a game engine framework written in C++20<br/>
 Support Windows and Linux platforms.
+
+## How to get started
+
+The `canvas.hpp` header includes all headers in the library
 
 ### Build requirements
 
@@ -80,10 +84,6 @@ The following configuration options control the behaviour of CanvasEngine and wh
 To get started using CanvasEngine, simple include the `canvas.hpp` header.
 This header will automatically include all other headers needed to use CanvasEngine.
 
-### Development
-
-TODO: write about development plans here.
-
 ## License
 
-Distributed under the GNU GPLv3 License. See `LICENSE` for more information.
+Distributed under the GNU GPLv3 License. See [`LICENSE`](https://github.com/jacob-isonell/CanvasEngine/blob/main/LICENSE) for more information.

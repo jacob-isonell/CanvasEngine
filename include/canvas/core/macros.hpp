@@ -32,7 +32,7 @@
 #	define ICANVAS_BUILD 1
 #endif
 
-#if defined(CANVAS_DEBUG)
+#if defined(CANVAS_DEBUG) || defined(DEBUG)
 #	undef CANVAS_DEBUG
 #	define CANVAS_DEBUG 1
 #else
@@ -41,21 +41,12 @@
 
 #if defined(_MSC_VER)
 #	define CANVAS_COMPILER_MSVC 1
-#	define ICANVAS_MSVC_VERSION _MSC_VER
 #elif defined(__GNUC__)
 #	define CANVAS_COMPILER_GNU 1
 #	if defined(__clang__)
 #		define CANVAS_COMPILER_CLANG 1
-#		define ICANVAS_CLANG_VERSION \
-	 (__clang_major__ * 10000 \
-	+ __clang_minor__ * 100   \
-	+ __clang_patchlevel__)
 #	else
 #		define CANVAS_COMPILER_GCC 1
-#		define ICANVAS_GCC_VERSION \
-	 (__GNUC__       * 10000 \
-	+ __GNUC_MINOR__ * 100   \
-	+ __GNUC_PATCHLEVEL__)
 #	endif
 #else
 #	define CANVAS_COMPILER_UNKNOWN 1
@@ -66,7 +57,7 @@
 #elif defined(__APPLE__) || defined(__MACH__) || defined(Macintosh) || defined(macintosh)
 #	define CANVAS_PLATFORM_MACOS 1
 # if !defined(CANVAS_MACOS_EXPERIMENTAL)
-#		error CanvasEngine has not been tested yet on MacOS. To remove this error message, define the CANVAS_MACOS_EXPERIMENTAL macro
+#		error CanvasEngine has not been tested yet on MacOS and may not work or compile. To remove this error message, define the CANVAS_MACOS_EXPERIMENTAL macro
 #	endif
 #elif defined(unix) || defined(__unix__) || defined(__unix)
 #	define CANVAS_PLATFORM_UNIX 1
@@ -89,6 +80,7 @@
 #define CANVAS_ARCH_UNKNOWN 1
 #endif
 
+// Define the macros to 0 to silence compiler warnings
 #if !defined(CANVAS_COMPILER_MSVC)
 #	define CANVAS_COMPILER_MSVC 0
 #endif
@@ -221,34 +213,10 @@
 #endif
 #endif
 
-#if defined(__has_feature) && CANVAS_COMPILER_GNU
-#define ICANVAS_HAS_GNU_FEATURE(x) __has_feature(x)
-#else
-#define ICANVAS_HAS_GNU_FEATURE(x) 0
-#endif
-
 #if defined(__has_builtin) && CANVAS_COMPILER_GNU
 #define ICANVAS_HAS_GNU_BUILTIN(x) __has_builtin(x)
 #else
 #define ICANVAS_HAS_GNU_BUILTIN(x) 0
-#endif
-
-#if defined(__has_extension) && CANVAS_COMPILER_GNU
-#define ICANVAS_HAS_GNU_EXTENSION(x) __has_extension(x)
-#else
-#define ICANVAS_HAS_GNU_EXTENSION(x) 0
-#endif
-
-#if defined(__has_constexpr_builtin) && CANVAS_COMPILER_GNU
-#define ICANVAS_HAS_GNU_CONSTEXPR_BUILTIN(x) __has_constexpr_builtin(x)
-#else
-#define ICANVAS_HAS_GNU_CONSTEXPR_BUILTIN(x) 0
-#endif
-
-#if defined(__has_include)
-#define ICANVAS_HAS_INCLUDE(x) __has_include(x)
-#else
-#define ICANVAS_HAS_INCLUDE(x) 0
 #endif
 
 #if defined(__has_cpp_attribute) && defined(__cpp_attributes) && 200809L <= __cpp_attributes
@@ -261,12 +229,6 @@
 #define ICANVAS_HAS_GNU_ATTRIBUTE(x) __has_attribute(x)
 #else
 #define ICANVAS_HAS_GNU_ATTRIBUTE(x) 0
-#endif
-
-#if defined(__has_attribute)
-#define ICANVAS_HAS_ATTRIBUTE(x) __has_attribute(x)
-#else
-#define ICANVAS_HAS_ATTRIBUTE(x) 0
 #endif
 
 #if ICANVAS_HAS_GNU_ATTRIBUTE(__cdecl__)
@@ -337,6 +299,14 @@
 #define CANVAS_DLLEXPORT ICANVAS_DEFAULT_VIS
 #endif
 
+#if CANVAS_COMPILER_MSVC
+#	define CANVAS_ATTR_NO_UNIQUE_ADDRESS [[msvc::no_unique_address]]
+#elif ICANVAS_HAS_CPP_ATTRIBUTE(no_unique_address)
+#	define CANVAS_ATTR_NO_UNIQUE_ADDRESS [[no_unique_address]]
+#else
+#	define CANVAS_ATTR_NO_UNIQUE_ADDRESS
+#endif
+
 #define ICANVAS_IMPL_NAMESPACE_BEGIN(name) \
 	namespace name { \
 	ICANVAS_WARN_PUSH
@@ -344,30 +314,6 @@
 #define ICANVAS_IMPL_NAMESPACE_END \
 	ICANVAS_WARN_POP \
 	}
-
-#define ICANVAS_NAMESPACE canvas
-#define ICANVAS_NAMESPACE_BEGIN ICANVAS_IMPL_NAMESPACE_BEGIN(canvas)
-#define ICANVAS_NAMESPACE_END ICANVAS_IMPL_NAMESPACE_END
-
-#define ICANVAS_NAMESPACE_MATH ICANVAS_NAMESPACE::math
-#define ICANVAS_NAMESPACE_MATH_BEGIN ICANVAS_IMPL_NAMESPACE_BEGIN(ICANVAS_NAMESPACE_MATH)
-#define ICANVAS_NAMESPACE_MATH_END ICANVAS_IMPL_NAMESPACE_END
-
-#define ICANVAS_NAMESPACE_GRAPHICS ICANVAS_NAMESPACE::graphics
-#define ICANVAS_NAMESPACE_GRAPHICS_BEGIN ICANVAS_IMPL_NAMESPACE_BEGIN(ICANVAS_NAMESPACE_GRAPHICS)
-#define ICANVAS_NAMESPACE_GRAPHICS_END ICANVAS_IMPL_NAMESPACE_END
-
-#define ICANVAS_NAMESPACE_GRAPHICS_VULKAN ICANVAS_NAMESPACE_GRAPHICS::vulkan
-#define ICANVAS_NAMESPACE_GRAPHICS_VULKAN_BEGIN ICANVAS_IMPL_NAMESPACE_BEGIN(ICANVAS_NAMESPACE_GRAPHICS_VULKAN)
-#define ICANVAS_NAMESPACE_GRAPHICS_VULKAN_END ICANVAS_IMPL_NAMESPACE_END
-
-#define ICANVAS_NAMESPACE_NETWORK ICANVAS_NAMESPACE::network
-#define ICANVAS_NAMESPACE_NETWORK_BEGIN ICANVAS_IMPL_NAMESPACE_BEGIN(ICANVAS_NAMESPACE_NETWORK)
-#define ICANVAS_NAMESPACE_NETWORK_END ICANVAS_IMPL_NAMESPACE_END
-
-#define ICANVAS_NAMESPACE_INTERNAL internal
-#define ICANVAS_NAMESPACE_INTERNAL_BEGIN ICANVAS_IMPL_NAMESPACE_BEGIN(internal) using namespace ::canvas::internal;
-#define ICANVAS_NAMESPACE_INTERNAL_END ICANVAS_IMPL_NAMESPACE_END
 
 #if CANVAS_SHARED
 #if defined(ICANVAS_BUILD)
@@ -383,12 +329,12 @@
 #define CANVAS_API ICANVAS_DEFAULT_VIS
 #endif
 
-#define CANVAS_MACRO_COMBINEX(a, b) a##b
-#define CANVAS_MACRO_STRINGX(a)     #a
-#define CANVAS_MACRO_LSTRINGX(a)    L"" #a
-#define CANVAS_MACRO_COMBINE(a, b)  CANVAS_MACRO_COMBINEX(a, b)
-#define CANVAS_MACRO_STRING(a)      CANVAS_MACRO_STRINGX(a)
-#define CANVAS_MACRO_LSTRING(a)     CANVAS_MACRO_LSTRINGX(a)
+#define CANVAS_MACRO_COMBINEX(a, b)  a##b
+#define CANVAS_MACRO_STRINGX(a)      #a
+#define CANVAS_MACRO_LSTRINGX(a)     L"" #a
+#define CANVAS_MACRO_COMBINE(a, b)   CANVAS_MACRO_COMBINEX(a, b)
+#define CANVAS_MACRO_STRING(a)       CANVAS_MACRO_STRINGX(a)
+#define CANVAS_MACRO_LSTRING(a)      CANVAS_MACRO_LSTRINGX(a)
 #define CANVAS_UNIQUE_IDENTIFIER     CANVAS_MACRO_COMBINE(icanvas_unique_identifier_, __LINE__)
 #define ICANVAS_UNIQUE_IDENTIFIER(x) CANVAS_MACRO_COMBINE(CANVAS_UNIQUE_IDENTIFIER, x)
 #define CANVAS_UNIQUE_IDENTIFIER1 ICANVAS_UNIQUE_IDENTIFIER(_1)
@@ -419,10 +365,18 @@
 #include <cstdint>
 #include <cstdlib>
 #include <csignal>
+#include <initializer_list>
 #include <concepts>
+#include <memory>
 #include <utility>
-#include <exception>
-#include <stdexcept>
+#include <algorithm>
+#include <functional>
+#include <ranges>
+#include <array>
+#include <format>
+#include <iterator>
+#include <iostream>
+#include <string_view>
 
 #if (defined(__cpp_exceptions) && 199711L <= __cpp_exceptions) || defined(CANVAS_ENABLE_EXCEPTIONS)
 #define ICANVAS_EXCEPTIONS 1
@@ -436,43 +390,171 @@
 #define ICANVAS_RTTI 0
 #endif
 
-ICANVAS_NAMESPACE_BEGIN
+namespace canvas {
 
-using i8 = std::int8_t;
-using i16 = std::int16_t;
-using i32 = std::int32_t;
-using i64 = std::int64_t;
-using u8 = std::uint8_t;
-using u16 = std::uint16_t;
-using u32 = std::uint32_t;
-using u64 = std::uint64_t;
+enum struct compiler {
+	msvc,
+	clang,
+	gcc,
+	unknown,
+	
+	current = 
+#if CANVAS_COMPILER_MSVC
+	msvc,
+#elif CANVAS_COMPILER_CLANG
+	clang,
+#elif CANVAS_COMPILER_GCC
+	gcc,
+#else
+	unknown,
+#endif
+};
 
-using il8 = std::int_least8_t;
-using il16 = std::int_least16_t;
-using il32 = std::int_least32_t;
-using il64 = std::int_least64_t;
-using ul8 = std::uint_least8_t;
-using ul16 = std::uint_least16_t;
-using ul32 = std::uint_least32_t;
-using ul64 = std::uint_least64_t;
+enum struct platform {
+	windows,
+	macos,
+	linux,
+	unknown,
+	
+	current = 
+#if CANVAS_PLATFORM_WINDOWS
+	windows,
+#elif CANVAS_PLATFORM_MACOS
+	macos,
+#elif CANVAS_PLATFORM_LINUX
+	linux,
+#else
+	unknown,
+#endif
+};
 
-using if8 = std::int_fast8_t;
-using if16 = std::int_fast16_t;
-using if32 = std::int_fast32_t;
-using if64 = std::int_fast64_t;
-using uf8 = std::uint_fast8_t;
-using uf16 = std::uint_fast16_t;
-using uf32 = std::uint_fast32_t;
-using uf64 = std::uint_fast64_t;
+static constexpr bool platform_unix = CANVAS_PLATFORM_UNIX;
 
-using sz = std::size_t;
-using pd = std::ptrdiff_t;
-using iptr = std::intptr_t;
-using uptr = std::uintptr_t;
-using imax = std::intmax_t;
-using umax = std::uintmax_t;
-constexpr std::nullptr_t null = nullptr;
-using null_t = std::nullptr_t;
+enum struct cpu_arch {
+	x86_64,
+	i386,
+	arm,
+	arm64,
+	unknown,
+	
+	current = 
+#if CANVAS_ARCH_I386
+	x86_64,
+#elif CANVAS_ARCH_X86_64
+	i386,
+#elif CANVAS_ARCH_ARM
+	arm,
+#elif CANVAS_ARCH_ARM64
+	arm64,
+#endif
+};
+
+using std::int8_t;
+using std::int16_t;
+using std::int32_t;
+using std::int64_t;
+using std::uint8_t;
+using std::uint16_t;
+using std::uint32_t;
+using std::uint64_t;
+using std::int_least8_t;
+using std::int_least16_t;
+using std::int_least32_t;
+using std::int_least64_t;
+using std::uint_least8_t;
+using std::uint_least16_t;
+using std::uint_least32_t;
+using std::uint_least64_t;
+using std::int_fast8_t;
+using std::int_fast16_t;
+using std::int_fast32_t;
+using std::int_fast64_t;
+using std::uint_fast8_t;
+using std::uint_fast16_t;
+using std::uint_fast32_t;
+using std::uint_fast64_t;
+using std::size_t;
+using std::ptrdiff_t;
+using std::intptr_t;
+using std::uintptr_t;
+using std::intmax_t;
+using std::uintmax_t;
+using std::nullptr_t;
+using std::get;
+using std::array;
+using std::to_array;
+
+using i8     = int8_t;
+using i16    = int16_t;
+using i32    = int32_t;
+using i64    = int64_t;
+using u8     = uint8_t;
+using u16    = uint16_t;
+using u32    = uint32_t;
+using u64    = uint64_t;
+using il8    = int_least8_t;
+using il16   = int_least16_t;
+using il32   = int_least32_t;
+using il64   = int_least64_t;
+using ul8    = uint_least8_t;
+using ul16   = uint_least16_t;
+using ul32   = uint_least32_t;
+using ul64   = uint_least64_t;
+using if8    = int_fast8_t;
+using if16   = int_fast16_t;
+using if32   = int_fast32_t;
+using if64   = int_fast64_t;
+using uf8    = uint_fast8_t;
+using uf16   = uint_fast16_t;
+using uf32   = uint_fast32_t;
+using uf64   = uint_fast64_t;
+using sz     = size_t;
+using pd     = ptrdiff_t;
+using iptr   = intptr_t;
+using uptr   = uintptr_t;
+using imax   = intmax_t;
+using umax   = uintmax_t;
+using null_t = nullptr_t;
+
+inline constexpr null_t null = nullptr;
+
+enum class byte : u8 { };
+enum class sbyte : i8 { };
+
+namespace literals {
+
+consteval i8   operator""_i8   (unsigned long long v) noexcept { return (i8)v; }
+consteval i16  operator""_i16  (unsigned long long v) noexcept { return (i16)v; }
+consteval i32  operator""_i32  (unsigned long long v) noexcept { return (i32)v; }
+consteval i64  operator""_i64  (unsigned long long v) noexcept { return (i64)v; }
+consteval u8   operator""_u8   (unsigned long long v) noexcept { return (u8)v; }
+consteval u16  operator""_u16  (unsigned long long v) noexcept { return (u16)v; }
+consteval u32  operator""_u32  (unsigned long long v) noexcept { return (u32)v; }
+consteval u64  operator""_u64  (unsigned long long v) noexcept { return (u64)v; }
+consteval il8  operator""_il8  (unsigned long long v) noexcept { return (il8)v; }
+consteval il16 operator""_il16 (unsigned long long v) noexcept { return (il16)v; }
+consteval il32 operator""_il32 (unsigned long long v) noexcept { return (il32)v; }
+consteval il64 operator""_il64 (unsigned long long v) noexcept { return (il64)v; }
+consteval ul8  operator""_ul8  (unsigned long long v) noexcept { return (ul8)v; }
+consteval ul16 operator""_ul16 (unsigned long long v) noexcept { return (ul16)v; }
+consteval ul32 operator""_ul32 (unsigned long long v) noexcept { return (ul32)v; }
+consteval ul64 operator""_ul64 (unsigned long long v) noexcept { return (ul64)v; }
+consteval if8  operator""_if8  (unsigned long long v) noexcept { return (if8)v; }
+consteval if16 operator""_if16 (unsigned long long v) noexcept { return (if16)v; }
+consteval if32 operator""_if32 (unsigned long long v) noexcept { return (if32)v; }
+consteval if64 operator""_if64 (unsigned long long v) noexcept { return (if64)v; }
+consteval uf8  operator""_uf8  (unsigned long long v) noexcept { return (uf8)v; }
+consteval uf16 operator""_uf16 (unsigned long long v) noexcept { return (uf16)v; }
+consteval uf32 operator""_uf32 (unsigned long long v) noexcept { return (uf32)v; }
+consteval uf64 operator""_uf64 (unsigned long long v) noexcept { return (uf64)v; }
+consteval sz   operator""_sz   (unsigned long long v) noexcept { return (sz)v; }
+consteval pd   operator""_pd   (unsigned long long v) noexcept { return (pd)v; }
+consteval iptr operator""_iptr (unsigned long long v) noexcept { return (iptr)v; }
+consteval uptr operator""_uptr (unsigned long long v) noexcept { return (uptr)v; }
+consteval imax operator""_imax (unsigned long long v) noexcept { return (imax)v; }
+consteval umax operator""_umax (unsigned long long v) noexcept { return (umax)v; }
+
+} // !namespace literals
 
 [[noreturn]]
 inline void unreachable() noexcept {
@@ -503,28 +585,258 @@ struct ignore_t {
 
 constexpr ignore_t ignore { };
 
-ICANVAS_NAMESPACE_INTERNAL_BEGIN
-
-template<typename T, typename ... Args>
-[[noreturn]]
-constexpr void dothrow([[maybe_unused]] Args&&... args) {
-#if ICANVAS_EXCEPTIONS
-	throw T { std::forward<Args>(args)... };
-#else
-	std::terminate();
-#endif
+inline void vprint(std::ostream& stream, std::string_view fmt, std::format_args args) {
+	std::vformat_to(std::ostream_iterator<char>(stream), fmt, args);
 }
 
-template<typename T, typename ... Args>
-[[noreturn]]
-constexpr void dothrow_debug([[maybe_unused]] Args&&... args) {
-#if CANVAS_DEBUG
-	dothrow<T>(std::forward<Args>(args)...);
-#else
-	unreachable();
-#endif
+inline void vprintln(std::ostream& stream, std::string_view fmt, std::format_args args) {
+	std::vformat_to(std::ostream_iterator<char>(stream), fmt, args);
+	stream.put('\n');
 }
 
-ICANVAS_NAMESPACE_INTERNAL_END
+inline void vprint(std::wostream& stream, std::wstring_view fmt, std::wformat_args args) {
+	std::vformat_to(std::ostream_iterator<wchar_t, wchar_t>(stream), fmt, args);
+}
 
-ICANVAS_NAMESPACE_END
+inline void vprintln(std::wostream& stream, std::wstring_view fmt, std::wformat_args args) {
+	std::vformat_to(std::ostream_iterator<wchar_t, wchar_t>(stream), fmt, args);
+	stream.put(L'\n');
+}
+
+template<typename ... Args>
+inline void print(std::ostream& stream, std::format_string<Args...> fmt, Args&&... args) {
+	vprint(stream, fmt.get(), std::make_format_args(args...));
+}
+
+template<typename ... Args>
+inline void println(std::ostream& stream, std::format_string<Args...> fmt, Args&&... args) {
+	vprintln(stream, fmt.get(), std::make_format_args(args...));
+}
+
+template<typename ... Args>
+inline void print(std::format_string<Args...> fmt, Args&&... args) {
+	vprint(std::cout, fmt.get(), std::make_format_args(args...));
+}
+
+template<typename ... Args>
+inline void println(std::format_string<Args...> fmt, Args&&... args) {
+	vprintln(std::cout, fmt.get(), std::make_format_args(args...));
+}
+
+template<typename ... Args>
+inline void print(std::ostream& stream, std::wformat_string<Args...> fmt, Args&&... args) {
+	vprint(stream, fmt.get(), std::make_wformat_args(args...));
+}
+
+template<typename ... Args>
+inline void println(std::ostream& stream, std::wformat_string<Args...> fmt, Args&&... args) {
+	vprintln(stream, fmt.get(), std::make_wformat_args(args...));
+}
+
+template<typename ... Args>
+inline void print(std::wformat_string<Args...> fmt, Args&&... args) {
+	vprint(std::wcout, fmt.get(), std::make_wformat_args(args...));
+}
+
+template<typename ... Args>
+inline void println(std::wformat_string<Args...> fmt, Args&&... args) {
+	vprintln(std::wcout, fmt.get(), std::make_wformat_args(args...));
+}
+
+namespace internal {
+using namespace ::canvas::internal;
+using namespace ::canvas::literals;
+
+struct min_t {
+	template<
+		typename T,
+		typename Proj = std::identity,
+		std::indirect_strict_weak_order<std::projected<const T*, Proj>> Comp = std::ranges::less
+	>
+	constexpr const T& operator()(const T& a, const T& b, Comp comp = {}, Proj proj = {}) const {
+		return std::invoke(comp,
+			std::invoke(proj, a),
+			std::invoke(proj, b)
+		) ? a : b;
+	}
+	
+	template<
+		typename T,
+		typename U,
+		typename Proj = std::identity,
+		std::indirect_strict_weak_order<std::projected<const std::common_type_t<T, U>*, Proj>> Comp = std::ranges::less
+	> requires (std::convertible_to<T, std::common_type_t<T, U>> && std::convertible_to<U, std::common_type_t<T, U>>)
+	constexpr std::common_type_t<T, U> operator()(const T& a, const U& b, Comp comp = {}, Proj proj = {}) const {
+		return (*this).operator()<std::common_type_t<T, U>, Proj, Comp>(
+			static_cast<std::common_type_t<T, U>>(a),
+			static_cast<std::common_type_t<T, U>>(b),
+			std::ref(comp),
+			std::ref(proj)
+		);
+	}
+	
+	template<
+		std::copyable T,
+		typename Proj = std::identity,
+		std::indirect_strict_weak_order<std::projected<const T*, Proj>> Comp = std::ranges::less
+	>
+	constexpr T operator()(std::initializer_list<T> r, Comp comp = {}, Proj proj = {}) const {
+		const auto end = r.end();
+		auto out_it = r.begin();
+		auto it = out_it;
+		
+		while (++it != end) {
+			if (std::invoke(
+				std::invoke(proj, *it),
+				std::invoke(proj, *out_it)
+			)) {
+				out_it = it;
+			}
+		}
+		
+		return *out_it;
+	}
+
+	template<
+		std::ranges::input_range R,
+		typename Proj = std::identity,
+		std::indirect_strict_weak_order<std::projected<std::ranges::iterator_t<R>, Proj>> Comp = std::ranges::less
+	>
+	requires std::indirectly_copyable_storable<std::ranges::iterator_t<R>, std::ranges::range_value_t<R>*>
+	constexpr std::ranges::range_value_t<R> operator()(R&& r, Comp comp = {}, Proj proj = {}) const {
+		const auto end = std::ranges::end(r);
+		auto out_it = std::ranges::begin(r);
+		auto it = out_it;
+		
+		while (++it != end) {
+			if (std::invoke(
+				std::invoke(proj, *it),
+				std::invoke(proj, *out_it)
+			)) {
+				out_it = it;
+			}
+		}
+		
+		return *out_it;
+	}
+};
+
+struct max_t {
+	template<
+		typename T,
+		typename Proj = std::identity,
+		std::indirect_strict_weak_order<std::projected<const T*, Proj>> Comp = std::ranges::less
+	>
+	constexpr const T& operator()(const T& a, const T& b, Comp comp = {}, Proj proj = {}) const {
+		return std::invoke(comp,
+			std::invoke(proj, b),
+			std::invoke(proj, a)
+		) ? a : b;
+	}
+	
+	template<
+		typename T,
+		typename U,
+		typename Proj = std::identity,
+		std::indirect_strict_weak_order<std::projected<const std::common_type_t<T, U>*, Proj>> Comp = std::ranges::less
+	>
+	constexpr std::common_type_t<T, U> operator()(const T& a, const T& b, Comp comp = {}, Proj proj = {}) const {
+		return std::invoke(comp,
+			std::invoke(proj, b),
+			std::invoke(proj, a)
+		) ? a : b;
+	}
+	
+	template<
+		std::copyable T,
+		typename Proj = std::identity,
+		std::indirect_strict_weak_order<std::projected<const T*, Proj>> Comp = std::ranges::less
+	>
+	constexpr T operator()(std::initializer_list<T> r, Comp comp = {}, Proj proj = {}) const {
+		const auto end = r.end();
+		auto out_it = r.begin();
+		auto it = out_it;
+		
+		while (++it != end) {
+			if (std::invoke(
+				std::invoke(proj, *out_it),
+				std::invoke(proj, *it)
+			)) {
+				out_it = it;
+			}
+		}
+		
+		return *out_it;
+	}
+
+	template<
+		std::ranges::input_range R,
+		typename Proj = std::identity,
+		std::indirect_strict_weak_order<std::projected<std::ranges::iterator_t<R>, Proj>> Comp = std::ranges::less
+	>
+	requires std::indirectly_copyable_storable<std::ranges::iterator_t<R>, std::ranges::range_value_t<R>*>
+	constexpr std::ranges::range_value_t<R> operator()(R&& r, Comp comp = {}, Proj proj = {}) const {
+		const auto end = std::ranges::end(r);
+		auto out_it = std::ranges::begin(r);
+		auto it = out_it;
+		
+		while (++it != end) {
+			if (std::invoke(
+				std::invoke(proj, *out_it),
+				std::invoke(proj, *it)
+			)) {
+				out_it = it;
+			}
+		}
+		
+		return *out_it;
+	}
+};
+
+struct clamp_t {
+	template<
+		typename T,
+		typename Proj = std::identity,
+		std::indirect_strict_weak_order<std::projected<const T*, Proj>> Comp = std::ranges::less
+	>
+	constexpr const T& operator()(
+		const T& v,
+		const T& lo,
+		const T& hi,
+		Comp comp = {},
+		Proj proj = {}
+	) {
+		return std::ranges::clamp(v, lo, hi, std::ref(comp), std::ref(proj));
+	}
+	
+	template<
+		typename T,
+		std::convertible_to<T> U,
+		std::convertible_to<T> V,
+		typename Proj = std::identity,
+		std::indirect_strict_weak_order<std::projected<const T*, Proj>> Comp = std::ranges::less
+	>
+	constexpr const T& operator()(
+		const T& v,
+		const U& lo,
+		const V& hi,
+		Comp comp = {},
+		Proj proj = {}
+	) {
+		return std::ranges::clamp(
+			v,
+			static_cast<T>(lo),
+			static_cast<T>(hi),
+			std::ref(comp),
+			std::ref(proj)
+		);
+	}
+};
+
+} // !namespace internal
+
+inline constexpr internal::min_t min { };
+inline constexpr internal::max_t max { };
+inline constexpr internal::clamp_t clamp { };
+
+} // !namespace canvas

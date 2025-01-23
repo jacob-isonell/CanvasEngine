@@ -1,5 +1,5 @@
 /**
- * @file graphics.cpp
+ * @file string.hpp
  * @author Jacob Isonell (isonelljacob@gmail.com)
  * @brief 
  * @version 0.1
@@ -24,22 +24,17 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <canvas/graphics/graphics.hpp>
+#pragma once
 
-namespace canvas::graphics {
+#include <canvas/core/vector.hpp>
 
-static backend s_selected_backend = backend::vulkan;
+namespace canvas {
 
-CANVAS_API
-err set_backend(backend selected_backend) noexcept {
-	s_selected_backend = selected_backend;
-	return err::eok;
-}
+namespace internal {
+using namespace ::canvas::internal;
 
-[[nodiscard]]
-CANVAS_API
-backend get_backend() noexcept {
-	return s_selected_backend;
-}
+using std::basic_string;
 
-} // !namespace canvas::graphics
+} // !namespace internal
+
+} // !namespace canvas

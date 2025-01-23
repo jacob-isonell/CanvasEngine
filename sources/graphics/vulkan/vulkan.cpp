@@ -27,7 +27,7 @@
 #include "icanvas_vulkan.hpp"
 #include <algorithm>
 
-ICANVAS_NAMESPACE_GRAPHICS_VULKAN_BEGIN
+namespace canvas::graphics::vulkan {
 
 static expected<std::vector<extension_info>> s_query_instance_extensions(
 	const char* layer
@@ -37,13 +37,9 @@ static expected<std::vector<extension_info>> s_query_instance_extensions(
 	u32 count;
 	vkerror e;
 	
-	e = vkEnumerateInstanceExtensionProperties(layer, &count, nullptr);
+	e = vkEnumerateInstanceExtensionProperties(layer, &count, null);
 	if (!e) [[unlikely]] {
 		return e;
-	}
-	
-	if (extensions.max_size() < count || out.max_size() < count) [[unlikely]] {
-		return err::enomem;
 	}
 	
 	extensions.resize(count);
@@ -69,13 +65,9 @@ expected<std::vector<layer_info>> query_instance_layers() {
 	u32 count;
 	vkerror e;
 	
-	e = vkEnumerateInstanceLayerProperties(&count, nullptr);
+	e = vkEnumerateInstanceLayerProperties(&count, null);
 	if (!e) [[unlikely]] {
 		return e;
-	}
-	
-	if (layers.max_size() < count) [[unlikely]] {
-		return err::enomem;
 	}
 	
 	layers.resize(count);
@@ -112,7 +104,7 @@ expected<std::vector<extension_info>> query_instance_extensions(
 
 CANVAS_API
 expected<std::vector<extension_info>> query_instance_extensions() {
-	return s_query_instance_extensions(nullptr);
+	return s_query_instance_extensions(null);
 }
 
-ICANVAS_NAMESPACE_GRAPHICS_VULKAN_END
+} // !namespace canvas::graphics::vulkan

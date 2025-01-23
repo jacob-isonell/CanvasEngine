@@ -32,7 +32,7 @@
 #include <compare>
 #include <utility>
 
-ICANVAS_NAMESPACE_BEGIN
+namespace canvas {
 
 template<typename T>
 using underlying_type = std::underlying_type_t<T>;
@@ -79,12 +79,13 @@ using std::relation;
 using std::equivalence_relation;
 using std::strict_weak_order;
 
-ICANVAS_NAMESPACE_INTERNAL_BEGIN
+namespace internal {
+using namespace ::canvas::internal;
 
 template<typename B>
 concept boolean_testable_impl = std::convertible_to<B, bool>;
 
-ICANVAS_NAMESPACE_INTERNAL_END
+} // !namespace internal
 
 template<typename B>
 concept boolean_testable =
@@ -113,6 +114,6 @@ concept arithmetic = std::is_arithmetic_v<T> || std::is_floating_point_v<T>
 		(a >> b) -> T;
 	};
 
-} // namespace traits
+} // !namespace traits
 
-ICANVAS_NAMESPACE_END
+} // !namespace canvas

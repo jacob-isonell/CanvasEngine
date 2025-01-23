@@ -28,7 +28,7 @@
 
 #include <canvas/graphics/vulkan/layers.hpp>
 
-ICANVAS_NAMESPACE_GRAPHICS_VULKAN_BEGIN
+namespace canvas::graphics::vulkan {
 
 struct extension_info {
 	char name[256];
@@ -48,4 +48,4 @@ expected<std::vector<extension_info>> query_instance_extensions(
 CANVAS_API
 expected<std::vector<extension_info>> query_instance_extensions();
 
-ICANVAS_NAMESPACE_GRAPHICS_VULKAN_END
+} // !namespace canvas::graphics::vulkan

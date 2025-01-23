@@ -31,7 +31,7 @@
 #include <numeric>
 #include <numbers>
 
-ICANVAS_NAMESPACE_MATH_BEGIN
+namespace canvas::math {
 
 namespace numbers {
 
@@ -42,12 +42,10 @@ inline constexpr T tau_v = 6.283185307179586476925286766559005768;
 
 inline constexpr double tau = tau_v<double>;
 
-} // namespace numbers
+} // !namespace numbers
 
 using std::abs;
 using std::fmod;
-using std::min;
-using std::max;
 using std::lerp;
 using std::exp;
 using std::pow;
@@ -69,4 +67,4 @@ using std::round;
 constexpr auto ln = [](auto f) { return std::log(f); };
 constexpr auto log = [](auto f) { return std::log10(f); };
 
-ICANVAS_NAMESPACE_MATH_END
+} // !namespace canvas::math

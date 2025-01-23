@@ -29,7 +29,7 @@
 #include <canvas/graphics/vulkan.hpp>
 #include <vulkan/vulkan.hpp>
 
-ICANVAS_NAMESPACE_GRAPHICS_VULKAN_BEGIN
+namespace canvas::graphics::vulkan {
 
 constexpr err vkresult_to_err(VkResult res) noexcept {
 	switch (res) {
@@ -38,69 +38,82 @@ constexpr err vkresult_to_err(VkResult res) noexcept {
 	case VK_SUCCESS:
 		return err::eok;
 	case VK_NOT_READY:
-		return err::eok;
+		return err::enotready;
 	case VK_TIMEOUT:
-		return err::eok;
+		return err::etimeout;
 	case VK_EVENT_SET:
 		return err::eok;
 	case VK_EVENT_RESET:
 		return err::eok;
 	case VK_INCOMPLETE:
+		return err::etrunc;
+	case VK_SUBOPTIMAL_KHR:
+		return err::esubopti;
+	case VK_THREAD_IDLE_KHR:
+		return err::ethrdidle;
+	case VK_THREAD_DONE_KHR:
+		return err::ethrddone;
+	case VK_OPERATION_DEFERRED_KHR:
 		return err::eok;
+	case VK_OPERATION_NOT_DEFERRED_KHR:
+		return err::eok;
+	case VK_PIPELINE_COMPILE_REQUIRED:
+		return err::eok;
+	case VK_PIPELINE_BINARY_MISSING_KHR:
+		return err::eok;
+	case VK_INCOMPATIBLE_SHADER_BINARY_EXT:
+		return err::edata;
+	
 	case VK_ERROR_OUT_OF_HOST_MEMORY:
 		return err::enomem;
 	case VK_ERROR_OUT_OF_DEVICE_MEMORY:
-		return err::enomem;
+		return err::enodevmem;
 	case VK_ERROR_INITIALIZATION_FAILED:
 		return err::eunknown;
 	case VK_ERROR_DEVICE_LOST:
-		return err::eunknown;
+		return err::edevlost;
 	case VK_ERROR_MEMORY_MAP_FAILED:
-		return err::eunknown;
+		return err::ememmap;
 	case VK_ERROR_LAYER_NOT_PRESENT:
-		return err::eunknown;
+		return err::evklayer;
 	case VK_ERROR_EXTENSION_NOT_PRESENT:
-		return err::eunknown;
+		return err::evkext;
 	case VK_ERROR_FEATURE_NOT_PRESENT:
-		return err::eunknown;
+		return err::evkfeat;
 	case VK_ERROR_INCOMPATIBLE_DRIVER:
-		return err::eunknown;
+		return err::edriver;
 	case VK_ERROR_TOO_MANY_OBJECTS:
-		return err::eunknown;
+		return err::eobj;
 	case VK_ERROR_FORMAT_NOT_SUPPORTED:
-		return err::eunknown;
+		return err::evkformat;
 	case VK_ERROR_FRAGMENTED_POOL:
 		return err::eunknown;
 	case VK_ERROR_UNKNOWN:
 		return err::eunknown;
 	case VK_ERROR_OUT_OF_POOL_MEMORY:
-		return err::eunknown;
+		return err::enomem;
 	case VK_ERROR_INVALID_EXTERNAL_HANDLE:
-		return err::eunknown;
+		return err::einval;
 	case VK_ERROR_FRAGMENTATION:
 		return err::eunknown;
 	case VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS:
 		return err::eunknown;
-	case VK_PIPELINE_COMPILE_REQUIRED:
-		return err::eunknown;
 	case VK_ERROR_NOT_PERMITTED:
-		return err::eunknown;
+		return err::eperm;
 	case VK_ERROR_SURFACE_LOST_KHR:
-		return err::eunknown;
+		return err::evksurface;
 	case VK_ERROR_NATIVE_WINDOW_IN_USE_KHR:
-		return err::eunknown;
-	case VK_SUBOPTIMAL_KHR:
-		return err::eunknown;
+		return err::ebusy;
 	case VK_ERROR_OUT_OF_DATE_KHR:
-		return err::eunknown;
+		return err::eoutofdate;
 	case VK_ERROR_INCOMPATIBLE_DISPLAY_KHR:
-		return err::eunknown;
+		return err::edev;
 	case VK_ERROR_VALIDATION_FAILED_EXT:
 		return err::eunknown;
 	case VK_ERROR_INVALID_SHADER_NV:
-		return err::eunknown;
+		return err::edata;
 	case VK_ERROR_IMAGE_USAGE_NOT_SUPPORTED_KHR:
-		return err::eunknown;
+		return err::einval;
 	case VK_ERROR_VIDEO_PICTURE_LAYOUT_NOT_SUPPORTED_KHR:
 		return err::eunknown;
 	case VK_ERROR_VIDEO_PROFILE_OPERATION_NOT_SUPPORTED_KHR:
@@ -115,24 +128,12 @@ constexpr err vkresult_to_err(VkResult res) noexcept {
 		return err::eunknown;
 	case VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT:
 		return err::eunknown;
-	case VK_THREAD_IDLE_KHR:
-		return err::eunknown;
-	case VK_THREAD_DONE_KHR:
-		return err::eunknown;
-	case VK_OPERATION_DEFERRED_KHR:
-		return err::eunknown;
-	case VK_OPERATION_NOT_DEFERRED_KHR:
-		return err::eunknown;
 	case VK_ERROR_INVALID_VIDEO_STD_PARAMETERS_KHR:
-		return err::eunknown;
+		return err::einval;
 	case VK_ERROR_COMPRESSION_EXHAUSTED_EXT:
 		return err::eunknown;
-	case VK_INCOMPATIBLE_SHADER_BINARY_EXT:
-		return err::eunknown;
-	case VK_PIPELINE_BINARY_MISSING_KHR:
-		return err::eunknown;
 	case VK_ERROR_NOT_ENOUGH_SPACE_KHR:
-		return err::eunknown;
+		return err::enomem;
 	}
 }
 
@@ -144,4 +145,4 @@ struct vkerror : error {
 	}
 };
 
-ICANVAS_NAMESPACE_GRAPHICS_VULKAN_END
+} // !namespace canvas::graphics::vulkan

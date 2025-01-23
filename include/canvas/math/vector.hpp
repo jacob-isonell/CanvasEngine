@@ -31,12 +31,13 @@
 #include <ranges>
 #include <functional>
 
-ICANVAS_NAMESPACE_MATH_BEGIN
+namespace canvas::math {
 
 template<typename Vec>
 constexpr auto dot(const Vec& lhs, const Vec& rhs);
 
-ICANVAS_NAMESPACE_INTERNAL_BEGIN
+namespace internal {
+using namespace ::canvas::internal;
 
 template<typename T> struct vector_traits { };
 template<template<typename, std::size_t> typename T, typename ValueType, std::size_t ElementCount>
@@ -200,7 +201,7 @@ struct vector_impl {
 	}
 };
 
-ICANVAS_NAMESPACE_INTERNAL_END
+} // !namespace internal
 
 template<typename FloatingType, std::size_t Elements>
 struct vector : internal::vector_impl<vector<FloatingType, Elements>> {
@@ -392,4 +393,4 @@ using vec2f64_t = vector<double, 2>;
 using vec3f64_t = vector<double, 3>;
 using vec4f64_t = vector<double, 4>;
 
-ICANVAS_NAMESPACE_MATH_END
+} // !namespace canvas::math

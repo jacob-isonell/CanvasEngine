@@ -32,3 +32,5 @@
 #include <canvas/core/traits.hpp>
 #include <canvas/core/time.hpp>
 #include <canvas/core/error.hpp>
+#include <canvas/core/vector.hpp>
+#include <canvas/core/string.hpp>

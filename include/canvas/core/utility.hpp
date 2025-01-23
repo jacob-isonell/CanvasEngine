@@ -26,14 +26,16 @@
 
 #pragma once
 
-#include <canvas/core/macros.hpp>
-#include <format>
-#include <array>
+#include <canvas/core/traits.hpp>
 #include <tuple>
+#include <source_location>
+#include <exception>
+#include <stdexcept>
 
-ICANVAS_NAMESPACE_BEGIN
+namespace canvas {
 
-ICANVAS_NAMESPACE_INTERNAL_BEGIN
+namespace internal {
+using namespace ::canvas::internal;
 
 template<typename T, typename ... Args>
 struct get_front_varg {
@@ -257,6 +259,146 @@ using format_string = std::conditional_t<
 	std::format_string<Args...>
 >;
 
-ICANVAS_NAMESPACE_INTERNAL_END
+template<typename T, typename ... Args>
+[[noreturn]]	
+inline void dothrow(
+	[[maybe_unused]] Args&&... args
+) {
+#if ICANVAS_EXCEPTIONS
+	throw T { std::forward<Args>(args)... };
+#else
+	std::abort();
+#endif
+}
 
-ICANVAS_NAMESPACE_END
+template<typename T, typename ... Args>
+[[noreturn]]	
+inline void dothrow_debug(
+	[[maybe_unused]] Args&&... args
+) {
+	if constexpr (CANVAS_DEBUG) {
+	#if ICANVAS_EXCEPTIONS
+		throw T { std::forward<Args>(args)... };
+	#else
+		std::abort();
+	#endif
+	} else {
+		unreachable();
+	}
+}
+
+} // !namespace internal
+
+template<typename First, typename Second>
+struct compressed_pair {
+	using first_type  = First;
+	using second_type = Second;
+	
+	CANVAS_ATTR_NO_UNIQUE_ADDRESS First first;
+	CANVAS_ATTR_NO_UNIQUE_ADDRESS Second second;
+};
+
+template<typename T, typename U>
+compressed_pair(T, U) -> compressed_pair<T, U>;
+
+template<typename T, typename First, typename Second>
+constexpr auto& get(compressed_pair<First, Second>& pair) noexcept {
+	static_assert(
+		std::same_as<T, First> || std::same_as<T, Second>,
+		"typename argument doesn't match any of the types in compressed_pair"
+	);
+	
+	if constexpr (std::same_as<T, First>) {
+		return pair.first;
+	} else if constexpr (std::same_as<T, Second>) {
+		return pair.second;
+	}
+}
+
+template<typename T, typename First, typename Second>
+constexpr const auto& get(const compressed_pair<First, Second>& pair) noexcept {
+	static_assert(
+		std::same_as<T, First> || std::same_as<T, Second>,
+		"typename argument doesn't match any of the types in compressed_pair"
+	);
+	
+	if constexpr (std::same_as<T, First>) {
+		return pair.first;
+	} else if constexpr (std::same_as<T, Second>) {
+		return pair.second;
+	}
+}
+
+template<typename T, typename First, typename Second>
+constexpr auto&& get(compressed_pair<First, Second>&& pair) noexcept {
+	static_assert(
+		std::same_as<T, First> || std::same_as<T, Second>,
+		"typename argument doesn't match any of the types in compressed_pair"
+	);
+	
+	if constexpr (std::same_as<T, First>) {
+		return std::move(pair.first);
+	} else if constexpr (std::same_as<T, Second>) {
+		return std::move(pair.second);
+	}
+}
+
+template<typename T, typename First, typename Second>
+constexpr const auto&& get(const compressed_pair<First, Second>&& pair) noexcept {
+	static_assert(
+		std::same_as<T, First> || std::same_as<T, Second>,
+		"typename argument doesn't match any of the types in compressed_pair"
+	);
+	
+	if constexpr (std::same_as<T, First>) {
+		return std::move(pair.first);
+	} else if constexpr (std::same_as<T, Second>) {
+		return std::move(pair.second);
+	}
+}
+
+template<sz I, typename First, typename Second>
+constexpr auto& get(compressed_pair<First, Second>& pair) noexcept {
+	static_assert(I < 2, "index out of range");
+	
+	if constexpr (I == 0) {
+		return pair.first;
+	} else {
+		return pair.second;
+	}
+}
+
+template<sz I, typename First, typename Second>
+constexpr const auto& get(const compressed_pair<First, Second>& pair) noexcept {
+	static_assert(I < 2, "index out of range");
+	
+	if constexpr (I == 0) {
+		return pair.first;
+	} else {
+		return pair.second;
+	}
+}
+
+template<sz I, typename First, typename Second>
+constexpr auto&& get(compressed_pair<First, Second>&& pair) noexcept {
+	static_assert(I < 2, "index out of range");
+	
+	if constexpr (I == 0) {
+		return std::move(pair.first);
+	} else {
+		return std::move(pair.second);
+	}
+}
+
+template<sz I, typename First, typename Second>
+constexpr const auto&& get(const compressed_pair<First, Second>&& pair) noexcept {
+	static_assert(I < 2, "index out of range");
+	
+	if constexpr (I == 0) {
+		return std::move(pair.first);
+	} else {
+		return std::move(pair.second);
+	}
+}
+
+} // !namespace canvas

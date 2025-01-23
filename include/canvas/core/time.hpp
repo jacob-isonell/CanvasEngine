@@ -30,7 +30,7 @@
 #include <compare>
 #include <chrono>
 
-ICANVAS_NAMESPACE_BEGIN
+namespace canvas {
 
 class time {
 public:
@@ -45,6 +45,14 @@ public:
 	template<typename Rep=rep, typename Period=period>
 	constexpr time(const std::chrono::duration<Rep, Period>& dur)
 		: m_value(std::chrono::duration_cast<duration>(dur)) {
+	}
+	
+	template<traits::convertible_to<rep> OtherRep> requires (
+		std::chrono::treat_as_floating_point_v<rep>
+		|| !std::chrono::treat_as_floating_point_v<OtherRep>
+	)
+	constexpr explicit time(const OtherRep& r)
+		: m_value(r) {
 	}
 	
 	template<typename Duration>
@@ -221,7 +229,8 @@ inline string to_string(const time& t) {
 }
 #endif
 
-ICANVAS_NAMESPACE_INTERNAL_BEGIN
+namespace internal {
+using namespace ::canvas::internal;
 
 using stopwatch_clock = std::conditional_t<
 	std::chrono::high_resolution_clock::is_steady,
@@ -229,7 +238,7 @@ using stopwatch_clock = std::conditional_t<
 	std::chrono::steady_clock
 >;
 
-ICANVAS_NAMESPACE_INTERNAL_END
+} // !namespace internal
 
 template<typename Clock>
 class basic_stopwatch {
@@ -335,7 +344,7 @@ stopwatch_stopscope(basic_stopwatch<Clock>&) -> stopwatch_stopscope<Clock>;
 
 using stopwatch = basic_stopwatch<internal::stopwatch_clock>;
 
-ICANVAS_NAMESPACE_END
+} // !namespace canvas
 
 template<typename CharTy>
 struct std::formatter<canvas::time, CharTy> : std::formatter<std::chrono::duration<float>, CharTy> {

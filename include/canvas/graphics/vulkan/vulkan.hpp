@@ -32,6 +32,6 @@
 #error VulkanAPI support is disabled with this build of CanvasEngine
 #endif
 
-ICANVAS_NAMESPACE_GRAPHICS_VULKAN_BEGIN
+namespace canvas::graphics::vulkan {
 
-ICANVAS_NAMESPACE_GRAPHICS_VULKAN_END
+} // !namespace canvas::graphics::vulkan

@@ -26,17 +26,20 @@
 
 #pragma once
 
-#include <canvas/core/traits.hpp>
 #include <canvas/core/utility.hpp>
-#include <initializer_list>
-#include <utility>
 #include <variant>
-#include <format>
 
-ICANVAS_NAMESPACE_BEGIN
+namespace canvas {
 
-enum class err : i32 {
-	eok = -1,      // Not an error
+enum struct err : i32 {
+// Success codes
+	ethrddone = -5, // Thread is done
+	ethrdidle = -4, // Thread is idle
+	etrunc    = -3, // Array was truncated
+	esubopti  = -2, // Object is suboptimal
+	eok       = -1, // Not an error
+	
+// Error codes
 	eunknown,      // Unknown/unspecified error
 	eperm,         // Operation not permitted
 	eaccess,       // Permission denied
@@ -45,14 +48,39 @@ enum class err : i32 {
 	enomem,        // No available memory
 	enodevmem,     // No available device memory
 	enosys,        // Function not implemented
-	erange,        // Result too big
-	etimedout,     // Operation Timed out
+	enotsup,       // Operation not supported
+	etimeout,      // Operation Timed out
 	econntimedout, // Connection timed out
 	econnrefused,  // Connection refused
 	ebusy,         // Device or resource busy
 	ebadfile,      // Invalid file handle
 	eisdir,        // File path is a directory
+	enotdir,       // File path is not a directory
 	eisfile,       // File path is a file
+	enotfile,      // File path is not a file
+	eexist,        // File/Object already exists
+	ebigfile,      // File too large
+	enodev,        // No such device
+	edev,          // Incompatible device
+	edom,          // Argument out of domain
+	erange,        // Result out of range
+	edeadlock,     // Resource deadlock avoided
+	ewouldblock,   // Operation would be blocked
+	ecanceled,     // Operation canceled
+	eunrecov,      // State is unrecoverable
+	enotready,     // Object is not ready for use
+	edata,         // Data is incompatible
+	einitfail,     // Object initialization failed
+	edevlost,      // Device was lost
+	ememmap,       // Memory mapping failed
+	edriver,       // Driver is incompatible
+	eobj,          // Too many objects
+	eoutofdate,    // Object is out of date
+	evklayer,      // Vulkan layer cannot be found
+	evkext,        // Vulkan extension cannot be found
+	evkfeat,       // Vulkan feature cannot be found
+	evkformat,     // Vulkan format not supported by device
+	evksurface,    // Vulkan surface was lost
 };
 
 struct error {
@@ -94,7 +122,8 @@ private:
 	err m_err = err::eok;
 };
 
-ICANVAS_NAMESPACE_INTERNAL_BEGIN
+namespace internal {
+using namespace ::canvas::internal;
 
 #define ICANVAS_ETOSTR_CASE(id, str) \
 	case id: out = ICANVAS_STRLITERAL(str).template view<CharTy>(); break
@@ -102,20 +131,57 @@ ICANVAS_NAMESPACE_INTERNAL_BEGIN
 template<typename CharTy>
 constexpr void to_string_error(auto& out, err e) {
 	switch (e) {
-	default:
-	ICANVAS_ETOSTR_CASE(err::eunknown,     "Unknown/unspecified error");
-	ICANVAS_ETOSTR_CASE(err::eok,          "Not an error");
-	ICANVAS_ETOSTR_CASE(err::enomem,       "No available memory");
-	ICANVAS_ETOSTR_CASE(err::enoimpl,      "Not implemented");
-	ICANVAS_ETOSTR_CASE(err::eio,          "Input/Output error");
-	ICANVAS_ETOSTR_CASE(err::erange,       "Result too big");
-	ICANVAS_ETOSTR_CASE(err::etimedout,    "Timed out");
-	ICANVAS_ETOSTR_CASE(err::econnrefused, "Connection refused");
-	ICANVAS_ETOSTR_CASE(err::elocked,      "Resource is locked");
+	ICANVAS_ETOSTR_CASE(err::ethrddone,     "Threis done");
+	ICANVAS_ETOSTR_CASE(err::ethrdidle,     "Threis idle");
+	ICANVAS_ETOSTR_CASE(err::etrunc,        "Arrwas truncated");
+	ICANVAS_ETOSTR_CASE(err::esubopti,      "Objeis suboptimal");
+	ICANVAS_ETOSTR_CASE(err::eok,           "Nan error");
+default:
+	ICANVAS_ETOSTR_CASE(err::eunknown,      "Unknown/unspecified error");
+	ICANVAS_ETOSTR_CASE(err::eperm,         "Operation not permitted");
+	ICANVAS_ETOSTR_CASE(err::eaccess,       "Permission denied");
+	ICANVAS_ETOSTR_CASE(err::einval,        "Invalid argument");
+	ICANVAS_ETOSTR_CASE(err::eio,           "Input/Output error");
+	ICANVAS_ETOSTR_CASE(err::enomem,        "No available memory");
+	ICANVAS_ETOSTR_CASE(err::enodevmem,     "No available device memory");
+	ICANVAS_ETOSTR_CASE(err::enosys,        "Function not implemented");
+	ICANVAS_ETOSTR_CASE(err::enotsup,       "Operation not supported");
+	ICANVAS_ETOSTR_CASE(err::etimeout,      "Operation Timed out");
+	ICANVAS_ETOSTR_CASE(err::econntimedout, "Connection timed out");
+	ICANVAS_ETOSTR_CASE(err::econnrefused,  "Connection refused");
+	ICANVAS_ETOSTR_CASE(err::ebusy,         "Device or resource busy");
+	ICANVAS_ETOSTR_CASE(err::ebadfile,      "Invalid file handle");
+	ICANVAS_ETOSTR_CASE(err::eisdir,        "File path is a directory");
+	ICANVAS_ETOSTR_CASE(err::enotdir,       "File path is not a directory");
+	ICANVAS_ETOSTR_CASE(err::eisfile,       "File path is a file");
+	ICANVAS_ETOSTR_CASE(err::enotfile,      "File path is not a file");
+	ICANVAS_ETOSTR_CASE(err::eexist,        "File/Object already exists");
+	ICANVAS_ETOSTR_CASE(err::ebigfile,      "File too large");
+	ICANVAS_ETOSTR_CASE(err::enodev,        "No such device");
+	ICANVAS_ETOSTR_CASE(err::edev,          "Incompatible device");
+	ICANVAS_ETOSTR_CASE(err::edom,          "Argument out of domain");
+	ICANVAS_ETOSTR_CASE(err::erange,        "Result out of range");
+	ICANVAS_ETOSTR_CASE(err::edeadlock,     "Resource deadlock avoided");
+	ICANVAS_ETOSTR_CASE(err::ewouldblock,   "Operation would be blocked");
+	ICANVAS_ETOSTR_CASE(err::ecanceled,     "Operation canceled");
+	ICANVAS_ETOSTR_CASE(err::eunrecov,      "State is unrecoverable");
+	ICANVAS_ETOSTR_CASE(err::enotready,     "Object is not ready for use");
+	ICANVAS_ETOSTR_CASE(err::edata,         "Data is incompatible");
+	ICANVAS_ETOSTR_CASE(err::einitfail,     "Object initialization failed");
+	ICANVAS_ETOSTR_CASE(err::edevlost,      "Device was lost");
+	ICANVAS_ETOSTR_CASE(err::ememmap,       "Memory mapping failed");
+	ICANVAS_ETOSTR_CASE(err::edriver,       "Driver is incompatible");
+	ICANVAS_ETOSTR_CASE(err::eobj,          "Too many objects");
+	ICANVAS_ETOSTR_CASE(err::eoutofdate,    "Object is out of date");
+	ICANVAS_ETOSTR_CASE(err::evklayer,      "Vulkan layer cannot be found");
+	ICANVAS_ETOSTR_CASE(err::evkext,        "Vulkan extension cannot be found");
+	ICANVAS_ETOSTR_CASE(err::evkfeat,       "Vulkan feature cannot be found");
+	ICANVAS_ETOSTR_CASE(err::evkformat,     "Vulkan format not supported by device");
+	ICANVAS_ETOSTR_CASE(err::evksurface,    "Vulkan surface was lost");
 	}
 }
 
-ICANVAS_NAMESPACE_INTERNAL_END
+} // !namespace internal
 
 using std::to_string;
 using std::to_wstring;
@@ -279,7 +345,7 @@ constexpr bool operator==(const expected<T>& lhs, const expected<U>& rhs) {
 	return lhs.error() == rhs.error();
 }
 
-ICANVAS_NAMESPACE_END
+} // !namespace canvas
 
 template<>
 struct std::formatter<canvas::err, char> : std::formatter<std::string_view, char> {

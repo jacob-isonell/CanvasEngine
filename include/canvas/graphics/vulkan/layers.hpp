@@ -30,7 +30,7 @@
 #include <canvas/core/error.hpp>
 #include <vector>
 
-ICANVAS_NAMESPACE_GRAPHICS_VULKAN_BEGIN
+namespace canvas::graphics::vulkan {
 
 struct layer_info {
 	char name[256];
@@ -42,4 +42,4 @@ struct layer_info {
 CANVAS_API
 expected<std::vector<layer_info>> query_instance_layers();
 
-ICANVAS_NAMESPACE_GRAPHICS_VULKAN_END
+} // !namespace canvas::graphics::vulkan
