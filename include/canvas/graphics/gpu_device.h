@@ -16,19 +16,22 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_GRAPHICS_SETUP_H
-#define CANVAS_GRAPHICS_SETUP_H
+#ifndef CANVAS_GRAPHICS_GPU_DEVICE_H
+#define CANVAS_GRAPHICS_GPU_DEVICE_H
 
 #include <canvas/graphics/graphics.h>
 
 ICE_NAMESPACE_BEGIN
 
-struct ce_graphics_t {
-	int unused;
+struct ce_gpu_dev;
+
+struct ce_gpy_dev_props {
+	char name[256];
+	ce_ul32 driver_version;
 };
 
-CE_API ce_err ce_graphics_options(const struct ce_graphics_t* options);
+CE_API size_t ce_gpu_dev_get(struct ce_gpu_dev** buffer, size_t buffer_size);
 
 ICE_NAMESPACE_END
 
-#endif /* !CANVAS_GRAPHICS_SETUP_H */
+#endif /* !CANVAS_GRAPHICS_GPU_DEVICE_H */

@@ -19,48 +19,41 @@
 #ifndef CANVAS_THREADS_MUTEX_H
 #define CANVAS_THREADS_MUTEX_H
 
-#include <canvas/threads/thread.h>
-
-#ifndef ICE_THREADS_NONE
-
-ICE_NAMESPACE_BEGIN
-
 #define CE_MTX_TYPE int
 #define CE_MTX_PLAIN 0
 #define CE_MTX_TIMED 1
 #define CE_MTX_RECURSIVE_BIT 2
 
-#if defined(ICE_THREADS_POSIX)
-#define ice_mtx_t pthread_mutex_t
-#define CE_MTX_INIT_PLAIN PTHREAD_MUTEX_INITIALIZER
-#define CE_MTX_INIT_TIMED PTHREAD_MUTEX_INITIALIZER
-#ifdef PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
-#define CE_MTX_INIT_RECURSIVE PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
-#define CE_MTX_INIT_TIMED_RECURSIVE PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
-#endif
-#elif defined(ICE_THREADS_WIN32)
-struct ice_mtx_impl_t {
-	SRWLOCK     lock;
-	CE_MTX_TYPE flags;
-};
-#define ice_mtx_t struct ice_mtx_impl_t
-#define CE_MTX_INIT_PLAIN { SRWLOCK_INIT, CE_MTX_PLAIN }
-#define CE_MTX_INIT_TIMED { SRWLOCK_INIT, CE_MTX_TIMED }
-#define CE_MTX_INIT_RECURSIVE { SRWLOCK_INIT, CE_MTX_PLAIN | CE_MTX_RECURSIVE_BIT }
-#define CE_MTX_INIT_TIMED_RECURSIVE { SRWLOCK_INIT, CE_MTX_TIMED | CE_MTX_RECURSIVE_BIT }
-#endif
+/** @brief Initializes a ce_mtx. */
+#define CE_MTX_INIT_PLAIN /* implementation-defined */
 
-#define ce_mtx_t ice_mtx_t
+/** @brief Initializes a ce_mtx for recursive use. */
+#define CE_MTX_INIT_TIMED /* implementation-defined */
 
-CE_API ce_err ce_mtx_init(ce_mtx_t* mtx, CE_MTX_TYPE type);
-CE_API ce_err ce_mtx_lock(ce_mtx_t* mtx);
-CE_API ce_err ce_mtx_timedlock(ce_mtx_t* CE_RESTRICT mtx, const struct ce_time_t* CE_RESTRICT time_point);
-CE_API ce_err ce_mtx_trylock(ce_mtx_t* mtx);
-CE_API ce_err ce_mtx_unlock(ce_mtx_t* mtx);
-CE_API void ce_mtx_destroy(ce_mtx_t* mtx);
+/** @brief If the implementation suports it, initializes a ce_mtx for recursive use. */
+#define CE_MTX_INIT_RECURSIVE /* implementation-defined */
+
+/** @brief If the implementation suports it, initializes a ce_mtx for timed recursive use. */
+#define CE_MTX_INIT_TIMED_RECURSIVE /* implementation-defined */
+
+#define ce_mtx /* implementation-defined */
+
+#include <canvas/threads/thread.h>
+#include <canvas/threads/details/mutex.h.inl>
+
+ICE_NAMESPACE_BEGIN
+
+#ifdef CANVAS_HAS_THREADS
+
+CE_API ce_err ce_mtx_init(ce_mtx* mtx, CE_MTX_TYPE type);
+CE_API ce_err ce_mtx_lock(ce_mtx* mtx);
+CE_API ce_err ce_mtx_timedlock(ce_mtx* CE_RESTRICT mtx, const struct ce_time_t* CE_RESTRICT time_point);
+CE_API ce_err ce_mtx_trylock(ce_mtx* mtx);
+CE_API ce_err ce_mtx_unlock(ce_mtx* mtx);
+CE_API void ce_mtx_destroy(ce_mtx* mtx);
+
+#endif /* !CANVAS_HAS_THREADS */
 
 ICE_NAMESPACE_END
-
-#endif /* !CANVAS_NO_THREADS */
 
 #endif /* !CANVAS_THREADS_MUTEX_H */

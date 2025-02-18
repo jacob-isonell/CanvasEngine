@@ -79,6 +79,11 @@ ICE_NAMESPACE_BEGIN
 #define ce_failure(code) (0 < (code))
 #define ce_success(code) ((code) <= 0)
 
+/**
+ * @brief Gets the error message associated with the error code.
+ * @return A pointer to a c-style string stored in static memory.
+ *         This pointer should not be free-ed or written to.
+ */
 CE_API const char* ce_errstr(ce_err error);
 
 ICE_NAMESPACE_END

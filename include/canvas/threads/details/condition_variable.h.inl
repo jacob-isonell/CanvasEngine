@@ -16,19 +16,20 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_GRAPHICS_SETUP_H
-#define CANVAS_GRAPHICS_SETUP_H
+#undef CE_COND_INIT
+#undef ce_cnd
 
-#include <canvas/graphics/graphics.h>
+#ifdef CANVAS_HAS_THREADS
 
-ICE_NAMESPACE_BEGIN
-
-struct ce_graphics_t {
-	int unused;
+#if defined(ICE_THREADS_POSIX)
+#define ce_cnd pthread_cond_t
+#define CE_COND_INIT PTHREAD_COND_INITIALIZER
+#elif defined(ICE_THREADS_WIN32)
+struct ice_cnd_impl {
+	CONDITION_VARIABLE var;
 };
+#define ce_cnd struct ice_cnd_impl_t
+#define CE_COND_INIT {CONDITION_VARIABLE_INIT}
+#endif
 
-CE_API ce_err ce_graphics_options(const struct ce_graphics_t* options);
-
-ICE_NAMESPACE_END
-
-#endif /* !CANVAS_GRAPHICS_SETUP_H */
+#endif /* !CANVAS_HAS_THREADS */

@@ -16,7 +16,18 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
-target_sources(CanvasEngine
-PRIVATE
-	"setup.c"
-)
+include(FindPackageHandleStandardArgs)
+
+find_package(X11 COMPONENTS Xrandr xcb xcb_randr)
+
+cmake_dependent_option(CANVAS_GRAPHICS_SUPPORT_X11 "Enable support for X11" ON "CANVAS_GRAPHICS;X11_FOUND" OFF)
+
+if (CANVAS_GRAPHICS_SUPPORT_X11)
+	target_link_libraries(CanvasEngineDependencies
+	INTERFACE
+		X11::X11
+		X11::Xrandr
+		X11::xcb
+		X11::xcb_randr
+	)
+endif ()

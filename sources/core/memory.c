@@ -20,7 +20,6 @@
 #include <canvas/core/memory.h>
 
 CE_API ce_err ce_set_alloc(struct ce_alloc_t in) {
-	ICE_REQ_INIT();
 	if (in.alloc == NULL || in.free == NULL) {
 		return CE_EINVAL;
 	}
@@ -34,7 +33,6 @@ CE_API ce_err ce_set_alloc(struct ce_alloc_t in) {
 }
 
 CE_API void* ce_alloc_s(size_t bytes, ce_err* opt_err) {
-	ICE_REQ_INIT();
 	void* out = NULL;
 	ce_err err = ce_mtx_lock(&icore.mem.lck);
 	if (ce_success(err)) {
@@ -49,7 +47,6 @@ CE_API void* ce_alloc_s(size_t bytes, ce_err* opt_err) {
 }
 
 CE_API void* ce_alloc(size_t bytes) {
-	ICE_REQ_INIT();
 	void* out = NULL;
 	if (ce_success(ce_mtx_lock(&icore.mem.lck))) {
 		out = icore.mem.alloc.alloc(bytes, icore.mem.alloc.user);
@@ -59,7 +56,6 @@ CE_API void* ce_alloc(size_t bytes) {
 }
 
 CE_API ce_err ce_free(void* addr) {
-	ICE_REQ_INIT();
 	ce_err err = ce_mtx_lock(&icore.mem.lck);
 	if (ce_success(err)) {
 		icore.mem.alloc.free(addr, icore.mem.alloc.user);
@@ -68,12 +64,53 @@ CE_API ce_err ce_free(void* addr) {
 	return err;
 }
 
+struct itemp_arr_t {
+	size_t m_capacity;
+	size_t m_count;
+	void* m_data;
+};
+
+struct iarr_data_t {
+	size_t* m_capacity;
+	size_t* m_count;
+	union {
+		void** vptr;
+		unsigned char** bptr;
+	} m_data;
+	size_t m_stride;
+};
+
+#define ITEMPARR ((struct itemp_arr_t*)inout_arr_arg)
+#define IFROM_ARRARG CE_STRUCT_INIT(struct iarr_data_t) { &(ITEMPARR->m_capacity), &(ITEMPARR->m_count), {&(ITEMPARR->m_data)}, in_arr_stride }
+#define IARRSTRIDE in_arr_stride
+
+CE_API ce_err ice_arr_alloc(ICE_ARRPAIR_ARG, size_t reserve) {
+	struct iarr_data_t in_arr = IFROM_ARRARG;
+	(void)reserve;
+	abort();
+}
+
+CE_API void ice_arr_free(void* array) {
+	struct itemp_arr_t* p = (struct itemp_arr_t*)array;
+	if (p == NULL) {
+		return;
+	}
+	
+	ce_free(p->m_data);
+}
+
+CE_API ce_err ice_arr_resize(ICE_ARRPAIR_ARG, size_t new_size);
+CE_API ce_err ice_arr_reserve(ICE_ARRPAIR_ARG, size_t new_capacity);
+
+
 /*CE_API ce_err ice_arr_alloc(void** out, size_t reserve, size_t stride) {
 	
 }
 
 CE_API void ice_arr_free(void* array) {
-	
+	if (array == NULL) {
+		return;
+	}
 }
 
 CE_API ce_err ice_arr_resize(void** out, size_t new_size) {

@@ -16,19 +16,24 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_GRAPHICS_SETUP_H
-#define CANVAS_GRAPHICS_SETUP_H
+#include "ifx_base.h"
+#include <canvas/graphics/setup.h>
 
-#include <canvas/graphics/graphics.h>
+CE_API ce_err ce_graphics_options(const struct ce_graphics_t* options) {
+	if (options == NULL) {
+		return CE_EINVAL;
+	}
+	if (ihas_initialized()) {
+		return CE_EACCESS;
+	}
+	
+	return CE_EOK;
+}
 
-ICE_NAMESPACE_BEGIN
+ICE_API ce_err ifx_init(void) {
+	return CE_EOK;
+}
 
-struct ce_graphics_t {
-	int unused;
-};
-
-CE_API ce_err ce_graphics_options(const struct ce_graphics_t* options);
-
-ICE_NAMESPACE_END
-
-#endif /* !CANVAS_GRAPHICS_SETUP_H */
+ICE_API void ifx_shutdown(void) {
+	
+}

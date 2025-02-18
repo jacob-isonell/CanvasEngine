@@ -19,34 +19,25 @@
 #ifndef CANVAS_THREADS_CONDITION_VARIABLE_H
 #define CANVAS_THREADS_CONDITION_VARIABLE_H
 
-#include <canvas/threads/mutex.h>
+#define CE_COND_INIT /* implementation-defined */
+#define ce_cnd /* implementation-defined */
 
-#ifndef ICE_THREADS_NONE
+#include <canvas/threads/mutex.h>
+#include <canvas/threads/details/condition_variable.h.inl>
 
 ICE_NAMESPACE_BEGIN
 
-#if defined(ICE_THREADS_POSIX)
-#define ice_cnd_t pthread_cond_t
-#define CE_COND_INIT PTHREAD_COND_INITIALIZER
-#elif defined(ICE_THREADS_WIN32)
-struct ice_cnd_impl_t {
-	CONDITION_VARIABLE var;
-};
-#define ice_cnd_t struct ice_cnd_impl_t
-#define CE_COND_INIT {CONDITION_VARIABLE_INIT}
-#endif
+#ifdef CANVAS_HAS_THREADS
 
-#define ce_cnd_t ice_cnd_t
+CE_API ce_err cnd_init(ce_cnd* cond);
+CE_API ce_err cnd_signal(ce_cnd* cond);
+CE_API ce_err cnd_broadcast(ce_cnd* cond);
+CE_API ce_err cnd_wait(ce_cnd* cond, ce_mtx* mutex);
+CE_API ce_err cnd_timedwait(ce_cnd* CE_RESTRICT cond, ce_mtx* CE_RESTRICT mutex, const struct ce_time_t* CE_RESTRICT time_point);
+CE_API void cnd_destroy(ce_cnd* cond);
 
-CE_API ce_err cnd_init(ce_cnd_t* cond);
-CE_API ce_err cnd_signal(ce_cnd_t *cond);
-CE_API ce_err cnd_broadcast(ce_cnd_t *cond);
-CE_API ce_err cnd_wait(ce_cnd_t* cond, ce_mtx_t* mutex);
-CE_API ce_err cnd_timedwait(ce_cnd_t* CE_RESTRICT cond, ce_mtx_t* CE_RESTRICT mutex, const struct ce_time_t* CE_RESTRICT time_point);
-CE_API void cnd_destroy(ce_cnd_t* cond);
+#endif /* !CANVAS_HAS_THREADS */
 
 ICE_NAMESPACE_END
-
-#endif /* !ICE_THREADS_NONE */
 
 #endif /* !CANVAS_THREADS_CONDITION_VARIABLE_H */

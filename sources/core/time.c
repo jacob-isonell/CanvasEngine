@@ -27,7 +27,6 @@ static int s_convert_base(int in) {
 }
 
 CE_API ce_err ce_time_get(struct ce_time_t* out, int base) {
-	ICE_REQ_INIT();
 	if (out == NULL) {
 		return CE_EINVAL;
 	}

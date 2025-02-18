@@ -29,6 +29,7 @@
 #ifdef CANVAS_NETWORK
 #include <canvas/network.h>
 #endif
+#include <canvas/math.h>
 #include <canvas/threads.h>
 
 #endif /* !CANVAS_H */

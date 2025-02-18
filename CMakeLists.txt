@@ -31,9 +31,9 @@ project(CanvasEngine
 
 include(CMakeDependentOption)
 include("cmake/configs.cmake")
-include("cmake/wayland_and_x11.cmake")
 add_library(CanvasEngine ${CANVAS_LIBRARY_KIND})
 include("cmake/options.cmake")
+include("cmake/dependencies.cmake")
 add_subdirectory("sources")
 
 string(TIMESTAMP CANVAS_BUILD_DATE "%Y%m")

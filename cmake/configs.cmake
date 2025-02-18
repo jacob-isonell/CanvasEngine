@@ -22,7 +22,6 @@ option(CANVAS_ENABLE_LOGS "add description here" OFF)
 option(CANVAS_GRAPHICS    "add description here" ON)
 option(CANVAS_AUDIO       "add description here" ON)
 option(CANVAS_NETWORK     "add description here" ON)
-option(CANVAS_TIME64      "add description here" ON)
 set(CANVAS_LIBRARY_KIND "" CACHE STRING "add description here")
 
 if (CANVAS_LIBRARY_KIND STREQUAL "SHARED")

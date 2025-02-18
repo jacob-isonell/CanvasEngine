@@ -21,7 +21,7 @@
 
 #ifndef ICE_THREADS_NONE
 
-CE_API ce_err cnd_init(ce_cnd_t* cond) {
+CE_API ce_err cnd_init(ce_cnd* cond) {
 	if (cond == NULL) {
 		return CE_EINVAL;
 	}
@@ -32,7 +32,7 @@ CE_API ce_err cnd_init(ce_cnd_t* cond) {
 	
 #endif
 }
-CE_API ce_err cnd_signal(ce_cnd_t *cond) {
+CE_API ce_err cnd_signal(ce_cnd* cond) {
 	if (cond == NULL) {
 		return CE_EINVAL;
 	}
@@ -43,7 +43,7 @@ CE_API ce_err cnd_signal(ce_cnd_t *cond) {
 	
 #endif
 }
-CE_API ce_err cnd_broadcast(ce_cnd_t *cond) {
+CE_API ce_err cnd_broadcast(ce_cnd* cond) {
 	if (cond == NULL) {
 		return CE_EINVAL;
 	}
@@ -54,7 +54,7 @@ CE_API ce_err cnd_broadcast(ce_cnd_t *cond) {
 	
 #endif
 }
-CE_API ce_err cnd_wait(ce_cnd_t* cond, ce_mtx_t* mtx) {
+CE_API ce_err cnd_wait(ce_cnd* cond, ce_mtx* mtx) {
 	if (cond == NULL || mtx == NULL) {
 		return CE_EINVAL;
 	}
@@ -65,7 +65,7 @@ CE_API ce_err cnd_wait(ce_cnd_t* cond, ce_mtx_t* mtx) {
 	
 #endif
 }
-CE_API ce_err cnd_timedwait(ce_cnd_t* CE_RESTRICT cond, ce_mtx_t* CE_RESTRICT mtx, const struct ce_time_t* CE_RESTRICT time_point) {
+CE_API ce_err cnd_timedwait(ce_cnd* CE_RESTRICT cond, ce_mtx* CE_RESTRICT mtx, const struct ce_time_t* CE_RESTRICT time_point) {
 	if (cond == NULL || mtx == NULL || time_point == NULL) {
 		return CE_EINVAL;
 	}
@@ -79,7 +79,7 @@ CE_API ce_err cnd_timedwait(ce_cnd_t* CE_RESTRICT cond, ce_mtx_t* CE_RESTRICT mt
 	
 #endif
 }
-CE_API void cnd_destroy(ce_cnd_t* cond) {
+CE_API void cnd_destroy(ce_cnd* cond) {
 	if (cond == NULL) {
 		return;
 	}

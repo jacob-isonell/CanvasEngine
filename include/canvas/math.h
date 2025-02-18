@@ -16,19 +16,10 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_GRAPHICS_SETUP_H
-#define CANVAS_GRAPHICS_SETUP_H
+#ifndef CANVAS_MATH_H
+#define CANVAS_MATH_H
 
-#include <canvas/graphics/graphics.h>
+#include <canvas/math/math.h>
+#include <canvas/math/vec.h>
 
-ICE_NAMESPACE_BEGIN
-
-struct ce_graphics_t {
-	int unused;
-};
-
-CE_API ce_err ce_graphics_options(const struct ce_graphics_t* options);
-
-ICE_NAMESPACE_END
-
-#endif /* !CANVAS_GRAPHICS_SETUP_H */
+#endif /* !CANVAS_MATH_H */

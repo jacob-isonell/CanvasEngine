@@ -16,19 +16,32 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_GRAPHICS_SETUP_H
-#define CANVAS_GRAPHICS_SETUP_H
+#undef CE_MTX_INIT_PLAIN
+#undef CE_MTX_INIT_TIMED
+#undef CE_MTX_INIT_RECURSIVE
+#undef CE_MTX_INIT_TIMED_RECURSIVE
+#undef ce_mtx
 
-#include <canvas/graphics/graphics.h>
+#ifdef CANVAS_HAS_THREADS
 
-ICE_NAMESPACE_BEGIN
-
-struct ce_graphics_t {
-	int unused;
+#if defined(ICE_THREADS_POSIX)
+#define ce_mtx pthread_mutex_t
+#define CE_MTX_INIT_PLAIN PTHREAD_MUTEX_INITIALIZER
+#define CE_MTX_INIT_TIMED PTHREAD_MUTEX_INITIALIZER
+#ifdef PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
+#define CE_MTX_INIT_RECURSIVE PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
+#define CE_MTX_INIT_TIMED_RECURSIVE PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
+#endif
+#elif defined(ICE_THREADS_WIN32)
+struct ice_mtx_impl {
+	SRWLOCK     lock;
+	CE_MTX_TYPE flags;
 };
+#define ce_mtx struct ice_mtx_impl
+#define CE_MTX_INIT_PLAIN { SRWLOCK_INIT, CE_MTX_PLAIN }
+#define CE_MTX_INIT_TIMED { SRWLOCK_INIT, CE_MTX_TIMED }
+#define CE_MTX_INIT_RECURSIVE { SRWLOCK_INIT, CE_MTX_PLAIN | CE_MTX_RECURSIVE_BIT }
+#define CE_MTX_INIT_TIMED_RECURSIVE { SRWLOCK_INIT, CE_MTX_TIMED | CE_MTX_RECURSIVE_BIT }
+#endif
 
-CE_API ce_err ce_graphics_options(const struct ce_graphics_t* options);
-
-ICE_NAMESPACE_END
-
-#endif /* !CANVAS_GRAPHICS_SETUP_H */
+#endif /* !CANVAS_HAS_THREADS */

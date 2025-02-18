@@ -47,7 +47,7 @@ static unsigned int CE_STDCALL i_thread_start(void* in) {
 }
 #endif
 
-CE_API ce_err ce_thrd_create(ce_thrd_t* out, int(*func)(void*), void* arg) {
+CE_API ce_err ce_thrd_create(ce_thrd* out, int(*func)(void*), void* arg) {
 	if (func == NULL || out == NULL) {
 		return CE_EINVAL;
 	}
@@ -70,7 +70,7 @@ CE_API ce_err ce_thrd_create(ce_thrd_t* out, int(*func)(void*), void* arg) {
 #endif
 }
 
-CE_API cebool ce_thrd_equal(ce_thrd_t lhs, ce_thrd_t rhs) {
+CE_API cebool ce_thrd_equal(ce_thrd lhs, ce_thrd rhs) {
 #if defined(ICE_THREADS_POSIX)
 	return pthread_equal(lhs, rhs);
 #elif defined(ICE_THREADS_WIN32)
@@ -78,7 +78,7 @@ CE_API cebool ce_thrd_equal(ce_thrd_t lhs, ce_thrd_t rhs) {
 #endif
 }
 
-CE_API ce_thrd_t ce_thrd_current(void) {
+CE_API ce_thrd ce_thrd_current(void) {
 #if defined(ICE_THREADS_POSIX)
 	return pthread_self();
 #elif defined(ICE_THREADS_WIN32)
@@ -86,7 +86,7 @@ CE_API ce_thrd_t ce_thrd_current(void) {
 #endif
 }
 
-CE_API unsigned long ce_thrd_id(ce_thrd_t thrd) {
+CE_API unsigned long ce_thrd_id(ce_thrd thrd) {
 #if defined(ICE_THREADS_POSIX)
 	return thrd;
 #elif defined(ICE_THREADS_WIN32)
@@ -155,7 +155,7 @@ CE_ATTR_NORET CE_API void ce_thrd_exit(int res) {
 #endif
 }
 
-CE_API ce_err ce_thrd_detach(ce_thrd_t thrd) {
+CE_API ce_err ce_thrd_detach(ce_thrd thrd) {
 #if defined(ICE_THREADS_POSIX)
 	return ifrom_errno(pthread_detach(thrd));
 #elif defined(ICE_THREADS_WIN32)
@@ -169,7 +169,7 @@ CE_API ce_err ce_thrd_detach(ce_thrd_t thrd) {
 #endif
 }
 
-CE_API ce_err ce_thrd_join(ce_thrd_t thrd, int* opt_res) {
+CE_API ce_err ce_thrd_join(ce_thrd thrd, int* opt_res) {
 #if defined(ICE_THREADS_POSIX)
 	intptr_t res;
 	const ce_err err = ifrom_errno(pthread_join(thrd, (void**)&res));
@@ -187,7 +187,7 @@ CE_API ce_err ce_thrd_run(int (*func)(void*), void* arg) {
 		return CE_EINVAL;
 	}
 	
-	ce_thrd_t thrd;
+	ce_thrd thrd;
 	ce_err err = ce_thrd_create(&thrd, func, arg);
 	if (ce_success(err)) {
 		err = ce_thrd_detach(thrd);
@@ -195,7 +195,7 @@ CE_API ce_err ce_thrd_run(int (*func)(void*), void* arg) {
 	return err;
 }
 
-CE_API ce_err ce_call_once(ce_once_flag_t* flag, void (*func)(void)) {
+CE_API ce_err ce_call_once(ce_once_flag* flag, void (*func)(void)) {
 	if (flag == NULL || func == NULL) {
 		return CE_EINVAL;
 	}

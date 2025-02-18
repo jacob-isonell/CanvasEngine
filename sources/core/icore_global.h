@@ -30,11 +30,16 @@ struct icore_t {
 	
 	struct {
 		struct ce_alloc_t alloc;
-		ce_mtx_t lck;
+		ce_mtx lck;
 	} mem;
+	
+	struct {
+		char name[256];
+		int version;
+	} app_info, engine_info;
 };
 
-extern struct icore_t icore;
+ICE_API extern struct icore_t icore;
 
 ICE_NAMESPACE_END
 

@@ -16,55 +16,19 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#include "icore_global.h"
-#include <canvas/core/setup.h>
+#ifndef IGRAPHICS_BASE_H
+#define IGRAPHICS_BASE_H
 
-ICE_API cebool ireq_init_impl(void) {
-	return icore.init_count != 0;
-}
+#include "icore_base.h"
+#include <canvas/graphics/graphics.h>
+#include <canvas/graphics/setup.h>
 
-static void* s_defalloc(size_t bytes, void* arg) {
-	(void)arg;
-	return malloc(bytes);
-}
+ICE_NAMESPACE_BEGIN
 
-static void s_deffree(void* addr, void* arg) {
-	(void)arg;
-	free(addr);
-}
+ICE_API extern struct ce_graphics_t ifx_ops;
+ICE_API ce_err ifx_init(void);
+ICE_API void ifx_shutdown(void);
 
-ICE_API ce_err icore_init(void) {
-	IERRBEGIN {
-		IERRDO(ce_mtx_init(&icore.mem.lck, CE_MTX_PLAIN));
-	} IERREND { }
-	return IERRVAL;
-}
+ICE_NAMESPACE_END
 
-ICE_API void icore_shutdown(void) {
-	ce_mtx_destroy(&icore.mem.lck);
-}
-
-struct icore_t icore = {
-	.init_count = 0,
-	.mem = {
-		.alloc = {
-			.alloc = &s_defalloc,
-			.free = &s_deffree,
-			.user = NULL
-		},
-		.lck = {0}
-	}
-};
-
-
-/*struct icore_t icore = {
-	.init_count = 0,
-	.mem = {
-		.alloc = {
-			.alloc = &s_defalloc,
-			.free = &s_deffree,
-			.user = NULL
-		},
-		.lck = { }
-	}
-};*/
+#endif /* !IGRAPHICS_BASE_H */

@@ -34,13 +34,9 @@ PROPERTIES
 
 target_compile_definitions(CanvasEngine
 PUBLIC
-	"$<$<CONFIG:Debug>:CANVAS_DEBUG=1>"
+	"$<$<CONFIG:Debug>:CANVAS_DEBUG>"
 PRIVATE
 	"ICE_BUILD"
-	"CANVAS_GRAPHICS_EXPOSE_WAYLAND"
-	"CANVAS_GRAPHICS_EXPOSE_X11"
-	"CANVAS_GRAPHICS_EXPOSE_WIN32"
-	"CANVAS_GRAPHICS_EXPOSE_VULKAN"
 )
 
 target_compile_options(CanvasEngine
@@ -55,8 +51,7 @@ PRIVATE
 	"$<$<C_COMPILER_ID:GNU,Clang>:-luuid>"
 	"$<$<PLATFORM_ID:Windows>:shlwapi>"
 	"$<$<PLATFORM_ID:Windows>:rpcrt4>"
-	CanvasEngine-WaylandDeps
-	CanvasEngine-X11Deps
+	CanvasEngineDependencies
 )
 
 set(ICE_COMMON_SANITIZER_FLAGS

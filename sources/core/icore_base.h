@@ -25,6 +25,16 @@
 #define _ISOC11_SOURCE
 #include <canvas/core/base.h>
 
+#ifdef CANVAS_GRAPHICS
+#	define CANVAS_GRAPHICS_EXPOSE_VULKAN
+#	if CANVAS_PLATFORM_UNIX
+#		define CANVAS_GRAPHICS_EXPOSE_WAYLAND
+#		define CANVAS_GRAPHICS_EXPOSE_X11
+#	elif CANVAS_PLATFORM_WINDOWS
+#		define CANVAS_GRAPHICS_EXPOSE_VULKAN
+#	endif
+#endif
+
 #if !defined(CANVAS_SKIP_COMPILER_CHECKS) && !CE_C11_STD
 #	error CanvasEngine requires C11 to compile
 #endif
@@ -35,11 +45,12 @@
 #define ICE_API
 #endif
 
-#if !CANVAS_DEBUG
+#ifndef CANVAS_DEBUG
 #define NDEBUG
 #endif
 
 #include <canvas/core/memory.h>
+#include <canvas/core/setup.h>
 #if CANVAS_PLATFORM_UNIX
 #	include <unistd.h>
 /*#	if _POSIX_VERSION < 200809L
@@ -62,13 +73,24 @@
 #include <assert.h>
 #include <errno.h>
 
+/**
+ * Naming scheme (this applies to regadless of capitalisation):
+ *  ce_* (library API used by API consumer)
+ *  ice_* (internal library usage, not intended to be used by the API user but are declared in the API header files)
+ *  i* (internal stuff not exposed/accessible to API consumer)
+ *  icore_* (core module)
+ *  ifx_* (graphics module)
+ *  iaud_* (audio module)
+ *  inet_* (network module)
+ */
+
 ICE_NAMESPACE_BEGIN
 
 #define IERRVAL i_curr_error
 #define IERRBEGIN ce_err IERRVAL = CE_EOK;
 #define IERRDO(expr) do { \
 	IERRVAL = (expr); \
-	if (IERRVAL < 0) break; \
+	if (ce_success(IERRVAL)) break; \
 	goto IERR_ERRTHROW; \
 } while (0)
 #define IERRDO_ERRNO(errno_val) do { \
@@ -78,14 +100,14 @@ ICE_NAMESPACE_BEGIN
 	goto IERR_ERRTHROW; \
 } while (0)
 
-#define IERREND IERR_ERRTHROW: for (cebool ierr_cond = cetrue; (IERRVAL < 0) && ierr_cond; ierr_cond = cefalse)
+#define IERREND IERR_ERRTHROW: for (cebool ierr_cond = cetrue; ce_failure(IERRVAL) && ierr_cond; ierr_cond = cefalse)
 
-#define ICE_REQ_INIT() ICE_ASSERT(ireq_init_impl())
+#define ICE_REQ_INIT() ICE_ASSERT(ihas_initialized())
 
 ICE_API ce_err icore_init(void);
 ICE_API void icore_shutdown(void);
 
-ICE_API cebool ireq_init_impl(void);
+ICE_API cebool ihas_initialized(void);
 ICE_API ce_err ifrom_errno(int errno_value);
 
 #define ICE_ASSERT(cond) assert(cond)

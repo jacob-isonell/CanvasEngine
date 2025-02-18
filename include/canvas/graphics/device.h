@@ -16,17 +16,15 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef IGRAPHICS_BASE_H
-#define IGRAPHICS_BASE_H
+#ifndef CANVAS_GRAPHICS_DEVICE_H
+#define CANVAS_GRAPHICS_DEVICE_H
 
-#include "icore_base.h"
-#include <canvas/graphics/graphics.h>
+#include <canvas/graphics/gpu_device.h>
 
 ICE_NAMESPACE_BEGIN
 
-ICE_API ce_err igraphics_init(void);
-ICE_API ce_err igraphics_shutdown(void);
+
 
 ICE_NAMESPACE_END
 
-#endif /* !IGRAPHICS_BASE_H */
+#endif /* !CANVAS_GRAPHICS_DEVICE_H */

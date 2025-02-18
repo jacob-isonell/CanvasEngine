@@ -17,14 +17,20 @@
 **************************************************************************/
 
 #include "icore_global.h"
+#ifdef CANVAS_GRAPHICS
+#include "ifx_base.h"
+#endif
 
-struct item_pairs_t {
+struct iitem_pairs {
 	ce_err (*init)(void);
 	void (*term)(void);
 };
 
-static const struct item_pairs_t s_items[] = {
-	{ &icore_init, &icore_shutdown }
+static const struct iitem_pairs s_items[] = {
+	{ &icore_init, &icore_shutdown },
+#ifdef CANVAS_GRAPHICS
+	{ &ifx_init, &ifx_shutdown }
+#endif
 };
 
 CE_API ce_err ce_init(void) {
@@ -56,6 +62,6 @@ CE_API void ce_shutdown(void) {
 	
 	size_t i = CE_ARRLEN(s_items);
 	while (0 < i) {
-		s_items[i--].term();
+		s_items[--i].term();
 	}
 }

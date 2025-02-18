@@ -18,9 +18,9 @@
 
 target_sources(CanvasEngine
 PRIVATE
-	"core.c"
 	"error.c"
 	"memory.c"
 	"time.c"
+	"setup.c"
 	"init_and_shutdown.c"
 )

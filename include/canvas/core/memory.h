@@ -34,15 +34,16 @@ CE_API void* ce_alloc_s(size_t bytes, ce_err* opt_err);
 CE_API void* ce_alloc(size_t bytes);
 CE_API ce_err ce_free(void* addr);
 
-CE_API ce_err ice_arr_alloc(void** out, size_t reserve, size_t stride);
-CE_API ce_err ice_arr_free(void* array);
-CE_API ce_err ice_arr_resize(void** out, size_t new_size);
-CE_API ce_err ice_arr_reserve(void** out, size_t new_capacity);
+#define ce_arr(type) /* implementation-defined */
+#define CE_ARRINIT /* implementation-defined */
+#define ce_arr_alloc(out, reserve) /* implementation-defined */
+#define ce_arr_free(arr) /* implementation-defined */
+#define ce_arr_at(arr, index) /* implementation-defined */
+#define ce_arr_size(arr) /* implementation-defined */
+#define ce_arr_cap(arr) /* implementation-defined */
+#define ce_arr_data(arr) /* implementation-defined */
 
-#define ce_arr(type) struct { type* array; }
-#define ce_arr_at(var, index) ((var).array[(index)])
-#define ce_arr_alloc(out, reserve) ice_arr_alloc((void**)&(out)->array, (reserve), sizeof(*((out)->array)))
-#define ce_arr_free(arr) ice_arr_free((out)->array)
+#include <canvas/core/details/memory.h.inl>
 
 ICE_NAMESPACE_END
 

@@ -16,7 +16,28 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
-target_sources(CanvasEngine
-PRIVATE
-	"setup.c"
-)
+add_library(CanvasEngineDependencies INTERFACE)
+
+### Core module dependencies
+
+
+### Graphics module dependencies
+if (CANVAS_GRAPHICS)
+	### X11/Wayland libraries
+	if (UNIX)
+		include("cmake/find_x11.cmake")
+		include("cmake/find_wayland.cmake")
+		if (CANVAS_GRAPHICS AND NOT CANVAS_GRAPHICS_SUPPORT_WAYLAND AND NOT CANVAS_GRAPHICS_SUPPORT_X11)
+			message(FATAL_ERROR "CanvasEngine requires support for either X11 or Wayland on Linux but neither could be found or was enabled")
+		endif ()
+	endif ()
+
+	### Vulkan
+	find_package(Vulkan)
+	if (Vulkan_FOUND)
+		target_link_libraries(CanvasEngineDependencies INTERFACE
+			Vulkan::Vulkan
+		)
+		set(ICE_VULKAN)
+	endif (Vulkan_FOUND)
+endif (CANVAS_GRAPHICS)

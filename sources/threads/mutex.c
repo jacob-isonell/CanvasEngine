@@ -42,7 +42,7 @@ static int s_to_pthread(CE_MTX_TYPE type) {
 	}
 }
 
-CE_API ce_err ce_mtx_init(ce_mtx_t* mtx, CE_MTX_TYPE type) {
+CE_API ce_err ce_mtx_init(ce_mtx* mtx, CE_MTX_TYPE type) {
 	if (mtx == NULL || !s_check_mtx_type(type)) {
 		return CE_EINVAL;
 	}
@@ -62,7 +62,7 @@ CE_API ce_err ce_mtx_init(ce_mtx_t* mtx, CE_MTX_TYPE type) {
 	
 #endif
 }
-CE_API ce_err ce_mtx_lock(ce_mtx_t* mtx) {
+CE_API ce_err ce_mtx_lock(ce_mtx* mtx) {
 	if (mtx == NULL) {
 		return CE_EINVAL;
 	}
@@ -73,7 +73,7 @@ CE_API ce_err ce_mtx_lock(ce_mtx_t* mtx) {
 	
 #endif
 }
-CE_API ce_err ce_mtx_timedlock(ce_mtx_t* CE_RESTRICT mtx, const struct ce_time_t* CE_RESTRICT time_point) {
+CE_API ce_err ce_mtx_timedlock(ce_mtx* CE_RESTRICT mtx, const struct ce_time_t* CE_RESTRICT time_point) {
 	if (mtx == NULL || time_point == NULL) {
 		return CE_EINVAL;
 	}
@@ -87,7 +87,7 @@ CE_API ce_err ce_mtx_timedlock(ce_mtx_t* CE_RESTRICT mtx, const struct ce_time_t
 	
 #endif
 }
-CE_API ce_err ce_mtx_trylock(ce_mtx_t* mtx) {
+CE_API ce_err ce_mtx_trylock(ce_mtx* mtx) {
 	if (mtx == NULL) {
 		return CE_EINVAL;
 	}
@@ -98,7 +98,7 @@ CE_API ce_err ce_mtx_trylock(ce_mtx_t* mtx) {
 	
 #endif
 }
-CE_API ce_err ce_mtx_unlock(ce_mtx_t* mtx) {
+CE_API ce_err ce_mtx_unlock(ce_mtx* mtx) {
 	if (mtx == NULL) {
 		return CE_EINVAL;
 	}
@@ -109,7 +109,7 @@ CE_API ce_err ce_mtx_unlock(ce_mtx_t* mtx) {
 	
 #endif
 }
-CE_API void ce_mtx_destroy(ce_mtx_t* mtx) {
+CE_API void ce_mtx_destroy(ce_mtx* mtx) {
 	if (mtx == NULL) {
 		return;
 	}

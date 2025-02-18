@@ -19,69 +19,60 @@
 #ifndef CANVAS_THREADS_THREAD_H
 #define CANVAS_THREADS_THREAD_H
 
-#include <canvas/core/time.h>
+/** @brief If macro is defined if the thread API is available for CanvasEngine. */
+#define CANVAS_HAS_THREADS /* implementation-defined */
 
-#if CANVAS_PLATFORM_UNIX && ICE_HAS_INCLUDE(<pthread.h>)
-#	define ICE_THREADS_POSIX
-#	include <unistd.h>
-#	include <pthread.h>
-#elif CANVAS_PLATFORM_WINDOWS
-#	define ICE_THREADS_WIN32
-#	if !defined(WIN32_LEAN_AND_MEAN)
-#		define WIN32_LEAN_AND_MEAN
-#		define ICE_UNDEF_WIN32_LAM
-#	endif
-#	include <windows.h>
-#	include <synchapi.h>
-#	include <process.h>
-#	if defined(ICE_UNDEF_WIN32_LAM)
-#		undef WIN32_LEAN_AND_MEAN
-#	endif
-#else
-#	define ICE_THREADS_NONE
-#endif
+/** @brief missing documentation. */
+#define ce_thrd /* implementation-defined */
+
+/** @brief missing documentation. */
+#define ce_once_flag /* implementation-defined */
+
+/** @brief missing documentation. */
+#define CE_ONCE_FLAG_INIT /* implementation-defined */
+
+#include <canvas/core/time.h>
+#include <canvas/threads/details/check.inl>
+#include <canvas/threads/details/thread.h.inl>
 
 ICE_NAMESPACE_BEGIN
 
-#ifndef ICE_THREADS_NONE
-#define CANVAS_HAS_THREADS 1
+#ifdef CANVAS_HAS_THREADS
 
-#if defined(ICE_THREADS_POSIX)
-#define ce_thrd_t pthread_t
-#define ce_once_flag_t pthread_once_t
-#define CE_ONCE_FLAG_INIT PTHREAD_ONCE_INIT
-#elif defined(ICE_THREADS_WIN32)
-struct ice_thread_impl_t {
-	HANDLE handle;
-};
+/** @brief missing documentation. */
+CE_API ce_err ce_thrd_create(ce_thrd* out, int (*func)(void*), void* arg);
 
-struct ice_once_flag_t {
-	CRITICAL_SECTION mtx;
-	cebool called;
-};
-#define ce_thrd_t struct ice_thread_impl_t
-#define ce_once_flag_t pthread_once_t
-#define CE_ONCE_FLAG_INIT {0}
-#endif
+/** @brief missing documentation. */
+CE_API cebool ce_thrd_equal(ce_thrd lhs, ce_thrd rhs);
 
-CE_API ce_err ce_thrd_create(ce_thrd_t* out, int (*func)(void*), void* arg);
-CE_API cebool ce_thrd_equal(ce_thrd_t lhs, ce_thrd_t rhs);
-CE_API ce_thrd_t ce_thrd_current(void);
-CE_API unsigned long ce_thrd_id(ce_thrd_t thrd);
+/** @brief missing documentation. */
+CE_API ce_thrd ce_thrd_current(void);
+
+/** @brief missing documentation. */
+CE_API unsigned long ce_thrd_id(ce_thrd thrd);
+
+/** @brief missing documentation. */
 CE_API ce_err ce_thrd_sleep(const struct ce_time_t* duration, struct ce_time_t* opt_remaining);
-CE_API ce_err ce_thrd_yield(void);
-CE_ATTR_NORET CE_API void ce_thrd_exit(int res);
-CE_API ce_err ce_thrd_detach(ce_thrd_t thrd);
-CE_API ce_err ce_thrd_join(ce_thrd_t thrd, int* opt_res);
 
-/** @brief Creates a new thread running the given function. Does not wait for the thread to finish. */
+/** @brief missing documentation. */
+CE_API ce_err ce_thrd_yield(void);
+
+/** @brief missing documentation. */
+CE_ATTR_NORET CE_API void ce_thrd_exit(int res);
+
+/** @brief missing documentation. */
+CE_API ce_err ce_thrd_detach(ce_thrd thrd);
+
+/** @brief missing documentation. */
+CE_API ce_err ce_thrd_join(ce_thrd thrd, int* opt_res);
+
+/** @brief missing documentation. */
 CE_API ce_err ce_thrd_run(int (*func)(void*), void* arg);
 
-CE_API ce_err ce_call_once(ce_once_flag_t* flag, void (*func)(void));
+/** @brief missing documentation. */
+CE_API ce_err ce_call_once(ce_once_flag* flag, void (*func)(void));
 
-#else
-#define CANVAS_HAS_THREADS 0
-#endif /* !CANVAS_NO_THREADS */
+#endif /* !CANVAS_HAS_THREADS */
 
 ICE_NAMESPACE_END
 

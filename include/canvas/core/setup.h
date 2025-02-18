@@ -25,12 +25,12 @@ ICE_NAMESPACE_BEGIN
 
 struct ce_core_t {
 	struct {
-		const char* name;
+		char name[256];
 		unsigned int version;
 	} app_info, engine_info;
 };
 
-CE_API ce_err ce_core_options(const struct ce_core_t* options);
+CE_API ce_err ce_core_options(const struct ce_core_t* ops);
 CE_API ce_err ce_init(void);
 CE_API void ce_shutdown(void);
 
