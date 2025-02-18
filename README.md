@@ -1,5 +1,5 @@
 <h1 align="center">CanvasEngine</h1>
-<p align="center">A game engine framework written in C++20
+<p align="center">A game engine framework written in C11
 	<br />
 	&#x2022;
 	<a style="width: 100%; text-align: center" href="https://github.com/jacob-isonell/CanvasEngine/labels/bug">Report Bug</a>
@@ -30,6 +30,9 @@
 </details>
 
 ## About The Project
+
+### NOTICE
+This project is still under early development. There may be certain features which are incomplete, non-functioning, and/or missing/inaccurate documentation.
 
 Temporary text
 
