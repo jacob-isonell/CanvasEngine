@@ -21,11 +21,11 @@
 
 CE_API ce_err ce_core_options(const struct ce_core_t* ops) {
 	if (ihas_initialized()) {
-		return CE_EPERM;
+		return EPERM;
 	}
 	
 	if (ops == NULL) {
-		return CE_EINVAL;
+		return EINVAL;
 	}
 	
 	strncpy(icore.app_info.name, ops->app_info.name, 256);

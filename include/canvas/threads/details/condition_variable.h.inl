@@ -21,6 +21,8 @@
 
 #ifdef CANVAS_HAS_THREADS
 
+ICE_NAMESPACE_BEGIN
+
 #if defined(ICE_THREADS_POSIX)
 #define ce_cnd pthread_cond_t
 #define CE_COND_INIT PTHREAD_COND_INITIALIZER
@@ -28,8 +30,10 @@
 struct ice_cnd_impl {
 	CONDITION_VARIABLE var;
 };
-#define ce_cnd struct ice_cnd_impl_t
+#define ce_cnd struct ice_cnd_impl
 #define CE_COND_INIT {CONDITION_VARIABLE_INIT}
 #endif
+
+ICE_NAMESPACE_END
 
 #endif /* !CANVAS_HAS_THREADS */

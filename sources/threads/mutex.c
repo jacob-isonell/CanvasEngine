@@ -19,7 +19,7 @@
 #include "icore_base.h"
 #include <canvas/threads/mutex.h>
 
-#ifndef ICE_THREADS_NONE
+#ifdef CANVAS_HAS_THREADS
 
 static cebool s_check_mtx_type(CE_MTX_TYPE type) {
 	switch (type) {
@@ -32,6 +32,7 @@ static cebool s_check_mtx_type(CE_MTX_TYPE type) {
 	}
 }
 
+#ifdef ICE_THREADS_POSIX
 static int s_to_pthread(CE_MTX_TYPE type) {
 	switch (type) {
 	case CE_MTX_PLAIN: return PTHREAD_MUTEX_DEFAULT;
@@ -41,41 +42,58 @@ static int s_to_pthread(CE_MTX_TYPE type) {
 	default: CE_UNREACHABLE();
 	}
 }
+#endif
 
 CE_API ce_err ce_mtx_init(ce_mtx* mtx, CE_MTX_TYPE type) {
 	if (mtx == NULL || !s_check_mtx_type(type)) {
-		return CE_EINVAL;
+		return EINVAL;
 	}
 	
 #if defined(ICE_THREADS_POSIX)
 	pthread_mutexattr_t attr;
 	IERRBEGIN {
-		IERRDO_ERRNO(pthread_mutexattr_init(&attr));
+		IERRDO(pthread_mutexattr_init(&attr));
 		pthread_mutexattr_settype(&attr, s_to_pthread(type));
-		IERRDO_ERRNO(pthread_mutex_init(mtx, &attr));
+		IERRDO(pthread_mutex_init(mtx, &attr));
 		pthread_mutexattr_destroy(&attr);
 	} IERREND {
 		pthread_mutexattr_destroy(&attr);
 	}
 	return IERRVAL;
 #elif defined(ICE_THREADS_WIN32)
-	
+	InitializeSRWLock(&mtx->lock);
+	mtx->refcount = 0;
+	mtx->flags = type;
+	return CE_EOK;
 #endif
 }
 CE_API ce_err ce_mtx_lock(ce_mtx* mtx) {
 	if (mtx == NULL) {
-		return CE_EINVAL;
+		return EINVAL;
 	}
 	
 #if defined(ICE_THREADS_POSIX)
 	return ifrom_errno(pthread_mutex_lock(mtx));
 #elif defined(ICE_THREADS_WIN32)
+	if (mtx->owner == GetCurrentThreadId()) {
+		if (mtx->flags & CE_MTX_RECURSIVE_BIT) {
+			++mtx->refcount;
+			return CE_EOK;
+		} else return EDEADLK;
+	}
 	
+	AcquireSRWLockExclusive(&mtx->lock);
+	mtx->owner = GetCurrentThreadId();
+	if (mtx->flags & CE_MTX_RECURSIVE_BIT) {
+		++mtx->refcount;
+	}
+	return CE_EOK;
 #endif
 }
+
 CE_API ce_err ce_mtx_timedlock(ce_mtx* CE_RESTRICT mtx, const struct ce_time_t* CE_RESTRICT time_point) {
 	if (mtx == NULL || time_point == NULL) {
-		return CE_EINVAL;
+		return EINVAL;
 	}
 	
 #if defined(ICE_THREADS_POSIX)
@@ -84,41 +102,78 @@ CE_API ce_err ce_mtx_timedlock(ce_mtx* CE_RESTRICT mtx, const struct ce_time_t* 
 	t.tv_nsec = time_point->nsec;
 	return ifrom_errno(pthread_mutex_timedlock(mtx, &t));
 #elif defined(ICE_THREADS_WIN32)
+	ICE_NOIMPL();
+	/*if (mtx->owner == GetCurrentThreadId()) {
+		if (mtx->flags & CE_MTX_RECURSIVE_BIT) {
+			++mtx->refcount;
+			return CE_EOK;
+		} else return EDEADLK;
+	}
 	
+	// Add locking scheme here
+	
+	mtx->owner = GetCurrentThreadId();
+	if (mtx->flags & CE_MTX_RECURSIVE_BIT) {
+		++mtx->refcount;
+	}
+	return CE_EOK; */
 #endif
 }
+
 CE_API ce_err ce_mtx_trylock(ce_mtx* mtx) {
 	if (mtx == NULL) {
-		return CE_EINVAL;
+		return EINVAL;
 	}
 	
 #if defined(ICE_THREADS_POSIX)
 	return ifrom_errno(pthread_mutex_trylock(mtx));
 #elif defined(ICE_THREADS_WIN32)
+	if (mtx->owner == GetCurrentThreadId()) {
+		if (mtx->flags & CE_MTX_RECURSIVE_BIT) {
+			++mtx->refcount;
+			return CE_EOK;
+		} else return EDEADLK;
+	}
 	
+	if (!TryAcquireSRWLockExclusive(&mtx->lock)) {
+		return EBUSY;
+	}
+	
+	mtx->owner = GetCurrentThreadId();
+	if (mtx->flags & CE_MTX_RECURSIVE_BIT) {
+		++mtx->refcount;
+	}
+	return CE_EOK;
 #endif
 }
+
 CE_API ce_err ce_mtx_unlock(ce_mtx* mtx) {
 	if (mtx == NULL) {
-		return CE_EINVAL;
+		return EINVAL;
 	}
 	
 #if defined(ICE_THREADS_POSIX)
 	return ifrom_errno(pthread_mutex_unlock(mtx));
 #elif defined(ICE_THREADS_WIN32)
-	
-#endif
-}
-CE_API void ce_mtx_destroy(ce_mtx* mtx) {
-	if (mtx == NULL) {
-		return;
+	if (mtx->owner != GetCurrentThreadId()) {
+		return EPERM;
 	}
 	
-#if defined(ICE_THREADS_POSIX)
-	pthread_mutex_destroy(mtx);
-#elif defined(ICE_THREADS_WIN32)
+	if (mtx->flags & CE_MTX_RECURSIVE_BIT && --mtx->refcount) {
+		return CE_EOK;
+	}
 	
+	ReleaseSRWLockExclusive(&mtx->lock);
+	return CE_EOK;
 #endif
 }
 
-#endif /* !CANVAS_NO_THREADS */
+CE_API void ce_mtx_destroy(ce_mtx* mtx) {
+#if defined(ICE_THREADS_POSIX)
+	pthread_mutex_destroy(mtx);
+#else
+	(void)mtx;
+#endif
+}
+
+#endif /* !CANVAS_HAS_THREADS */

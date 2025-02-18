@@ -22,6 +22,8 @@
 
 #ifdef CANVAS_HAS_THREADS
 
+ICE_NAMESPACE_BEGIN
+
 #if defined(ICE_THREADS_POSIX)
 #define ce_thrd pthread_t
 #define ce_once_flag pthread_once_t
@@ -35,9 +37,12 @@ struct ice_once_flag {
 	CRITICAL_SECTION mtx;
 	cebool called;
 };
-#define ce_thrd struct ice_thread_impl_t
-#define ce_once_flag pthread_once_t
+
+#define ce_thrd struct ice_thread_impl
+#define ce_once_flag struct ice_once_flag
 #define CE_ONCE_FLAG_INIT {0}
 #endif
+
+ICE_NAMESPACE_END
 
 #endif /* !CANVAS_HAS_THREADS */

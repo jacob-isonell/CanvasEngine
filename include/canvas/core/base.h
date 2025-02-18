@@ -27,6 +27,8 @@
  *   to ensure the compiler is able to compile the CanvasEngine library.
  */
 
+#define cebool /* boolean-type */
+
 #include <canvas_cmake_options.h>
 #include <canvas/core/details/sysmacros.inl>
 #include <stddef.h>
@@ -34,8 +36,17 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <float.h>
+#include <errno.h>
 
 ICE_NAMESPACE_BEGIN
+
+/** @brief CanvasEngine's error type. Based on errno. Values less than or equal to 0 is a success value. */
+#define ce_err int
+
+#define CE_EOK 0 /* No error */
+
+#define cetrue ((cebool)1)
+#define cefalse ((cebool)0)
 
 #define ce_f32 float
 #define ce_f64 double
@@ -84,10 +95,6 @@ ICE_NAMESPACE_BEGIN
 
 /** @brief Gets the number of elements in a fixed sized array */
 #define CE_ARRLEN(arr) (sizeof(arr) / sizeof(*(arr)))
-
-#define cebool ICE_BOOL_TYPE
-#define cetrue ((cebool)1)
-#define cefalse ((cebool)0)
 
 union ce_version {
 	unsigned int value;

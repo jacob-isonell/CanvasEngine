@@ -82,6 +82,8 @@
 
 #ifdef CANVAS_HAS_ATOMICS
 
+ICE_NAMESPACE_BEGIN
+
 #define CE_MEMORD int
 
 /* Temporary */
@@ -504,10 +506,6 @@ ice_impl_atomic_signal_fence((memory_order)(order))
 #	define ce_kill_dependency(in) (in)
 #endif
 
-ICE_NAMESPACE_BEGIN
-
-#ifdef CANVAS_HAS_ATOMICS
-
 #define ce_atomic_bool ICE_ATOMIC_DECL(cebool)
 #define ce_atomic_char ICE_ATOMIC_DECL(char)
 #define ce_atomic_schar ICE_ATOMIC_DECL(signed char)
@@ -521,8 +519,6 @@ ICE_NAMESPACE_BEGIN
 #define ce_atomic_longlong ICE_ATOMIC_DECL(long long)
 #define ce_atomic_ulonglong ICE_ATOMIC_DECL(unsigned long long)
 #define ce_atomic_pointer(type) ICE_ATOMIC_DECL(type*)
-
-#endif
 
 ICE_NAMESPACE_END
 

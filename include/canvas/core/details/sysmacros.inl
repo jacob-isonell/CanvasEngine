@@ -29,6 +29,22 @@
 #	define CANVAS_COMPILER_OTHER 1
 #endif
 
+#ifndef CANVAS_COMPILER_GNU
+#	define CANVAS_COMPILER_GNU 0
+#endif
+#ifndef CANVAS_COMPILER_CLANG
+#	define CANVAS_COMPILER_CLANG 0
+#endif
+#ifndef CANVAS_COMPILER_GCC
+#	define CANVAS_COMPILER_GCC 0
+#endif
+#ifndef CANVAS_COMPILER_MSVC
+#	define CANVAS_COMPILER_MSVC 0
+#endif
+#ifndef CANVAS_COMPILER_OTHER
+#	define CANVAS_COMPILER_OTHER 0
+#endif
+
 #if defined(__unix__) || defined(__unix) || defined(unix)
 #	define CANVAS_PLATFORM_UNIX 1
 #else
@@ -57,27 +73,43 @@
 #	endif
 #else
 #	define CANVAS_PLATFORM_BSD 0
+#	define CANVAS_PLATFORM_FREEBSD 0
+#	define CANVAS_PLATFORM_NETBSD 0
+#	define CANVAS_PLATFORM_OPENBSD 0
+#	define CANVAS_PLATFORM_BSDI 0
+#	define CANVAS_PLATFORM_DRAGONFLY 0
+#	define CANVAS_PLATFORM_MIDNIGHTBSD 0
 #endif
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(_WIN64) || defined(__WINDOWS__)
 #	define CANVAS_PLATFORM_WINDOWS 1
+#else
+#	define CANVAS_PLATFORM_WINDOWS 0
 #endif
 
 #if defined(__ANDROID__)
 #	define CANVAS_PLATFORM_ANDROID 1
+#else
+#	define CANVAS_PLATFORM_ANDROID 0
 #endif
 
 #if !CANVAS_PLATFORM_UNIX && !CANVAS_PLATFORM_BSD && \
 	!CANVAS_PLATFORM_WINDOWS && !CANVAS_PLATFORM_ANDROID
 #	define CANVAS_PLATFORM_OTHER 1
+#else
+#	define CANVAS_PLATFORM_OTHER 0
 #endif
 
 #if defined(__CYGWIN__)
 #	define CANVAS_ENVIROMENT_CYGWIN 1
+#else
+#	define CANVAS_ENVIROMENT_CYGWIN 0
 #endif
 
 #if defined(EMSCRIPTEN) || defined(__EMSCRIPTEN__)
 #	define CANVAS_ENVIROMENT_EMSCRIPTEN 1
+#else
+#	define CANVAS_ENVIROMENT_EMSCRIPTEN 0
 #endif
 
 #if defined(__amd64__) || defined(__amd64) || defined(__x86_64__) || \
@@ -96,51 +128,6 @@
 #	define CANVAS_ARCH_OTHER 1
 #endif
 
-#ifndef CANVAS_COMPILER_GCC
-#	define CANVAS_COMPILER_GCC 0
-#endif
-#ifndef CANVAS_COMPILER_CLANG
-#	define CANVAS_COMPILER_CLANG 0
-#endif
-#ifndef CANVAS_COMPILER_MSVC
-#	define CANVAS_COMPILER_MSVC 0
-#endif
-#ifndef CANVAS_COMPILER_OTHER
-#	define CANVAS_COMPILER_OTHER 0
-#endif
-#ifndef CANVAS_PLATFORM_FREEBSD
-#	define CANVAS_PLATFORM_FREEBSD 0
-#endif
-#ifndef CANVAS_PLATFORM_NETBSD
-#	define CANVAS_PLATFORM_NETBSD 0
-#endif
-#ifndef CANVAS_PLATFORM_OPENBSD
-#	define CANVAS_PLATFORM_OPENBSD 0
-#endif
-#ifndef CANVAS_PLATFORM_BSDI
-#	define CANVAS_PLATFORM_BSDI 0
-#endif
-#ifndef CANVAS_PLATFORM_DRAGONFLY
-#	define CANVAS_PLATFORM_DRAGONFLY 0
-#endif
-#ifndef CANVAS_PLATFORM_MIDNIGHTBSD
-#	define CANVAS_PLATFORM_MIDNIGHTBSD 0
-#endif
-#ifndef CANVAS_PLATFORM_WINDOWS
-#	define CANVAS_PLATFORM_WINDOWS 0
-#endif
-#ifndef CANVAS_PLATFORM_ANDROID
-#	define CANVAS_PLATFORM_ANDROID 0
-#endif
-#ifndef CANVAS_PLATFORM_OTHER
-#	define CANVAS_PLATFORM_OTHER 0
-#endif
-#ifndef CANVAS_ENVIROMENT_CYGWIN
-#	define CANVAS_ENVIROMENT_CYGWIN 0
-#endif
-#ifndef CANVAS_ENVIROMENT_EMSCRIPTEN
-#	define CANVAS_ENVIROMENT_EMSCRIPTEN 0
-#endif
 #ifndef CANVAS_ARCH_AMD64
 #	define CANVAS_ARCH_AMD64 0
 #endif
@@ -251,8 +238,12 @@
 #else
 #define CE_CXX 0
 
-#if !defined(CANVAS_SKIP_COMPILER_CHECKS) && (!defined(__STDC__) || !__STDC__)
-#	error CanvasEngine does not support the current compiler
+#ifndef CANVAS_SKIP_COMPILER_CHECKS
+#	if CANVAS_COMPILER_MSVC
+#	elif defined(__STDC__) &&| __STDC__
+#	else
+#		error CanvasEngine does not support the current compiler
+#	endif
 #endif
 
 #define CE_EXTERNC
@@ -286,16 +277,18 @@
 #define CE_CXX20_STD ICE_CXX_CHECK_STANDARD(202002L)
 #define CE_CXX23_STD ICE_CXX_CHECK_STANDARD(202302L)
 
+#undef cebool
+
 #if CE_CXX
-#	define ICE_BOOL_TYPE bool
+#	define cebool bool
 #	define CE_RESTRICT __restrict
 #	define ICE_INLINE inline
 #elif CE_C99_STD
-#	define ICE_BOOL_TYPE _Bool
+#	define cebool _Bool
 #	define CE_RESTRICT restrict
 #	define ICE_INLINE static inline
 #else
-#	define ICE_BOOL_TYPE unsigned char
+#	define cebool unsigned char
 #	define CE_RESTRICT
 #	if CANVAS_COMPILER_GNU
 #		define ICE_INLINE static __inline
@@ -419,7 +412,8 @@
 #define ICE_NAMESPACE_BEGIN \
 	CE_EXTERNC_BEGIN \
 	ICE_WARN_PUSH \
-	ICE_WARN_DISABLE_GNU("-Wunused-function")
+	ICE_WARN_DISABLE_GNU("-Wunused-function") \
+	ICE_WARN_DISABLE_MSVC(4820)
 
 #define ICE_NAMESPACE_END \
 	ICE_WARN_POP \

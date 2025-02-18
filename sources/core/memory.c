@@ -21,7 +21,7 @@
 
 CE_API ce_err ce_set_alloc(struct ce_alloc_t in) {
 	if (in.alloc == NULL || in.free == NULL) {
-		return CE_EINVAL;
+		return EINVAL;
 	}
 	
 	ce_err err = ce_mtx_lock(&icore.mem.lck);
@@ -37,7 +37,7 @@ CE_API void* ce_alloc_s(size_t bytes, ce_err* opt_err) {
 	ce_err err = ce_mtx_lock(&icore.mem.lck);
 	if (ce_success(err)) {
 		out = icore.mem.alloc.alloc(bytes, icore.mem.alloc.user);
-		err = (out == NULL) ? CE_ENOMEM : CE_EOK;
+		err = (out == NULL) ? ENOMEM : CE_EOK;
 		ce_mtx_unlock(&icore.mem.lck);
 	}
 	if (opt_err) {

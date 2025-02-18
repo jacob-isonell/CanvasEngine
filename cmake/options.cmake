@@ -101,6 +101,8 @@ set(ICE_COMPILER_SANITIZER_FLAGS ${ICE_COMMON_SANITIZER_FLAGS}
 	"$<$<C_COMPILER_ID:MSVC>:/wd4127>" # conditional expression is constant
 	"$<$<C_COMPILER_ID:MSVC>:/wd4065>" # switch statement contains 'default' but no 'case' labels
 	"$<$<C_COMPILER_ID:MSVC>:/wd4060>" # switch statement contains no 'case' or 'default' labels
+	"$<$<C_COMPILER_ID:MSVC>:/wd4820>" # padding bytes added
+	"$<$<C_COMPILER_ID:MSVC>:/wd4255>" # function decleration with () instead of (void)
 	"$<$<AND:$<CONFIG:Debug>,$<C_COMPILER_ID:MSVC>>:/fsanitize=address>"
 	"$<$<C_COMPILER_ID:GNU,Clang>:-Wall>"
 	"$<$<C_COMPILER_ID:GNU,Clang>:-Werror>"

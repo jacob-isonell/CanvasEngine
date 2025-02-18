@@ -23,14 +23,14 @@
 #include <sched.h>
 #endif
 
-#ifndef ICE_THREADS_NONE
+#ifdef CANVAS_HAS_THREADS
 
-#if defined(ICE_THREADS_POSIX)
 struct i_thread_start_data_t {
 	int (*func)(void*);
 	void* arg;
 };
 
+#if defined(ICE_THREADS_POSIX)
 static void* i_thread_start(void* in) {
 	struct i_thread_start_data_t data = *(struct i_thread_start_data_t*)in;
 	ce_free(in);
@@ -38,43 +38,47 @@ static void* i_thread_start(void* in) {
 	return (void*)out;
 }
 #elif defined(ICE_THREADS_WIN32)
-struct i_thread_start_data_t {
-	int (*func)(void*);
-};
-
 static unsigned int CE_STDCALL i_thread_start(void* in) {
-	struct i_thread_start_data_t* const p = (struct i_thread_start_data_t*)in;
+	struct i_thread_start_data_t data = *(struct i_thread_start_data_t*)in;
+	ce_free(in);
+	return (int)data.func(data.arg);
 }
 #endif
 
 CE_API ce_err ce_thrd_create(ce_thrd* out, int(*func)(void*), void* arg) {
 	if (func == NULL || out == NULL) {
-		return CE_EINVAL;
+		return EINVAL;
 	}
 	
-#if defined(ICE_THREADS_POSIX)
 	ce_err err;
 	struct i_thread_start_data_t* data;
 	data = ce_alloc_s(sizeof(*data), &err);
-	if (ce_success(err)) {
-		data->func = func;
-		data->arg = arg;
-		err = ifrom_errno(pthread_create(out, NULL, &i_thread_start, data));
+	if (ce_failure(err)) {
+		return err;
 	}
+	data->func = func;
+	data->arg = arg;
+#if defined(ICE_THREADS_POSIX)
+	err = ifrom_errno(pthread_create(out, NULL, &i_thread_start, data));
+#elif defined(ICE_THREADS_WIN32)
+	uintptr_t thrd_handle = _beginthreadex(NULL, 0, &i_thread_start, data, 0, NULL);
+	if (thrd_handle == -1) {
+		err = errno;
+	} else {
+		memcpy(&out->handle, &thrd_handle, sizeof(thrd_handle));
+	}
+#endif
 	if (ce_failure(err)) {
 		ce_free(data);
 	}
 	return err;
-#elif defined(ICE_THREADS_WIN32)
-	// _beginthreadex(NULL, 0, &i_thread_start, );
-#endif
 }
 
 CE_API cebool ce_thrd_equal(ce_thrd lhs, ce_thrd rhs) {
 #if defined(ICE_THREADS_POSIX)
 	return pthread_equal(lhs, rhs);
 #elif defined(ICE_THREADS_WIN32)
-	
+	return GetThreadId(lhs.handle) == GetThreadId(rhs.handle);
 #endif
 }
 
@@ -82,7 +86,9 @@ CE_API ce_thrd ce_thrd_current(void) {
 #if defined(ICE_THREADS_POSIX)
 	return pthread_self();
 #elif defined(ICE_THREADS_WIN32)
-	
+	ce_thrd out;
+	out.handle = GetCurrentThread();
+	return out;
 #endif
 }
 
@@ -90,13 +96,13 @@ CE_API unsigned long ce_thrd_id(ce_thrd thrd) {
 #if defined(ICE_THREADS_POSIX)
 	return thrd;
 #elif defined(ICE_THREADS_WIN32)
-	
+	return GetThreadId(thrd.handle);
 #endif
 }
 
 CE_API ce_err ce_thrd_sleep(const struct ce_time_t* duration, struct ce_time_t* opt_remaining) {
 	if (duration == NULL) {
-		return CE_EINVAL;
+		return EINVAL;
 	}
 	
 #if defined(ICE_THREADS_POSIX)
@@ -116,7 +122,7 @@ CE_API ce_err ce_thrd_sleep(const struct ce_time_t* duration, struct ce_time_t* 
 	DWORD sleep_status;
 	IERRBEGIN {
 		IERRDO(ce_time_get(&begin, CE_TIME_UTC));
-		sleep_status = SleepEx((DWORD)ce_time_imilli(duration), TRUE);
+		sleep_status = SleepEx((DWORD)ce_time_to_imilli(*duration), TRUE);
 		IERRDO(ce_time_get(&end, CE_TIME_UTC));
 		if (opt_remaining) {
 			*opt_remaining = ce_time_sub(end, begin);
@@ -126,8 +132,8 @@ CE_API ce_err ce_thrd_sleep(const struct ce_time_t* duration, struct ce_time_t* 
 	}
 	switch (sleep_status) {
 	case 0:                  return CE_EOK;
-	case WAIT_IO_COMPLETION: return CE_EINTR;
-	default:                 return CE_EFAIL;
+	case WAIT_IO_COMPLETION: return EINTR;
+	default:                 return CE_EUNKNOWN;
 	}
 #endif
 }
@@ -160,7 +166,7 @@ CE_API ce_err ce_thrd_detach(ce_thrd thrd) {
 	return ifrom_errno(pthread_detach(thrd));
 #elif defined(ICE_THREADS_WIN32)
 	if (thrd.handle == NULL || GetCurrentThreadId() != GetThreadId(thrd.handle)) {
-		return CE_EINVAL;
+		return EINVAL;
 	}
 	switch (CloseHandle(thrd.handle)) {
 	case FALSE: return CE_EOK;
@@ -178,13 +184,26 @@ CE_API ce_err ce_thrd_join(ce_thrd thrd, int* opt_res) {
 	}
 	return err;
 #elif defined(ICE_THREADS_WIN32)
+	if (thrd.handle == NULL || GetCurrentThreadId() != GetThreadId(thrd.handle)) {
+		return EINVAL;
+	}
 	
+	switch (WaitForSingleObjectEx(thrd.handle, INFINITE, FALSE)) {
+	case WAIT_FAILED:
+		return CE_EUNKNOWN;
+	}
+	
+	if (opt_res) {
+		GetExitCodeThread(thrd.handle, (DWORD*)opt_res);
+	}
+	CloseHandle(thrd.handle);
+	return CE_EOK;
 #endif
 }
 
 CE_API ce_err ce_thrd_run(int (*func)(void*), void* arg) {
 	if (func == NULL) {
-		return CE_EINVAL;
+		return EINVAL;
 	}
 	
 	ce_thrd thrd;
@@ -197,7 +216,7 @@ CE_API ce_err ce_thrd_run(int (*func)(void*), void* arg) {
 
 CE_API ce_err ce_call_once(ce_once_flag* flag, void (*func)(void)) {
 	if (flag == NULL || func == NULL) {
-		return CE_EINVAL;
+		return EINVAL;
 	}
 	
 #if defined(ICE_THREADS_POSIX)
@@ -206,7 +225,7 @@ CE_API ce_err ce_call_once(ce_once_flag* flag, void (*func)(void)) {
 #elif defined(ICE_THREADS_WIN32)
 	EnterCriticalSection(&flag->mtx);
 	if (!flag->called) {
-		flag->called = canvas_true;
+		flag->called = cetrue;
 		func();
 	}
 	LeaveCriticalSection(&flag->mtx);
@@ -214,4 +233,4 @@ CE_API ce_err ce_call_once(ce_once_flag* flag, void (*func)(void)) {
 #endif
 }
 
-#endif /* !ICE_THREADS_NONE */
+#endif /* !CANVAS_HAS_THREADS */

@@ -229,3 +229,5 @@
 	(((unsigned int)(major) << 26) & 64 \
 	| (((unsigned int)(major) << 14) & 1024) \
 	| ((unsigned int)(major) & 4096))
+
+#define ICE_NOIMPL() abort()

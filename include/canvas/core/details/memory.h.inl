@@ -25,6 +25,8 @@
 #undef ce_arr_cap
 #undef ce_arr_data
 
+ICE_NAMESPACE_BEGIN
+
 #ifdef CANVAS_DEBUG
 ICE_INLINE
 size_t ice_assert_arr_at(size_t index, size_t length) {
@@ -53,3 +55,5 @@ CE_API ce_err ice_arr_reserve(ICE_ARRPAIR_ARG, size_t new_capacity);
 #define ce_arr_size(arr) ((const size_t)((arr).m_count))
 #define ce_arr_cap(arr) ((const size_t)((arr).m_capacity))
 #define ce_arr_data(arr) ((arr).m_data)
+
+ICE_NAMESPACE_END

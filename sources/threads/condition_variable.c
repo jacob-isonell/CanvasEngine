@@ -19,55 +19,59 @@
 #include "icore_base.h"
 #include <canvas/threads/condition_variable.h>
 
-#ifndef ICE_THREADS_NONE
+#ifdef CANVAS_HAS_THREADS
 
 CE_API ce_err cnd_init(ce_cnd* cond) {
 	if (cond == NULL) {
-		return CE_EINVAL;
+		return EINVAL;
 	}
 	
 #if defined(ICE_THREADS_POSIX)
 	return ifrom_errno(pthread_cond_init(cond, NULL));
 #elif defined(ICE_THREADS_WIN32)
-	
+	ICE_NOIMPL();
 #endif
 }
+
 CE_API ce_err cnd_signal(ce_cnd* cond) {
 	if (cond == NULL) {
-		return CE_EINVAL;
+		return EINVAL;
 	}
 	
 #if defined(ICE_THREADS_POSIX)
 	return ifrom_errno(pthread_cond_signal(cond));
 #elif defined(ICE_THREADS_WIN32)
-	
+	ICE_NOIMPL();
 #endif
 }
+
 CE_API ce_err cnd_broadcast(ce_cnd* cond) {
 	if (cond == NULL) {
-		return CE_EINVAL;
+		return EINVAL;
 	}
 	
 #if defined(ICE_THREADS_POSIX)
 	return ifrom_errno(pthread_cond_broadcast(cond));
 #elif defined(ICE_THREADS_WIN32)
-	
+	ICE_NOIMPL();
 #endif
 }
+
 CE_API ce_err cnd_wait(ce_cnd* cond, ce_mtx* mtx) {
 	if (cond == NULL || mtx == NULL) {
-		return CE_EINVAL;
+		return EINVAL;
 	}
 	
 #if defined(ICE_THREADS_POSIX)
 	return ifrom_errno(pthread_cond_wait(cond, mtx));
 #elif defined(ICE_THREADS_WIN32)
-	
+	ICE_NOIMPL();
 #endif
 }
+
 CE_API ce_err cnd_timedwait(ce_cnd* CE_RESTRICT cond, ce_mtx* CE_RESTRICT mtx, const struct ce_time_t* CE_RESTRICT time_point) {
 	if (cond == NULL || mtx == NULL || time_point == NULL) {
-		return CE_EINVAL;
+		return EINVAL;
 	}
 	
 #if defined(ICE_THREADS_POSIX)
@@ -76,9 +80,10 @@ CE_API ce_err cnd_timedwait(ce_cnd* CE_RESTRICT cond, ce_mtx* CE_RESTRICT mtx, c
 	t.tv_nsec = time_point->nsec;
 	return ifrom_errno(pthread_cond_timedwait(cond, mtx, &t));
 #elif defined(ICE_THREADS_WIN32)
-	
+	ICE_NOIMPL();
 #endif
 }
+
 CE_API void cnd_destroy(ce_cnd* cond) {
 	if (cond == NULL) {
 		return;
@@ -87,8 +92,8 @@ CE_API void cnd_destroy(ce_cnd* cond) {
 #if defined(ICE_THREADS_POSIX)
 	pthread_cond_destroy(cond);
 #elif defined(ICE_THREADS_WIN32)
-	
+	ICE_NOIMPL();
 #endif
 }
 
-#endif /* !ICE_THREADS_NONE */
+#endif /* !CANVAS_HAS_THREADS */

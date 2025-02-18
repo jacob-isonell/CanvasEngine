@@ -23,6 +23,9 @@
 #define _XOPEN_SOURCE
 #define _FILE_OFFSET_BITS 64
 #define _ISOC11_SOURCE
+#define _CRT_NONSTDC_NO_WARNINGS
+#define _CRT_SECURE_NO_DEPRECATE
+#define _CRT_SECURE_NO_WARNINGS
 #include <canvas/core/base.h>
 
 #ifdef CANVAS_GRAPHICS
@@ -93,12 +96,6 @@ ICE_NAMESPACE_BEGIN
 	if (ce_success(IERRVAL)) break; \
 	goto IERR_ERRTHROW; \
 } while (0)
-#define IERRDO_ERRNO(errno_val) do { \
-	const int e = (errno_val); \
-	if (e == 0) break; \
-	IERRVAL = ifrom_errno(e); \
-	goto IERR_ERRTHROW; \
-} while (0)
 
 #define IERREND IERR_ERRTHROW: for (cebool ierr_cond = cetrue; ce_failure(IERRVAL) && ierr_cond; ierr_cond = cefalse)
 
@@ -108,7 +105,6 @@ ICE_API ce_err icore_init(void);
 ICE_API void icore_shutdown(void);
 
 ICE_API cebool ihas_initialized(void);
-ICE_API ce_err ifrom_errno(int errno_value);
 
 #define ICE_ASSERT(cond) assert(cond)
 
