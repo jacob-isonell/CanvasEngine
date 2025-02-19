@@ -16,25 +16,59 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_GRAPHICS_GRAPHICS_H
-#define CANVAS_GRAPHICS_GRAPHICS_H
+#include "icore_base.h"
+#include <canvas/core/library.h>
 
-#include <canvas/core/error.h>
-
-#ifndef CANVAS_GRAPHICS
-#error the graphics module for CanvasEngine has been disabled
+CE_API ce_err ce_lib_open(struct ce_lib** handle, const char* filepath, ce_lib_flags flags) {
+#if CANVAS_PLATFORM_WINDOWS
+	(void)flags;
+	HMODULE mod = LoadLibraryExA(filepath, NULL, 0);
+	if (mod == NULL) {
+		return EFAULT;
+	}
+	memcpy(handle, &mod, sizeof(mod));
+	return CE_EOK;
+#elif CANVAS_PLATFORM_UNIX
+	/* dlopen(); */
+	ICE_NOIMPL();
 #endif
+}
 
-/* CANVAS_EXPOSE_VULKAN
- * CANVAS_EXPOSE_WAYLAND
- * CANVAS_EXPOSE_X11
- * CANVAS_EXPOSE_VULKAN
- */
+CE_API ce_err ce_lib_wopen(struct ce_lib** handle, const wchar_t* filepath, ce_lib_flags flags) {
+#if CANVAS_PLATFORM_WINDOWS
+	(void)flags;
+	const HMODULE hmod = LoadLibraryExW(filepath, NULL, 0);
+	if (hmod == NULL) {
+		return EFAULT;
+	}
+	memcpy(handle, &hmod, sizeof(hmod));
+	return CE_EOK;
+#elif CANVAS_PLATFORM_UNIX
+	/* dlopen(); */
+	ICE_NOIMPL();
+#endif
+}
 
-ICE_NAMESPACE_BEGIN
+CE_API ce_err ce_lib_load(struct ce_lib* handle, const char* name, void* out) {
+	if (handle == NULL || name == NULL || out == NULL) {
+		return EINVAL;
+	}
+#if CANVAS_PLATFORM_WINDOWS
+	ICE_NOIMPL();
+	// GetProcAddress();
+#elif CANVAS_PLATFORM_UNIX
+	ICE_NOIMPL();
+#endif
+}
 
-
-
-ICE_NAMESPACE_END
-
-#endif /* !CANVAS_GRAPHICS_GRAPHICS_H */
+CE_API void ce_lib_close(struct ce_lib* handle) {
+	if (handle == NULL) {
+		return;
+	}
+	
+#if CANVAS_PLATFORM_WINDOWS
+	FreeLibrary((HMODULE)handle);
+#elif CANVAS_PLATFORM_UNIX
+	ICE_NOIMPL();
+#endif
+}

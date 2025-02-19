@@ -19,50 +19,10 @@
 #include "icore_global.h"
 #include <canvas/core/memory.h>
 
-CE_API ce_err ce_set_alloc(struct ce_alloc_t in) {
-	if (in.alloc == NULL || in.free == NULL) {
-		return EINVAL;
-	}
-	
-	ce_err err = ce_mtx_lock(&icore.mem.lck);
-	if (ce_success(err)) {
-		icore.mem.alloc = in;
-		ce_mtx_unlock(&icore.mem.lck);
-	}
-	return err;
-}
-
-CE_API void* ce_alloc_s(size_t bytes, ce_err* opt_err) {
-	void* out = NULL;
-	ce_err err = ce_mtx_lock(&icore.mem.lck);
-	if (ce_success(err)) {
-		out = icore.mem.alloc.alloc(bytes, icore.mem.alloc.user);
-		err = (out == NULL) ? ENOMEM : CE_EOK;
-		ce_mtx_unlock(&icore.mem.lck);
-	}
-	if (opt_err) {
-		*opt_err = err;
-	}
-	return out;
-}
-
-CE_API void* ce_alloc(size_t bytes) {
-	void* out = NULL;
-	if (ce_success(ce_mtx_lock(&icore.mem.lck))) {
-		out = icore.mem.alloc.alloc(bytes, icore.mem.alloc.user);
-		ce_mtx_unlock(&icore.mem.lck);
-	}
-	return out;
-}
-
-CE_API ce_err ce_free(void* addr) {
-	ce_err err = ce_mtx_lock(&icore.mem.lck);
-	if (ce_success(err)) {
-		icore.mem.alloc.free(addr, icore.mem.alloc.user);
-		ce_mtx_unlock(&icore.mem.lck);
-	}
-	return err;
-}
+struct imemdata {
+	size_t length;
+	unsigned char buffer[1];
+};
 
 struct itemp_arr_t {
 	size_t m_capacity;
@@ -84,7 +44,99 @@ struct iarr_data_t {
 #define IFROM_ARRARG CE_STRUCT_INIT(struct iarr_data_t) { &(ITEMPARR->m_capacity), &(ITEMPARR->m_count), {&(ITEMPARR->m_data)}, in_arr_stride }
 #define IARRSTRIDE in_arr_stride
 
-CE_API ce_err ice_arr_alloc(ICE_ARRPAIR_ARG, size_t reserve) {
+static struct imemdata* igetmemdata(void* in) {
+	return (struct imemdata*)((unsigned char*)in - offsetof(struct imemdata, buffer));
+}
+
+CE_API ce_err ce_set_alloc(struct ce_alloc_t in) {
+	if (in.alloc == NULL || in.free == NULL) {
+		return EINVAL;
+	}
+	
+	ce_err err = ce_mtx_lock(&icore.mem.lck);
+	if (ce_success(err)) {
+		icore.mem.alloc = in;
+		ce_mtx_unlock(&icore.mem.lck);
+	}
+	return err;
+}
+
+CE_API void* ce_alloc_s(size_t bytes, ce_err* opt_err) {
+	void* out = NULL;
+	const size_t alloc_size = offsetof(struct imemdata, buffer) + bytes;
+	ce_err err = ce_mtx_lock(&icore.mem.lck);
+	if (ce_success(err)) {
+		struct imemdata* const data = (struct imemdata*)icore.mem.alloc.alloc(alloc_size, icore.mem.alloc.user);
+		ce_mtx_unlock(&icore.mem.lck);
+		if (data) {
+			err = CE_EOK;
+			data->length = bytes;
+			out = data->buffer;
+		} else err = ENOMEM;
+	}
+	if (opt_err) {
+		*opt_err = err;
+	}
+	return out;
+}
+
+CE_API void* ce_alloc(size_t bytes) {
+	void* out = NULL;
+	const size_t alloc_size = offsetof(struct imemdata, buffer) + bytes;
+	if (ce_success(ce_mtx_lock(&icore.mem.lck))) {
+		struct imemdata* const data = (struct imemdata*)icore.mem.alloc.alloc(alloc_size, icore.mem.alloc.user);
+		ce_mtx_unlock(&icore.mem.lck);
+		if (data) {
+			data->length = bytes;
+			out = data->buffer;
+		}
+	}
+	return out;
+}
+
+CE_API ce_err ce_free(void* addr) {
+	if (addr == NULL) {
+		return CE_EOK;
+	}
+	
+	struct imemdata* const data = igetmemdata(addr);
+	
+	ce_err err = ce_mtx_lock(&icore.mem.lck);
+	if (ce_success(err)) {
+		icore.mem.alloc.free(data, data->length + offsetof(struct imemdata, buffer), icore.mem.alloc.user);
+		ce_mtx_unlock(&icore.mem.lck);
+	}
+	return err;
+}
+
+CE_API ce_err ice_realloc(void* inout, size_t new_size) {
+	void** const inout_ptr = (void**)inout;
+	struct imemdata* const data = igetmemdata(*inout_ptr);
+	if (new_size <= data->length) {
+		return CE_EOK;
+	}
+	
+	const ce_err err = ce_mtx_lock(&icore.mem.lck);
+	if (ce_failure(err)) {
+		return err;
+	}
+	
+	const size_t alloc_size = offsetof(struct imemdata, buffer) + new_size;
+	struct imemdata* const new_data = (struct imemdata*)icore.mem.alloc.alloc(alloc_size, icore.mem.alloc.user);
+	if (new_data == NULL) {
+		ce_mtx_unlock(&icore.mem.lck);
+		return ENOMEM;
+	}
+	
+	new_data->length = new_size;
+	memcpy(new_data->buffer, data->buffer, data->length);
+	*inout_ptr = new_data->buffer;
+	icore.mem.alloc.free(data, data->length + offsetof(struct imemdata, buffer), icore.mem.alloc.user);
+	ce_mtx_unlock(&icore.mem.lck);
+	return CE_EOK;
+}
+
+/*CE_API ce_err ice_arr_alloc(ICE_ARRPAIR_ARG, size_t reserve) {
 	struct iarr_data_t in_arr = IFROM_ARRARG;
 	(void)reserve;
 	abort();
@@ -100,7 +152,7 @@ CE_API void ice_arr_free(void* array) {
 }
 
 CE_API ce_err ice_arr_resize(ICE_ARRPAIR_ARG, size_t new_size);
-CE_API ce_err ice_arr_reserve(ICE_ARRPAIR_ARG, size_t new_capacity);
+CE_API ce_err ice_arr_reserve(ICE_ARRPAIR_ARG, size_t new_capacity);*/
 
 
 /*CE_API ce_err ice_arr_alloc(void** out, size_t reserve, size_t stride) {

@@ -16,25 +16,21 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_GRAPHICS_GRAPHICS_H
-#define CANVAS_GRAPHICS_GRAPHICS_H
+#include "icore_base.h"
+#include <canvas/core/string.h>
 
-#include <canvas/core/error.h>
+/*ICE_API size_t icore_str2wcs(wchar_t* buffer, size_t buffer_count, const char* src, size_t opt_srclen) {
+	// wcsrtombs()
+}
 
-#ifndef CANVAS_GRAPHICS
-#error the graphics module for CanvasEngine has been disabled
-#endif
+ICE_API size_t icore_wcs2str(char* buffer, size_t buffer_count, const wchar_t* src, size_t opt_srclen) {
+	
+}
 
-/* CANVAS_EXPOSE_VULKAN
- * CANVAS_EXPOSE_WAYLAND
- * CANVAS_EXPOSE_X11
- * CANVAS_EXPOSE_VULKAN
- */
+ICE_API wchar_t* icore_str2wcsd(const char* src, size_t opt_srclen) {
+	
+}
 
-ICE_NAMESPACE_BEGIN
-
-
-
-ICE_NAMESPACE_END
-
-#endif /* !CANVAS_GRAPHICS_GRAPHICS_H */
+ICE_API char* icore_wcs2strd(const wchar_t* src, size_t opt_srclen) {
+	
+}*/

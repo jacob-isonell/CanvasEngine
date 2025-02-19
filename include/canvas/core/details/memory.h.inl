@@ -24,6 +24,7 @@
 #undef ce_arr_size
 #undef ce_arr_cap
 #undef ce_arr_data
+#undef ce_realloc
 
 ICE_NAMESPACE_BEGIN
 
@@ -42,11 +43,13 @@ size_t ice_assert_arr_at(size_t index, size_t length) {
 #define ICE_ARRPAIR(arr) ((void**)(arr)), sizeof((arr)->m_data)
 #define ICE_ARRPAIR_ARG void** inout_arr_arg, size_t in_arr_stride
 
+CE_API ce_err ice_realloc(void* inout, size_t new_size);
 CE_API ce_err ice_arr_alloc(ICE_ARRPAIR_ARG, size_t reserve);
 CE_API void ice_arr_free(void* array);
 CE_API ce_err ice_arr_resize(ICE_ARRPAIR_ARG, size_t new_size);
 CE_API ce_err ice_arr_reserve(ICE_ARRPAIR_ARG, size_t new_capacity);
 
+#define ce_realloc(inout, new_size) ice_realloc((void**)(inout), (sizeof(**(inout)), (new_size)))
 #define ce_arr(type) struct { size_t m_capacity; size_t m_count; type* m_data; }
 #define CE_ARRINIT {0,0,NULL}
 #define ce_arr_alloc(out, reserve) ice_arr_alloc(ICE_ARRPAIR(out), (reserve))

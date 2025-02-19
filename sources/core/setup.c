@@ -44,7 +44,8 @@ static void* s_defalloc(size_t bytes, void* arg) {
 	return malloc(bytes);
 }
 
-static void s_deffree(void* addr, void* arg) {
+static void s_deffree(void* addr, size_t bytes, void* arg) {
+	(void)bytes;
 	(void)arg;
 	free(addr);
 }

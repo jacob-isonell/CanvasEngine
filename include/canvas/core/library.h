@@ -16,25 +16,23 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_GRAPHICS_GRAPHICS_H
-#define CANVAS_GRAPHICS_GRAPHICS_H
+#ifndef CANVAS_CORE_LIBRARY_H
+#define CANVAS_CORE_LIBRARY_H
 
 #include <canvas/core/error.h>
 
-#ifndef CANVAS_GRAPHICS
-#error the graphics module for CanvasEngine has been disabled
-#endif
-
-/* CANVAS_EXPOSE_VULKAN
- * CANVAS_EXPOSE_WAYLAND
- * CANVAS_EXPOSE_X11
- * CANVAS_EXPOSE_VULKAN
- */
-
 ICE_NAMESPACE_BEGIN
 
+struct ce_lib;
 
+#define ce_lib_flags int
+#define CE_LIB_FLAG_NONE 0
+
+CE_API ce_err ce_lib_open(struct ce_lib** handle, const char* filepath, ce_lib_flags flags);
+CE_API ce_err ce_lib_wopen(struct ce_lib** handle, const wchar_t* filepath, ce_lib_flags flags);
+CE_API ce_err ce_lib_load(struct ce_lib* handle, const char* name, void* out);
+CE_API void ce_lib_close(struct ce_lib* handle);
 
 ICE_NAMESPACE_END
 
-#endif /* !CANVAS_GRAPHICS_GRAPHICS_H */
+#endif /* !CANVAS_CORE_LIBRARY_H */

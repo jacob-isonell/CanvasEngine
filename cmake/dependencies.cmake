@@ -36,8 +36,9 @@ if (CANVAS_GRAPHICS)
 	find_package(Vulkan)
 	if (Vulkan_FOUND)
 		target_link_libraries(CanvasEngineDependencies INTERFACE
-			Vulkan::Vulkan
+			# Vulkan::Vulkan
+			Vulkan::Headers
 		)
-		set(ICE_VULKAN)
+		set(ICE_VULKAN ON)
 	endif (Vulkan_FOUND)
 endif (CANVAS_GRAPHICS)

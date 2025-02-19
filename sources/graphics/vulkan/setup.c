@@ -16,25 +16,21 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_GRAPHICS_GRAPHICS_H
-#define CANVAS_GRAPHICS_GRAPHICS_H
+#include "ifx_vk.h"
+#include "ivk_proto.h"
 
-#include <canvas/core/error.h>
+ICE_API VkInstance ivk_inst = VK_NULL_HANDLE;
 
-#ifndef CANVAS_GRAPHICS
-#error the graphics module for CanvasEngine has been disabled
-#endif
+ICE_API ce_err ifxvk_init(void) {
+	
+	// vkCreateInstance(NULL, NULL, NULL);
+	return CE_EOK;
+}
 
-/* CANVAS_EXPOSE_VULKAN
- * CANVAS_EXPOSE_WAYLAND
- * CANVAS_EXPOSE_X11
- * CANVAS_EXPOSE_VULKAN
- */
+ICE_API void ifxvk_shutdown(void) {
+	
+}
 
-ICE_NAMESPACE_BEGIN
-
-
-
-ICE_NAMESPACE_END
-
-#endif /* !CANVAS_GRAPHICS_GRAPHICS_H */
+ICE_API ce_err ivk_load(void) {
+	return CE_EOK;
+}

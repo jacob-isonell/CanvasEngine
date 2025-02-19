@@ -17,7 +17,7 @@
 **************************************************************************/
 
 #include "ifx_base.h"
-#include <canvas/graphics/setup.h>
+#include "ifx_vk.h"
 
 CE_API ce_err ce_graphics_options(const struct ce_graphics_t* options) {
 	if (options == NULL) {
@@ -31,9 +31,12 @@ CE_API ce_err ce_graphics_options(const struct ce_graphics_t* options) {
 }
 
 ICE_API ce_err ifx_init(void) {
-	return CE_EOK;
+	IERRBEGIN {
+		IERRDO(ifxvk_init());
+	} IERREND { }
+	return IERRVAL;
 }
 
 ICE_API void ifx_shutdown(void) {
-	
+	ifxvk_shutdown();
 }

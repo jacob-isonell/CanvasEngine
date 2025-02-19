@@ -225,9 +225,12 @@
 #	endif
 #endif
 
+#define ICE_VERARG(in) ((unsigned int)(in))
+#define ICE_VERSHIFT(in, shift) (ICE_VERARG(in) << shift)
+
 #define CE_VERSION(major, minor, patch) \
-	(((unsigned int)(major) << 26) & 64 \
-	| (((unsigned int)(major) << 14) & 1024) \
-	| ((unsigned int)(major) & 4096))
+	(ICE_VERSHIFT(major, 24) \
+	| ICE_VERSHIFT(minor, 14) \
+	| ICE_VERSHIFT(patch, 0))
 
 #define ICE_NOIMPL() abort()

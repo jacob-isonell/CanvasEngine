@@ -37,6 +37,8 @@
 #include <limits.h>
 #include <float.h>
 #include <errno.h>
+#include <string.h>
+#include <wchar.h>
 
 ICE_NAMESPACE_BEGIN
 
@@ -96,13 +98,10 @@ ICE_NAMESPACE_BEGIN
 /** @brief Gets the number of elements in a fixed sized array */
 #define CE_ARRLEN(arr) (sizeof(arr) / sizeof(*(arr)))
 
-union ce_version {
-	unsigned int value;
-	struct {
-		unsigned int patch : 14; /* 4096 */
-		unsigned int minor : 12; /* 1024 */
-		unsigned int major : 6;  /* 64 */
-	} packed;
+struct ce_version {
+	unsigned int patch : 14;
+	unsigned int minor : 12;
+	unsigned int major : 6;
 };
 
 #define CE_VERSION(major, minor, patch) /* implementation-defined */

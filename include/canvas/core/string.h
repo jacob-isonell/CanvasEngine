@@ -16,20 +16,10 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_GRAPHICS_GRAPHICS_H
-#define CANVAS_GRAPHICS_GRAPHICS_H
+#ifndef CANVAS_CORE_STRING_H
+#define CANVAS_CORE_STRING_H
 
-#include <canvas/core/error.h>
-
-#ifndef CANVAS_GRAPHICS
-#error the graphics module for CanvasEngine has been disabled
-#endif
-
-/* CANVAS_EXPOSE_VULKAN
- * CANVAS_EXPOSE_WAYLAND
- * CANVAS_EXPOSE_X11
- * CANVAS_EXPOSE_VULKAN
- */
+#include <canvas/core/memory.h>
 
 ICE_NAMESPACE_BEGIN
 
@@ -37,4 +27,4 @@ ICE_NAMESPACE_BEGIN
 
 ICE_NAMESPACE_END
 
-#endif /* !CANVAS_GRAPHICS_GRAPHICS_H */
+#endif /* !CANVAS_CORE_STRING_H */

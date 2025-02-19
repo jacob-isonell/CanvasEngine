@@ -24,8 +24,8 @@
 ICE_NAMESPACE_BEGIN
 
 struct ce_alloc_t {
-	void* (*alloc)(size_t, void*);
-	void (*free)(void*, void*);
+	void* (*alloc)(size_t count, void* usr);
+	void (*free)(void* address, size_t count, void* usr);
 	void* user;
 };
 
@@ -33,6 +33,7 @@ CE_API ce_err ce_set_alloc(struct ce_alloc_t in);
 CE_API void* ce_alloc_s(size_t bytes, ce_err* opt_err);
 CE_API void* ce_alloc(size_t bytes);
 CE_API ce_err ce_free(void* addr);
+#define ce_realloc(inout, new_size) /* implementation-defined */
 
 #define ce_arr(type) /* implementation-defined */
 #define CE_ARRINIT /* implementation-defined */

@@ -20,3 +20,7 @@ target_sources(CanvasEngine
 PRIVATE
 	"setup.c"
 )
+
+if (ICE_VULKAN)
+	ICE_ADDDIR("vulkan")
+endif ()

@@ -26,15 +26,16 @@
 #define _CRT_NONSTDC_NO_WARNINGS
 #define _CRT_SECURE_NO_DEPRECATE
 #define _CRT_SECURE_NO_WARNINGS
+#define VK_NO_PROTOTYPES
 #include <canvas/core/base.h>
 
 #ifdef CANVAS_GRAPHICS
-#	define CANVAS_GRAPHICS_EXPOSE_VULKAN
+#	define CANVAS_EXPOSE_VULKAN
 #	if CANVAS_PLATFORM_UNIX
-#		define CANVAS_GRAPHICS_EXPOSE_WAYLAND
-#		define CANVAS_GRAPHICS_EXPOSE_X11
+#		define CANVAS_EXPOSE_WAYLAND
+#		define CANVAS_EXPOSE_X11
 #	elif CANVAS_PLATFORM_WINDOWS
-#		define CANVAS_GRAPHICS_EXPOSE_VULKAN
+#		define CANVAS_EXPOSE_WIN32
 #	endif
 #endif
 
@@ -81,10 +82,11 @@
  *  ce_* (library API used by API consumer)
  *  ice_* (internal library usage, not intended to be used by the API user but are declared in the API header files)
  *  i* (internal stuff not exposed/accessible to API consumer)
- *  icore_* (core module)
- *  ifx_* (graphics module)
- *  iaud_* (audio module)
- *  inet_* (network module)
+ *    icore_* (core module)
+ *    ifx_* (graphics module)
+ *      ivk_* (vulkan api)
+ *    iaud_* (audio module)
+ *    inet_* (network module)
  */
 
 ICE_NAMESPACE_BEGIN
@@ -100,6 +102,12 @@ ICE_NAMESPACE_BEGIN
 #define IERREND IERR_ERRTHROW: for (cebool ierr_cond = cetrue; ce_failure(IERRVAL) && ierr_cond; ierr_cond = cefalse)
 
 #define ICE_REQ_INIT() ICE_ASSERT(ihas_initialized())
+
+ICE_API size_t icore_str2wcs(wchar_t* buffer, size_t buffer_count, const char* src, size_t opt_srclen);
+ICE_API size_t icore_wcs2str(char* buffer, size_t buffer_count, const wchar_t* src, size_t opt_srclen);
+
+ICE_API wchar_t* icore_str2wcsd(const char* src, size_t opt_srclen);
+ICE_API char* icore_wcs2strd(const wchar_t* src, size_t opt_srclen);
 
 ICE_API ce_err icore_init(void);
 ICE_API void icore_shutdown(void);

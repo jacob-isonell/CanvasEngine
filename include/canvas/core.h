@@ -21,8 +21,10 @@
 
 #include <canvas/core/base.h>
 #include <canvas/core/error.h>
+#include <canvas/core/library.h>
 #include <canvas/core/memory.h>
-#include <canvas/core/time.h>
 #include <canvas/core/setup.h>
+#include <canvas/core/string.h>
+#include <canvas/core/time.h>
 
 #endif /* !CANVAS_CORE_H */
