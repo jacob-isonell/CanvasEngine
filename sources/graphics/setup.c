@@ -21,10 +21,10 @@
 
 CE_API ce_err ce_graphics_options(const struct ce_graphics_t* options) {
 	if (options == NULL) {
-		return EINVAL;
+		return CE_EINVAL;
 	}
 	if (ihas_initialized()) {
-		return EACCES;
+		return CE_EACCES;
 	}
 	
 	return CE_EOK;

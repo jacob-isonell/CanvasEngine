@@ -240,7 +240,7 @@
 
 #ifndef CANVAS_SKIP_COMPILER_CHECKS
 #	if CANVAS_COMPILER_MSVC
-#	elif defined(__STDC__) &&| __STDC__
+#	elif defined(__STDC__) && __STDC__
 #	else
 #		error CanvasEngine does not support the current compiler
 #	endif

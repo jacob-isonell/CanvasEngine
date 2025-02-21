@@ -113,6 +113,7 @@ ICE_API ce_err icore_init(void);
 ICE_API void icore_shutdown(void);
 
 ICE_API cebool ihas_initialized(void);
+ICE_API ce_err ierrno(int in);
 
 #define ICE_ASSERT(cond) assert(cond)
 

@@ -47,7 +47,7 @@ static unsigned int CE_STDCALL i_thread_start(void* in) {
 
 CE_API ce_err ce_thrd_create(ce_thrd* out, int(*func)(void*), void* arg) {
 	if (func == NULL || out == NULL) {
-		return EINVAL;
+		return CE_EINVAL;
 	}
 	
 	ce_err err;
@@ -59,7 +59,7 @@ CE_API ce_err ce_thrd_create(ce_thrd* out, int(*func)(void*), void* arg) {
 	data->func = func;
 	data->arg = arg;
 #if defined(ICE_THREADS_POSIX)
-	err = ifrom_errno(pthread_create(out, NULL, &i_thread_start, data));
+	err = ierrno(pthread_create(out, NULL, &i_thread_start, data));
 #elif defined(ICE_THREADS_WIN32)
 	uintptr_t thrd_handle = _beginthreadex(NULL, 0, &i_thread_start, data, 0, NULL);
 	if (thrd_handle == -1) {
@@ -102,7 +102,7 @@ CE_API unsigned long ce_thrd_id(ce_thrd thrd) {
 
 CE_API ce_err ce_thrd_sleep(const struct ce_time_t* duration, struct ce_time_t* opt_remaining) {
 	if (duration == NULL) {
-		return EINVAL;
+		return CE_EINVAL;
 	}
 	
 #if defined(ICE_THREADS_POSIX)
@@ -114,7 +114,7 @@ CE_API ce_err ce_thrd_sleep(const struct ce_time_t* duration, struct ce_time_t* 
 			opt_remaining->sec = rem.tv_sec;
 			opt_remaining->nsec = rem.tv_nsec;
 		}
-		return ifrom_errno(errno);
+		return ierrno(errno);
 	}
 	return CE_EOK;
 #elif defined(ICE_THREADS_WIN32)
@@ -132,7 +132,7 @@ CE_API ce_err ce_thrd_sleep(const struct ce_time_t* duration, struct ce_time_t* 
 	}
 	switch (sleep_status) {
 	case 0:                  return CE_EOK;
-	case WAIT_IO_COMPLETION: return EINTR;
+	case WAIT_IO_COMPLETION: return CE_EINTR;
 	default:                 return CE_EUNKNOWN;
 	}
 #endif
@@ -143,7 +143,7 @@ CE_API ce_err ce_thrd_yield(void) {
 	if (sched_yield() == 0) {
 		return CE_EOK;
 	}
-	return ifrom_errno(errno);
+	return ierrno(errno);
 #elif defined(ICE_THREADS_WIN32)
 	switch (SwitchToThread()) {
 	case FALSE: return CE_EUNKNOWN;
@@ -163,10 +163,10 @@ CE_ATTR_NORET CE_API void ce_thrd_exit(int res) {
 
 CE_API ce_err ce_thrd_detach(ce_thrd thrd) {
 #if defined(ICE_THREADS_POSIX)
-	return ifrom_errno(pthread_detach(thrd));
+	return ierrno(pthread_detach(thrd));
 #elif defined(ICE_THREADS_WIN32)
 	if (thrd.handle == NULL || GetCurrentThreadId() != GetThreadId(thrd.handle)) {
-		return EINVAL;
+		return CE_EINVAL;
 	}
 	switch (CloseHandle(thrd.handle)) {
 	case FALSE: return CE_EOK;
@@ -178,14 +178,14 @@ CE_API ce_err ce_thrd_detach(ce_thrd thrd) {
 CE_API ce_err ce_thrd_join(ce_thrd thrd, int* opt_res) {
 #if defined(ICE_THREADS_POSIX)
 	intptr_t res;
-	const ce_err err = ifrom_errno(pthread_join(thrd, (void**)&res));
+	const ce_err err = ierrno(pthread_join(thrd, (void**)&res));
 	if (ce_success(err) && opt_res) {
 		*opt_res = (int)res;
 	}
 	return err;
 #elif defined(ICE_THREADS_WIN32)
 	if (thrd.handle == NULL || GetCurrentThreadId() != GetThreadId(thrd.handle)) {
-		return EINVAL;
+		return CE_EINVAL;
 	}
 	
 	switch (WaitForSingleObjectEx(thrd.handle, INFINITE, FALSE)) {
@@ -203,7 +203,7 @@ CE_API ce_err ce_thrd_join(ce_thrd thrd, int* opt_res) {
 
 CE_API ce_err ce_thrd_run(int (*func)(void*), void* arg) {
 	if (func == NULL) {
-		return EINVAL;
+		return CE_EINVAL;
 	}
 	
 	ce_thrd thrd;
@@ -216,7 +216,7 @@ CE_API ce_err ce_thrd_run(int (*func)(void*), void* arg) {
 
 CE_API ce_err ce_call_once(ce_once_flag* flag, void (*func)(void)) {
 	if (flag == NULL || func == NULL) {
-		return EINVAL;
+		return CE_EINVAL;
 	}
 	
 #if defined(ICE_THREADS_POSIX)

@@ -42,11 +42,6 @@
 
 ICE_NAMESPACE_BEGIN
 
-/** @brief CanvasEngine's error type. Based on errno. Values less than or equal to 0 is a success value. */
-#define ce_err int
-
-#define CE_EOK 0 /* No error */
-
 #define cetrue ((cebool)1)
 #define cefalse ((cebool)0)
 

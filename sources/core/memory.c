@@ -50,7 +50,7 @@ static struct imemdata* igetmemdata(void* in) {
 
 CE_API ce_err ce_set_alloc(struct ce_alloc_t in) {
 	if (in.alloc == NULL || in.free == NULL) {
-		return EINVAL;
+		return CE_EINVAL;
 	}
 	
 	ce_err err = ce_mtx_lock(&icore.mem.lck);
@@ -72,7 +72,7 @@ CE_API void* ce_alloc_s(size_t bytes, ce_err* opt_err) {
 			err = CE_EOK;
 			data->length = bytes;
 			out = data->buffer;
-		} else err = ENOMEM;
+		} else err = CE_ENOMEM;
 	}
 	if (opt_err) {
 		*opt_err = err;
@@ -125,7 +125,7 @@ CE_API ce_err ice_realloc(void* inout, size_t new_size) {
 	struct imemdata* const new_data = (struct imemdata*)icore.mem.alloc.alloc(alloc_size, icore.mem.alloc.user);
 	if (new_data == NULL) {
 		ce_mtx_unlock(&icore.mem.lck);
-		return ENOMEM;
+		return CE_ENOMEM;
 	}
 	
 	new_data->length = new_size;
