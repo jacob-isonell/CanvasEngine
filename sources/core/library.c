@@ -68,8 +68,12 @@ CE_API ce_err ce_lib_load(struct ce_lib* handle, const char* name, void* out) {
 		return CE_EINVAL;
 	}
 #if CANVAS_PLATFORM_WINDOWS
-	ICE_NOIMPL();
-	// GetProcAddress();
+	FARPROC p = GetProcAddress((HMODULE)handle, name);
+	if (p == NULL) {
+		return CE_ENODATA;
+	}
+	memcpy(out, &p, sizeof(void*));
+	return CE_EOK;
 #elif CANVAS_PLATFORM_UNIX
 	(void)dlerror();
 	void* const p = dlsym((void*)handle, name);

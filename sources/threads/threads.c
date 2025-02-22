@@ -127,14 +127,13 @@ CE_API ce_err ce_thrd_sleep(const struct ce_time_t* duration, struct ce_time_t* 
 		if (opt_remaining) {
 			*opt_remaining = ce_time_sub(end, begin);
 		}
-	} IERREND {
-		return IERRVAL;
-	}
-	switch (sleep_status) {
-	case 0:                  return CE_EOK;
-	case WAIT_IO_COMPLETION: return CE_EINTR;
-	default:                 return CE_EUNKNOWN;
-	}
+		switch (sleep_status) {
+		case 0:                  return CE_EOK;
+		case WAIT_IO_COMPLETION: return CE_EINTR;
+		default:                 return CE_EUNKNOWN;
+		}
+	} IERREND { }
+	return IERRVAL;
 #endif
 }
 

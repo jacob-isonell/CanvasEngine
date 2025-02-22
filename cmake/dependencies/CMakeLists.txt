@@ -16,18 +16,31 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
+add_library(CanvasEngineDependencies INTERFACE)
 include(FindPackageHandleStandardArgs)
 
-find_package(X11 COMPONENTS Xrandr xcb xcb_randr)
+### Core module dependencies
 
-cmake_dependent_option(CANVAS_GRAPHICS_SUPPORT_X11 "Enable support for X11" ON "CANVAS_GRAPHICS;X11_FOUND" OFF)
 
-if (CANVAS_GRAPHICS_SUPPORT_X11)
-	target_link_libraries(CanvasEngineDependencies
-	INTERFACE
-		X11::X11
-		X11::Xrandr
-		X11::xcb
-		X11::xcb_randr
-	)
-endif ()
+### Graphics module dependencies
+
+include("find_x11.cmake")
+include("find_wayland.cmake")
+include("find_vulkan.cmake")
+
+if (CANVAS_GRAPHICS)
+	if (UNIX)
+		ICELinkX11(CanvasEngineDependencies INTERFACE)
+		ICELinkWaylandClient(CanvasEngineDependencies INTERFACE)
+		if (NOT CANVAS_GRAPHICS_ENABLE_WAYLAND AND NOT CANVAS_GRAPHICS_ENABLE_X11)
+			message(FATAL_ERROR "CanvasEngine requires support for either X11 or Wayland on Linux but neither could be found or both were disabled")
+		endif ()
+	endif ()
+	ICELinkVulkan(CanvasEngineDependencies INTERFACE)
+	
+	if (ICE_DEVMODE)
+		message(STATUS "Vulkan_FOUND : ${Vulkan_FOUND}")
+		message(STATUS "CANVAS_GRAPHICS_ENABLE_VULKAN : ${CANVAS_GRAPHICS_ENABLE_VULKAN}")
+		message(STATUS "ICE_VULKAN : ${ICE_VULKAN}")
+	endif ()
+endif (CANVAS_GRAPHICS)

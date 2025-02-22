@@ -152,11 +152,23 @@ CE_API const char* ce_errstr(ce_err error) {
 	case CE_ENOTRECOVERABLE  : return "State not recoverable";
 	case CE_ERFKILL          : return "Operation not possible due to RF-kill";
 	case CE_EHWPOISON        : return "Memory page has hardware error";
+	
+	case CE_EINIT            : return "Initialization failed";
+	case CE_EFAIL            : return "Operation failed";
+	case CE_EDRIVER          : return "Incompatible driver";
+	case CE_EOBJECTS         : return "Too many objects";
+	case CE_EFRAG            : return "Data fragmentation";
+	case CE_EFORMAT          : return "Data format incompatible";
+	case CE_ELOST            : return "Resource was lost";
 	case CE_EVKLAYER         : return "Vulkan layer cannot be found";
 	case CE_EVKEXT           : return "Vulkan extension cannot be found";
 	case CE_EVKFEAT          : return "Vulkan feature cannot be found";
 	case CE_EVKFORMAT        : return "Vulkan format not supported by device";
 	case CE_EVKSURFACE       : return "Vulkan surface was lost";
+	case CE_EUNDEF           : return "Undefined error";
+		
+	case CE_EOK              : return "No error";
+	
 	default:
 	case CE_EUNKNOWN         : return "Unknown/unspecified error";
 	}
@@ -164,399 +176,400 @@ CE_API const char* ce_errstr(ce_err error) {
 
 ICE_API ce_err ierrno(int in) {
 	switch (in) {
+	case 0: return CE_EOK;
 	default: return CE_EUNKNOWN;
 #ifdef EPERM
-	case CE_EPERM: return EPERM;
+	case EPERM: return CE_EPERM;
 #endif /* !EPERM */
 #ifdef ENOENT
-	case CE_ENOENT: return ENOENT;
+	case ENOENT: return CE_ENOENT;
 #endif /* !ENOENT */
 #ifdef ESRCH
-	case CE_ESRCH: return ESRCH;
+	case ESRCH: return CE_ESRCH;
 #endif /* !ESRCH */
 #ifdef EINTR
-	case CE_EINTR: return EINTR;
+	case EINTR: return CE_EINTR;
 #endif /* !EINTR */
 #ifdef EIO
-	case CE_EIO: return EIO;
+	case EIO: return CE_EIO;
 #endif /* !EIO */
 #ifdef ENXIO
-	case CE_ENXIO: return ENXIO;
+	case ENXIO: return CE_ENXIO;
 #endif /* !ENXIO */
 #ifdef E2BIG
-	case CE_E2BIG: return E2BIG;
+	case E2BIG: return CE_E2BIG;
 #endif /* !E2BIG */
 #ifdef ENOEXEC
-	case CE_ENOEXEC: return ENOEXEC;
+	case ENOEXEC: return CE_ENOEXEC;
 #endif /* !ENOEXEC */
 #ifdef EBADF
-	case CE_EBADF: return EBADF;
+	case EBADF: return CE_EBADF;
 #endif /* !EBADF */
 #ifdef ECHILD
-	case CE_ECHILD: return ECHILD;
+	case ECHILD: return CE_ECHILD;
 #endif /* !ECHILD */
 #ifdef EAGAIN
-	case CE_EAGAIN: return EAGAIN;
+	case EAGAIN: return CE_EAGAIN;
 #endif /* !EAGAIN */
 #ifdef ENOMEM
-	case CE_ENOMEM: return ENOMEM;
+	case ENOMEM: return CE_ENOMEM;
 #endif /* !ENOMEM */
 #ifdef EACCES
-	case CE_EACCES: return EACCES;
+	case EACCES: return CE_EACCES;
 #endif /* !EACCES */
 #ifdef EFAULT
-	case CE_EFAULT: return EFAULT;
+	case EFAULT: return CE_EFAULT;
 #endif /* !EFAULT */
 #ifdef ENOTBLK
-	case CE_ENOTBLK: return ENOTBLK;
+	case ENOTBLK: return CE_ENOTBLK;
 #endif /* !ENOTBLK */
 #ifdef EBUSY
-	case CE_EBUSY: return EBUSY;
+	case EBUSY: return CE_EBUSY;
 #endif /* !EBUSY */
 #ifdef EEXIST
-	case CE_EEXIST: return EEXIST;
+	case EEXIST: return CE_EEXIST;
 #endif /* !EEXIST */
 #ifdef EXDEV
-	case CE_EXDEV: return EXDEV;
+	case EXDEV: return CE_EXDEV;
 #endif /* !EXDEV */
 #ifdef ENODEV
-	case CE_ENODEV: return ENODEV;
+	case ENODEV: return CE_ENODEV;
 #endif /* !ENODEV */
 #ifdef ENOTDIR
-	case CE_ENOTDIR: return ENOTDIR;
+	case ENOTDIR: return CE_ENOTDIR;
 #endif /* !ENOTDIR */
 #ifdef EISDIR
-	case CE_EISDIR: return EISDIR;
+	case EISDIR: return CE_EISDIR;
 #endif /* !EISDIR */
 #ifdef EINVAL
-	case CE_EINVAL: return EINVAL;
+	case EINVAL: return CE_EINVAL;
 #endif /* !EINVAL */
 #ifdef ENFILE
-	case CE_ENFILE: return ENFILE;
+	case ENFILE: return CE_ENFILE;
 #endif /* !ENFILE */
 #ifdef EMFILE
-	case CE_EMFILE: return EMFILE;
+	case EMFILE: return CE_EMFILE;
 #endif /* !EMFILE */
 #ifdef ENOTTY
-	case CE_ENOTTY: return ENOTTY;
+	case ENOTTY: return CE_ENOTTY;
 #endif /* !ENOTTY */
 #ifdef ETXTBSY
-	case CE_ETXTBSY: return ETXTBSY;
+	case ETXTBSY: return CE_ETXTBSY;
 #endif /* !ETXTBSY */
 #ifdef EFBIG
-	case CE_EFBIG: return EFBIG;
+	case EFBIG: return CE_EFBIG;
 #endif /* !EFBIG */
 #ifdef ENOSPC
-	case CE_ENOSPC: return ENOSPC;
+	case ENOSPC: return CE_ENOSPC;
 #endif /* !ENOSPC */
 #ifdef ESPIPE
-	case CE_ESPIPE: return ESPIPE;
+	case ESPIPE: return CE_ESPIPE;
 #endif /* !ESPIPE */
 #ifdef EROFS
-	case CE_EROFS: return EROFS;
+	case EROFS: return CE_EROFS;
 #endif /* !EROFS */
 #ifdef EMLINK
-	case CE_EMLINK: return EMLINK;
+	case EMLINK: return CE_EMLINK;
 #endif /* !EMLINK */
 #ifdef EPIPE
-	case CE_EPIPE: return EPIPE;
+	case EPIPE: return CE_EPIPE;
 #endif /* !EPIPE */
 #ifdef EDOM
-	case CE_EDOM: return EDOM;
+	case EDOM: return CE_EDOM;
 #endif /* !EDOM */
 #ifdef ERANGE
-	case CE_ERANGE: return ERANGE;
+	case ERANGE: return CE_ERANGE;
 #endif /* !ERANGE */
 #ifdef EDEADLOCK
-	case CE_EDEADLOCK: return EDEADLOCK;
+	case EDEADLOCK: return CE_EDEADLOCK;
 #endif /* !EDEADLOCK */
 #ifdef ENAMETOOLONG
-	case CE_ENAMETOOLONG: return ENAMETOOLONG;
+	case ENAMETOOLONG: return CE_ENAMETOOLONG;
 #endif /* !ENAMETOOLONG */
 #ifdef ENOLCK
-	case CE_ENOLCK: return ENOLCK;
+	case ENOLCK: return CE_ENOLCK;
 #endif /* !ENOLCK */
 #ifdef ENOSYS
-	case CE_ENOSYS: return ENOSYS;
+	case ENOSYS: return CE_ENOSYS;
 #endif /* !ENOSYS */
 #ifdef ENOTEMPTY
-	case CE_ENOTEMPTY: return ENOTEMPTY;
+	case ENOTEMPTY: return CE_ENOTEMPTY;
 #endif /* !ENOTEMPTY */
 #ifdef ELOOP
-	case CE_ELOOP: return ELOOP;
+	case ELOOP: return CE_ELOOP;
 #endif /* !ELOOP */
 #ifdef ENOMSG
-	case CE_ENOMSG: return ENOMSG;
+	case ENOMSG: return CE_ENOMSG;
 #endif /* !ENOMSG */
 #ifdef EIDRM
-	case CE_EIDRM: return EIDRM;
+	case EIDRM: return CE_EIDRM;
 #endif /* !EIDRM */
 #ifdef ECHRNG
-	case CE_ECHRNG: return ECHRNG;
+	case ECHRNG: return CE_ECHRNG;
 #endif /* !ECHRNG */
 #ifdef EL2NSYNC
-	case CE_EL2NSYNC: return EL2NSYNC;
+	case EL2NSYNC: return CE_EL2NSYNC;
 #endif /* !EL2NSYNC */
 #ifdef EL3HLT
-	case CE_EL3HLT: return EL3HLT;
+	case EL3HLT: return CE_EL3HLT;
 #endif /* !EL3HLT */
 #ifdef EL3RST
-	case CE_EL3RST: return EL3RST;
+	case EL3RST: return CE_EL3RST;
 #endif /* !EL3RST */
 #ifdef ELNRNG
-	case CE_ELNRNG: return ELNRNG;
+	case ELNRNG: return CE_ELNRNG;
 #endif /* !ELNRNG */
 #ifdef EUNATCH
-	case CE_EUNATCH: return EUNATCH;
+	case EUNATCH: return CE_EUNATCH;
 #endif /* !EUNATCH */
 #ifdef ENOCSI
-	case CE_ENOCSI: return ENOCSI;
+	case ENOCSI: return CE_ENOCSI;
 #endif /* !ENOCSI */
 #ifdef EL2HLT
-	case CE_EL2HLT: return EL2HLT;
+	case EL2HLT: return CE_EL2HLT;
 #endif /* !EL2HLT */
 #ifdef EBADE
-	case CE_EBADE: return EBADE;
+	case EBADE: return CE_EBADE;
 #endif /* !EBADE */
 #ifdef EBADR
-	case CE_EBADR: return EBADR;
+	case EBADR: return CE_EBADR;
 #endif /* !EBADR */
 #ifdef EXFULL
-	case CE_EXFULL: return EXFULL;
+	case EXFULL: return CE_EXFULL;
 #endif /* !EXFULL */
 #ifdef ENOANO
-	case CE_ENOANO: return ENOANO;
+	case ENOANO: return CE_ENOANO;
 #endif /* !ENOANO */
 #ifdef EBADRQC
-	case CE_EBADRQC: return EBADRQC;
+	case EBADRQC: return CE_EBADRQC;
 #endif /* !EBADRQC */
 #ifdef EBADSLT
-	case CE_EBADSLT: return EBADSLT;
+	case EBADSLT: return CE_EBADSLT;
 #endif /* !EBADSLT */
 #ifdef EBFONT
-	case CE_EBFONT: return EBFONT;
+	case EBFONT: return CE_EBFONT;
 #endif /* !EBFONT */
 #ifdef ENOSTR
-	case CE_ENOSTR: return ENOSTR;
+	case ENOSTR: return CE_ENOSTR;
 #endif /* !ENOSTR */
 #ifdef ENODATA
-	case CE_ENODATA: return ENODATA;
+	case ENODATA: return CE_ENODATA;
 #endif /* !ENODATA */
 #ifdef ETIME
-	case CE_ETIME: return ETIME;
+	case ETIME: return CE_ETIME;
 #endif /* !ETIME */
 #ifdef ENOSR
-	case CE_ENOSR: return ENOSR;
+	case ENOSR: return CE_ENOSR;
 #endif /* !ENOSR */
 #ifdef ENONET
-	case CE_ENONET: return ENONET;
+	case ENONET: return CE_ENONET;
 #endif /* !ENONET */
 #ifdef ENOPKG
-	case CE_ENOPKG: return ENOPKG;
+	case ENOPKG: return CE_ENOPKG;
 #endif /* !ENOPKG */
 #ifdef EREMOTE
-	case CE_EREMOTE: return EREMOTE;
+	case EREMOTE: return CE_EREMOTE;
 #endif /* !EREMOTE */
 #ifdef ENOLINK
-	case CE_ENOLINK: return ENOLINK;
+	case ENOLINK: return CE_ENOLINK;
 #endif /* !ENOLINK */
 #ifdef EADV
-	case CE_EADV: return EADV;
+	case EADV: return CE_EADV;
 #endif /* !EADV */
 #ifdef ESRMNT
-	case CE_ESRMNT: return ESRMNT;
+	case ESRMNT: return CE_ESRMNT;
 #endif /* !ESRMNT */
 #ifdef ECOMM
-	case CE_ECOMM: return ECOMM;
+	case ECOMM: return CE_ECOMM;
 #endif /* !ECOMM */
 #ifdef EPROTO
-	case CE_EPROTO: return EPROTO;
+	case EPROTO: return CE_EPROTO;
 #endif /* !EPROTO */
 #ifdef EMULTIHOP
-	case CE_EMULTIHOP: return EMULTIHOP;
+	case EMULTIHOP: return CE_EMULTIHOP;
 #endif /* !EMULTIHOP */
 #ifdef EDOTDOT
-	case CE_EDOTDOT: return EDOTDOT;
+	case EDOTDOT: return CE_EDOTDOT;
 #endif /* !EDOTDOT */
 #ifdef EBADMSG
-	case CE_EBADMSG: return EBADMSG;
+	case EBADMSG: return CE_EBADMSG;
 #endif /* !EBADMSG */
 #ifdef EOVERFLOW
-	case CE_EOVERFLOW: return EOVERFLOW;
+	case EOVERFLOW: return CE_EOVERFLOW;
 #endif /* !EOVERFLOW */
 #ifdef ENOTUNIQ
-	case CE_ENOTUNIQ: return ENOTUNIQ;
+	case ENOTUNIQ: return CE_ENOTUNIQ;
 #endif /* !ENOTUNIQ */
 #ifdef EBADFD
-	case CE_EBADFD: return EBADFD;
+	case EBADFD: return CE_EBADFD;
 #endif /* !EBADFD */
 #ifdef EREMCHG
-	case CE_EREMCHG: return EREMCHG;
+	case EREMCHG: return CE_EREMCHG;
 #endif /* !EREMCHG */
 #ifdef ELIBACC
-	case CE_ELIBACC: return ELIBACC;
+	case ELIBACC: return CE_ELIBACC;
 #endif /* !ELIBACC */
 #ifdef ELIBBAD
-	case CE_ELIBBAD: return ELIBBAD;
+	case ELIBBAD: return CE_ELIBBAD;
 #endif /* !ELIBBAD */
 #ifdef ELIBSCN
-	case CE_ELIBSCN: return ELIBSCN;
+	case ELIBSCN: return CE_ELIBSCN;
 #endif /* !ELIBSCN */
 #ifdef ELIBMAX
-	case CE_ELIBMAX: return ELIBMAX;
+	case ELIBMAX: return CE_ELIBMAX;
 #endif /* !ELIBMAX */
 #ifdef ELIBEXEC
-	case CE_ELIBEXEC: return ELIBEXEC;
+	case ELIBEXEC: return CE_ELIBEXEC;
 #endif /* !ELIBEXEC */
 #ifdef EILSEQ
-	case CE_EILSEQ: return EILSEQ;
+	case EILSEQ: return CE_EILSEQ;
 #endif /* !EILSEQ */
 #ifdef ERESTART
-	case CE_ERESTART: return ERESTART;
+	case ERESTART: return CE_ERESTART;
 #endif /* !ERESTART */
 #ifdef ESTRPIPE
-	case CE_ESTRPIPE: return ESTRPIPE;
+	case ESTRPIPE: return CE_ESTRPIPE;
 #endif /* !ESTRPIPE */
 #ifdef EUSERS
-	case CE_EUSERS: return EUSERS;
+	case EUSERS: return CE_EUSERS;
 #endif /* !EUSERS */
 #ifdef ENOTSOCK
-	case CE_ENOTSOCK: return ENOTSOCK;
+	case ENOTSOCK: return CE_ENOTSOCK;
 #endif /* !ENOTSOCK */
 #ifdef EDESTADDRREQ
-	case CE_EDESTADDRREQ: return EDESTADDRREQ;
+	case EDESTADDRREQ: return CE_EDESTADDRREQ;
 #endif /* !EDESTADDRREQ */
 #ifdef EMSGSIZE
-	case CE_EMSGSIZE: return EMSGSIZE;
+	case EMSGSIZE: return CE_EMSGSIZE;
 #endif /* !EMSGSIZE */
 #ifdef EPROTOTYPE
-	case CE_EPROTOTYPE: return EPROTOTYPE;
+	case EPROTOTYPE: return CE_EPROTOTYPE;
 #endif /* !EPROTOTYPE */
 #ifdef ENOPROTOOPT
-	case CE_ENOPROTOOPT: return ENOPROTOOPT;
+	case ENOPROTOOPT: return CE_ENOPROTOOPT;
 #endif /* !ENOPROTOOPT */
 #ifdef EPROTONOSUPPORT
-	case CE_EPROTONOSUPPORT: return EPROTONOSUPPORT;
+	case EPROTONOSUPPORT: return CE_EPROTONOSUPPORT;
 #endif /* !EPROTONOSUPPORT */
 #ifdef ESOCKTNOSUPPORT
-	case CE_ESOCKTNOSUPPORT: return ESOCKTNOSUPPORT;
+	case ESOCKTNOSUPPORT: return CE_ESOCKTNOSUPPORT;
 #endif /* !ESOCKTNOSUPPORT */
 #ifdef ENOTSUP
-	case CE_ENOTSUP: return ENOTSUP;
+	case ENOTSUP: return CE_ENOTSUP;
 #endif /* !ENOTSUP */
 #ifdef EPFNOSUPPORT
-	case CE_EPFNOSUPPORT: return EPFNOSUPPORT;
+	case EPFNOSUPPORT: return CE_EPFNOSUPPORT;
 #endif /* !EPFNOSUPPORT */
 #ifdef EAFNOSUPPORT
-	case CE_EAFNOSUPPORT: return EAFNOSUPPORT;
+	case EAFNOSUPPORT: return CE_EAFNOSUPPORT;
 #endif /* !EAFNOSUPPORT */
 #ifdef EADDRINUSE
-	case CE_EADDRINUSE: return EADDRINUSE;
+	case EADDRINUSE: return CE_EADDRINUSE;
 #endif /* !EADDRINUSE */
 #ifdef EADDRNOTAVAIL
-	case CE_EADDRNOTAVAIL: return EADDRNOTAVAIL;
+	case EADDRNOTAVAIL: return CE_EADDRNOTAVAIL;
 #endif /* !EADDRNOTAVAIL */
 #ifdef ENETDOWN
-	case CE_ENETDOWN: return ENETDOWN;
+	case ENETDOWN: return CE_ENETDOWN;
 #endif /* !ENETDOWN */
 #ifdef ENETUNREACH
-	case CE_ENETUNREACH: return ENETUNREACH;
+	case ENETUNREACH: return CE_ENETUNREACH;
 #endif /* !ENETUNREACH */
 #ifdef ENETRESET
-	case CE_ENETRESET: return ENETRESET;
+	case ENETRESET: return CE_ENETRESET;
 #endif /* !ENETRESET */
 #ifdef ECONNABORTED
-	case CE_ECONNABORTED: return ECONNABORTED;
+	case ECONNABORTED: return CE_ECONNABORTED;
 #endif /* !ECONNABORTED */
 #ifdef ECONNRESET
-	case CE_ECONNRESET: return ECONNRESET;
+	case ECONNRESET: return CE_ECONNRESET;
 #endif /* !ECONNRESET */
 #ifdef ENOBUFS
-	case CE_ENOBUFS: return ENOBUFS;
+	case ENOBUFS: return CE_ENOBUFS;
 #endif /* !ENOBUFS */
 #ifdef EISCONN
-	case CE_EISCONN: return EISCONN;
+	case EISCONN: return CE_EISCONN;
 #endif /* !EISCONN */
 #ifdef ENOTCONN
-	case CE_ENOTCONN: return ENOTCONN;
+	case ENOTCONN: return CE_ENOTCONN;
 #endif /* !ENOTCONN */
 #ifdef ESHUTDOWN
-	case CE_ESHUTDOWN: return ESHUTDOWN;
+	case ESHUTDOWN: return CE_ESHUTDOWN;
 #endif /* !ESHUTDOWN */
 #ifdef ETOOMANYREFS
-	case CE_ETOOMANYREFS: return ETOOMANYREFS;
+	case ETOOMANYREFS: return CE_ETOOMANYREFS;
 #endif /* !ETOOMANYREFS */
 #ifdef ETIMEDOUT
-	case CE_ETIMEDOUT: return ETIMEDOUT;
+	case ETIMEDOUT: return CE_ETIMEDOUT;
 #endif /* !ETIMEDOUT */
 #ifdef ECONNREFUSED
-	case CE_ECONNREFUSED: return ECONNREFUSED;
+	case ECONNREFUSED: return CE_ECONNREFUSED;
 #endif /* !ECONNREFUSED */
 #ifdef EHOSTDOWN
-	case CE_EHOSTDOWN: return EHOSTDOWN;
+	case EHOSTDOWN: return CE_EHOSTDOWN;
 #endif /* !EHOSTDOWN */
 #ifdef EHOSTUNREACH
-	case CE_EHOSTUNREACH: return EHOSTUNREACH;
+	case EHOSTUNREACH: return CE_EHOSTUNREACH;
 #endif /* !EHOSTUNREACH */
 #ifdef EALREADY
-	case CE_EALREADY: return EALREADY;
+	case EALREADY: return CE_EALREADY;
 #endif /* !EALREADY */
 #ifdef EINPROGRESS
-	case CE_EINPROGRESS: return EINPROGRESS;
+	case EINPROGRESS: return CE_EINPROGRESS;
 #endif /* !EINPROGRESS */
 #ifdef ESTALE
-	case CE_ESTALE: return ESTALE;
+	case ESTALE: return CE_ESTALE;
 #endif /* !ESTALE */
 #ifdef EUCLEAN
-	case CE_EUCLEAN: return EUCLEAN;
+	case EUCLEAN: return CE_EUCLEAN;
 #endif /* !EUCLEAN */
 #ifdef ENOTNAM
-	case CE_ENOTNAM: return ENOTNAM;
+	case ENOTNAM: return CE_ENOTNAM;
 #endif /* !ENOTNAM */
 #ifdef ENAVAIL
-	case CE_ENAVAIL: return ENAVAIL;
+	case ENAVAIL: return CE_ENAVAIL;
 #endif /* !ENAVAIL */
 #ifdef EISNAM
-	case CE_EISNAM: return EISNAM;
+	case EISNAM: return CE_EISNAM;
 #endif /* !EISNAM */
 #ifdef EREMOTEIO
-	case CE_EREMOTEIO: return EREMOTEIO;
+	case EREMOTEIO: return CE_EREMOTEIO;
 #endif /* !EREMOTEIO */
 #ifdef EDQUOT
-	case CE_EDQUOT: return EDQUOT;
+	case EDQUOT: return CE_EDQUOT;
 #endif /* !EDQUOT */
 #ifdef ENOMEDIUM
-	case CE_ENOMEDIUM: return ENOMEDIUM;
+	case ENOMEDIUM: return CE_ENOMEDIUM;
 #endif /* !ENOMEDIUM */
 #ifdef EMEDIUMTYPE
-	case CE_EMEDIUMTYPE: return EMEDIUMTYPE;
+	case EMEDIUMTYPE: return CE_EMEDIUMTYPE;
 #endif /* !EMEDIUMTYPE */
 #ifdef ECANCELED
-	case CE_ECANCELED: return ECANCELED;
+	case ECANCELED: return CE_ECANCELED;
 #endif /* !ECANCELED */
 #ifdef ENOKEY
-	case CE_ENOKEY: return ENOKEY;
+	case ENOKEY: return CE_ENOKEY;
 #endif /* !ENOKEY */
 #ifdef EKEYEXPIRED
-	case CE_EKEYEXPIRED: return EKEYEXPIRED;
+	case EKEYEXPIRED: return CE_EKEYEXPIRED;
 #endif /* !EKEYEXPIRED */
 #ifdef EKEYREVOKED
-	case CE_EKEYREVOKED: return EKEYREVOKED;
+	case EKEYREVOKED: return CE_EKEYREVOKED;
 #endif /* !EKEYREVOKED */
 #ifdef EKEYREJECTED
-	case CE_EKEYREJECTED: return EKEYREJECTED;
+	case EKEYREJECTED: return CE_EKEYREJECTED;
 #endif /* !EKEYREJECTED */
 #ifdef EOWNERDEAD
-	case CE_EOWNERDEAD: return EOWNERDEAD;
+	case EOWNERDEAD: return CE_EOWNERDEAD;
 #endif /* !EOWNERDEAD */
 #ifdef ENOTRECOVERABLE
-	case CE_ENOTRECOVERABLE: return ENOTRECOVERABLE;
+	case ENOTRECOVERABLE: return CE_ENOTRECOVERABLE;
 #endif /* !ENOTRECOVERABLE */
 #ifdef ERFKILL
-	case CE_ERFKILL: return ERFKILL;
+	case ERFKILL: return CE_ERFKILL;
 #endif /* !ERFKILL */
 #ifdef EHWPOISON
-	case CE_EHWPOISON: return EHWPOISON;
+	case EHWPOISON: return CE_EHWPOISON;
 #endif /* !EHWPOISON */
 	}
 }

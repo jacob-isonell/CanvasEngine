@@ -16,39 +16,24 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_CORE_SETUP_H
-#define CANVAS_CORE_SETUP_H
+#ifndef IGRAPHICS_VULKAN_LOAD_H
+#define IGRAPHICS_VULKAN_LOAD_H
 
-#include <canvas/core/error.h>
+#include "ifx_vk.h"
 
 ICE_NAMESPACE_BEGIN
 
-/** @brief add documentation here! */
-struct ce_core_t {
-	struct {
-		char name[256];
-		unsigned int version;
-	} app_info, engine_info;
-};
+#if CANVAS_PLATFORM_WINDOWS
+#define IVK_DLL_FILE "vulkan-1.dll"
+#elif CANVAS_PLATFORM_UNIX
+#define IVK_DLL_FILE "libvulkan.so.1"
+#endif
 
-/** @brief add documentation here! */
-CE_API
-ce_err ce_core_options(
-	const struct ce_core_t* ops
-);
+ICE_API ce_err ivk_load(void);
+ICE_API void ivk_unload(void);
 
-/** @brief add documentation here! */
-CE_API
-ce_err ce_init(
-	void
-);
-
-/** @brief add documentation here! */
-CE_API
-void ce_shutdown(
-	void
-);
+ICE_API extern PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
 
 ICE_NAMESPACE_END
 
-#endif /* !CANVAS_CORE_SETUP_H */
+#endif /* !IGRAPHICS_VULKAN_LOAD_H */

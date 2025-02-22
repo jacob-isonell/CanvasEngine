@@ -79,7 +79,7 @@ CE_API ce_err ce_mtx_lock(ce_mtx* mtx) {
 		if (mtx->flags & CE_MTX_RECURSIVE_BIT) {
 			++mtx->refcount;
 			return CE_EOK;
-		} else return CE_EDEADLK;
+		} else return CE_EDEADLOCK;
 	}
 	
 	AcquireSRWLockExclusive(&mtx->lock);

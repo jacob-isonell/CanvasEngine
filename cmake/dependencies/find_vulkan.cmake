@@ -16,20 +16,17 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
-set(ICE_DEVMODE OFF CACHE INTERNAL "Enable CanvasEngine development mode")
+macro(ICEFindVulkan)
+	find_package(Vulkan)
+endmacro()
 
-option(CANVAS_ENABLE_LOGS "add description here" OFF)
-option(CANVAS_GRAPHICS    "add description here" ON)
-option(CANVAS_AUDIO       "add description here" ON)
-option(CANVAS_NETWORK     "add description here" ON)
-set(CANVAS_LIBRARY_KIND "" CACHE STRING "add description here")
-
-if (CANVAS_LIBRARY_KIND STREQUAL "SHARED")
-	set(CANVAS_SHARED ON)
-elseif (CANVAS_LIBRARY_KIND STREQUAL "STATIC")
-	set(CANVAS_SHARED OFF)
-else ()
-	set(CANVAS_SHARED BUILD_SHARED_LIBS)
-endif ()
-
-find_package(Doxygen)
+macro(ICELinkVulkan out_target linking_kind)
+	ICEFindVulkan()
+	cmake_dependent_option(CANVAS_GRAPHICS_ENABLE_VULKAN "Enable support for VulkanAPI" ON "CANVAS_GRAPHICS;Vulkan_FOUND" OFF)
+	if (CANVAS_GRAPHICS_ENABLE_VULKAN)
+		target_link_libraries(${out_target} ${linking_kind}
+			Vulkan::Headers
+		)
+		set(ICE_VULKAN ON CACHE BOOL "ICE_VULKAN")
+	endif ()
+endmacro()

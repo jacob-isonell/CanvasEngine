@@ -32,11 +32,11 @@ CE_API ce_err ce_graphics_options(const struct ce_graphics_t* options) {
 
 ICE_API ce_err ifx_init(void) {
 	IERRBEGIN {
-		IERRDO(ifxvk_init());
+		IERRDO(ivk_init());
 	} IERREND { }
 	return IERRVAL;
 }
 
 ICE_API void ifx_shutdown(void) {
-	ifxvk_shutdown();
+	ivk_shutdown();
 }

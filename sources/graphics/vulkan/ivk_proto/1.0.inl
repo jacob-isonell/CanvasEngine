@@ -16,39 +16,15 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_CORE_SETUP_H
-#define CANVAS_CORE_SETUP_H
+#ifndef IVK_PROTO_NO_UNDEF
+#undef vkCreateInstance
+#undef vkDestroyInstance
+#endif /* !IVK_PROTO_NO_UNDEF */
 
-#include <canvas/core/error.h>
-
-ICE_NAMESPACE_BEGIN
-
-/** @brief add documentation here! */
-struct ce_core_t {
-	struct {
-		char name[256];
-		unsigned int version;
-	} app_info, engine_info;
-};
-
-/** @brief add documentation here! */
-CE_API
-ce_err ce_core_options(
-	const struct ce_core_t* ops
-);
-
-/** @brief add documentation here! */
-CE_API
-ce_err ce_init(
-	void
-);
-
-/** @brief add documentation here! */
-CE_API
-void ce_shutdown(
-	void
-);
-
-ICE_NAMESPACE_END
-
-#endif /* !CANVAS_CORE_SETUP_H */
+#ifdef IVK_PROTO_MACRO
+#define vkCreateInstance IVK_PROTO_MACRO(vkCreateInstance)
+#define vkDestroyInstance IVK_PROTO_MACRO(vkDestroyInstance)
+#elif defined(IVK_PROTO_DECL)
+IVK_PROTO_DECL(vkCreateInstance)
+IVK_PROTO_DECL(vkDestroyInstance)
+#endif /* !IVK_PROTO_MACRO */

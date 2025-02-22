@@ -16,39 +16,42 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_CORE_SETUP_H
-#define CANVAS_CORE_SETUP_H
+#include "ivk_proto.h"
 
-#include <canvas/core/error.h>
+#undef IVK_PROTO_MACRO
+#undef IVK_PROTO_DECL
+#undef IVK_PROTO_NO_UNDEF
 
-ICE_NAMESPACE_BEGIN
+#include "ivk_proto/1.0.inl"
+#include "ivk_proto/1.1.inl"
+#include "ivk_proto/1.2.inl"
+#include "ivk_proto/1.3.inl"
+#include "ivk_proto/1.4.inl"
 
-/** @brief add documentation here! */
-struct ce_core_t {
-	struct {
-		char name[256];
-		unsigned int version;
-	} app_info, engine_info;
-};
+#ifdef CANVAS_DEBUG
+ICE_API void ivk_impl_check_pfn_value(cebool is_empty, const char* name, const char* func, const char* file, unsigned int line) {
+	if (!is_empty) {
+		return;
+	}
+	
+	fprintf(stderr, "Vulkan function pointer \"%s\" was null at %s %s:%u\n", name, func, file, line);
+	abort();
+}
+#endif /* !CANVAS_DEBUG */
 
-/** @brief add documentation here! */
-CE_API
-ce_err ce_core_options(
-	const struct ce_core_t* ops
-);
+#define IVK_PROTO_DECL(name) \
+	ICE_API PFN_##name ice_##name = NULL;
 
-/** @brief add documentation here! */
-CE_API
-ce_err ce_init(
-	void
-);
-
-/** @brief add documentation here! */
-CE_API
-void ce_shutdown(
-	void
-);
-
-ICE_NAMESPACE_END
-
-#endif /* !CANVAS_CORE_SETUP_H */
+#include "ivk_proto/1.0.inl"
+#ifdef VK_API_VERSION_1_1
+#include "ivk_proto/1.1.inl"
+#endif /* !VK_API_VERSION_1_1 */
+#ifdef VK_API_VERSION_1_2
+#include "ivk_proto/1.2.inl"
+#endif /* !VK_API_VERSION_1_2 */
+#ifdef VK_API_VERSION_1_3
+#include "ivk_proto/1.3.inl"
+#endif /* !VK_API_VERSION_1_3 */
+#ifdef VK_API_VERSION_1_4
+#include "ivk_proto/1.4.inl"
+#endif /* !VK_API_VERSION_1_4 */

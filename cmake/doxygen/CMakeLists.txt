@@ -16,20 +16,38 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
-set(ICE_DEVMODE OFF CACHE INTERNAL "Enable CanvasEngine development mode")
+find_package(Doxygen)
 
-option(CANVAS_ENABLE_LOGS "add description here" OFF)
-option(CANVAS_GRAPHICS    "add description here" ON)
-option(CANVAS_AUDIO       "add description here" ON)
-option(CANVAS_NETWORK     "add description here" ON)
-set(CANVAS_LIBRARY_KIND "" CACHE STRING "add description here")
-
-if (CANVAS_LIBRARY_KIND STREQUAL "SHARED")
-	set(CANVAS_SHARED ON)
-elseif (CANVAS_LIBRARY_KIND STREQUAL "STATIC")
-	set(CANVAS_SHARED OFF)
-else ()
-	set(CANVAS_SHARED BUILD_SHARED_LIBS)
+cmake_dependent_option(CANVAS_GENERATE_DOXYGEN "Generate documentation with Doxygen" ON "DOXYGEN_FOUND" OFF)
+if (NOT CANVAS_GENERATE_DOXYGEN)
+	return ()
 endif ()
 
-find_package(Doxygen)
+set(DOXYGEN_EXCLUDE_PATTERNS
+	"*/details/*"
+)
+
+set(DOXYGEN_EXCLUDE_SYMBOLS
+	"ice_*"
+	"ICE_*"
+	"i*"
+	"I*"
+)
+
+set(DOXYGEN_PREDEFINED
+	"ICE_NAMESPACE_BEGIN="
+	"ICE_NAMESPACE_END="
+	"ICE_INLINE="
+	"CE_API="
+)
+
+set(DOXYGEN_MACRO_EXPANSION YES)
+set(DOXYGEN_EXTRACT_ALL YES)
+set(DOXYGEN_GENERATE_HTML YES)
+set(DOXYGEN_RECURSIVE YES)
+set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/CanvasDocs")
+set(DOXYGEN_OPTIMIZE_OUTPUT_FOR_C YES)
+
+doxygen_add_docs(CanvasDoxygen
+	"../../include"
+)

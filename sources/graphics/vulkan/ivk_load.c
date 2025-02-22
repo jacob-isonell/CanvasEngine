@@ -16,16 +16,19 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef IGRAPHICS_VULKAN_PROTO_H
-#define IGRAPHICS_VULKAN_PROTO_H
+#include "ivk_proto.h"
+#include "ivk_load.h"
+#include <canvas/core/library.h>
 
-#include "ifx_vk.h"
+#ifndef VK_API_VERSION_1_0
+#	error VK_API_VERSION_1_0 is not defined. Check your install of the VulkanSDK
+#endif
 
-ICE_NAMESPACE_BEGIN
+ICE_API PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr = NULL;
+static struct ce_lib* ivulkan_lib = NULL;
 
 #undef IVK_PROTO_MACRO
 #undef IVK_PROTO_DECL
-#undef IVK_PROTO_NO_UNDEF
 
 #include "ivk_proto/1.0.inl"
 #include "ivk_proto/1.1.inl"
@@ -33,17 +36,18 @@ ICE_NAMESPACE_BEGIN
 #include "ivk_proto/1.3.inl"
 #include "ivk_proto/1.4.inl"
 
-#ifdef CANVAS_DEBUG
-ICE_API void ivk_impl_check_pfn_value(cebool is_empty, const char* name, const char* func, const char* file, unsigned int line);
-#else
-#define ivk_impl_check_pfn_value(...) ((void)(__VA_ARGS__))
-#endif /* !CANVAS_DEBUG */
-
 #define IVK_PROTO_DECL(name) \
-	ICE_API extern PFN_##name ice_##name; \
-	ICE_INLINE PFN_##name ice_get_##name(const char* func, const char* file, unsigned int line) { \
-		ivk_impl_check_pfn_value(ice_##name != NULL, #name, func, file, line); \
-		return ice_##name; \
+	static ce_err iload_##name(VkInstance inst) { \
+		union { \
+			PFN_vkVoidFunction in; \
+			PFN_##name out; \
+		} cast; \
+		cast.in = vkGetInstanceProcAddr(inst, #name); \
+		if (cast.in == NULL) { \
+			return CE_ENODATA; \
+		} \
+		ice_##name = cast.out; \
+		return CE_EOK; \
 	}
 
 #include "ivk_proto/1.0.inl"
@@ -60,25 +64,102 @@ ICE_API void ivk_impl_check_pfn_value(cebool is_empty, const char* name, const c
 #include "ivk_proto/1.4.inl"
 #endif /* !VK_API_VERSION_1_4 */
 
-#define IVK_PROTO_MACRO(name) ice_get_##name(__func__, __FILE__, __LINE__)
+#define LOAD(name) IERRDO(iload_##name(NULL))
+#undef IVK_PROTO_DECL
+#define IVK_PROTO_DECL(name) LOAD(name);
 
-#include "ivk_proto/1.0.inl"
+static ce_err iload_1_0(void);
+
 #ifdef VK_API_VERSION_1_1
-#include "ivk_proto/1.1.inl"
+static ce_err iload_1_1(void);
+#else
+#define iload_1_1() CE_EOK
 #endif /* !VK_API_VERSION_1_1 */
+
 #ifdef VK_API_VERSION_1_2
-#include "ivk_proto/1.2.inl"
+static ce_err iload_1_2(void);
+#else
+#define iload_1_2() CE_EOK
 #endif /* !VK_API_VERSION_1_2 */
+
 #ifdef VK_API_VERSION_1_3
-#include "ivk_proto/1.3.inl"
+static ce_err iload_1_3(void);
+#else
+#define iload_1_3() CE_EOK
 #endif /* !VK_API_VERSION_1_3 */
+
 #ifdef VK_API_VERSION_1_4
-#include "ivk_proto/1.4.inl"
+static ce_err iload_1_4(void);
+#else
+#define iload_1_4() CE_EOK
 #endif /* !VK_API_VERSION_1_4 */
 
-#undef IVK_PROTO_DECL
-#undef IVK_PROTO_NO_UNDEF
+ICE_API ce_err ivk_load(void) {
+	IERRBEGIN {
+		union {
+			PFN_vkVoidFunction in;
+			PFN_vkGetInstanceProcAddr out;
+		} cast;
+		
+		IERRDO(ce_lib_open(&ivulkan_lib, IVK_DLL_FILE, CE_LIB_FLAG_NONE));
+		IERRDO(ce_lib_load(ivulkan_lib, "vkGetInstanceProcAddr", &cast.in));
+		vkGetInstanceProcAddr = cast.out;
+		
+		IERRDO(iload_1_0());
+		IERRDO(iload_1_1());
+		IERRDO(iload_1_2());
+		IERRDO(iload_1_3());
+		IERRDO(iload_1_4());
+	} IERREND { }
+	return IERRVAL;
+}
 
-ICE_NAMESPACE_END
+ICE_API void ivk_unload(void) {
+	ce_lib_close(ivulkan_lib);
+	ivulkan_lib = NULL;
+}
 
-#endif /* !IGRAPHICS_VULKAN_PROTO_H */
+static ce_err iload_1_0(void) {
+	IERRBEGIN {
+#include "ivk_proto/1.0.inl"
+	} IERREND { }
+	return IERRVAL;
+}
+
+ICE_WARN_DISABLE_MSVC(4102) /* temporary */
+
+#ifdef VK_API_VERSION_1_1
+static ce_err iload_1_1(void) {
+	IERRBEGIN {
+#include "ivk_proto/1.1.inl"
+	} IERREND { }
+	return IERRVAL;
+}
+#endif /* !VK_API_VERSION_1_1 */
+
+#ifdef VK_API_VERSION_1_2
+static ce_err iload_1_2(void) {
+	IERRBEGIN {
+#include "ivk_proto/1.2.inl"
+	} IERREND { }
+	return IERRVAL;
+}
+#endif /* !VK_API_VERSION_1_2 */
+
+#ifdef VK_API_VERSION_1_3
+static ce_err iload_1_3(void) {
+	IERRBEGIN {
+#include "ivk_proto/1.3.inl"
+	} IERREND { }
+	return IERRVAL;
+}
+#endif /* !VK_API_VERSION_1_3 */
+
+#ifdef VK_API_VERSION_1_4
+static ce_err iload_1_4(void) {
+	IERRBEGIN {
+#include "ivk_proto/1.4.inl"
+	} IERREND { }
+	return IERRVAL;
+}
+#endif /* !VK_API_VERSION_1_4 */
