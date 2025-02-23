@@ -23,9 +23,13 @@
 
 ICE_API VkInstance ivk_inst = VK_NULL_HANDLE;
 
+static ce_err s_create_instance(void);
+
 ICE_API ce_err ivk_init(void) {
 	IERRBEGIN {
-		IERRDO(ivk_load());
+		IERRDO(ivk_load_global());
+		IERRDO(s_create_instance());
+		IERRDO(ivk_load(ivk_inst));
 		
 		// VkInstanceCreateInfo info;
 		
@@ -41,7 +45,39 @@ ICE_API ce_err ivk_init(void) {
 }
 
 ICE_API void ivk_shutdown(void) {
+	if (ivk_inst != NULL) {
+		vkDestroyInstance(ivk_inst, IVK_ALLOC);
+	}
+	ivk_inst = NULL;
+	
 	ivk_unload();
+}
+
+static ce_err s_create_instance(void) {
+	IERRBEGIN {
+		VkApplicationInfo app_info;
+		app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+		app_info.pNext = NULL;
+		app_info.pApplicationName = icore.app_info.name;
+		app_info.applicationVersion = icore.app_info.version;
+		app_info.pEngineName = icore.engine_info.name;
+		app_info.engineVersion = icore.engine_info.version;
+		app_info.apiVersion = VK_API_VERSION_1_0;
+		
+		VkInstanceCreateInfo inst_info;
+		inst_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+		inst_info.pNext = NULL;
+		inst_info.flags = 0;
+		inst_info.pApplicationInfo = &app_info;
+		inst_info.enabledLayerCount = 0;
+		inst_info.ppEnabledLayerNames = NULL;
+		inst_info.enabledExtensionCount = 0;
+		inst_info.ppEnabledExtensionNames = NULL;
+		IERRDO(ifrom_vk(vkCreateInstance(&inst_info, IVK_ALLOC, &ivk_inst)));
+	} IERREND {
+		
+	}
+	return IERRVAL;
 }
 
 ICE_API ce_err ifrom_vk(VkResult res) {

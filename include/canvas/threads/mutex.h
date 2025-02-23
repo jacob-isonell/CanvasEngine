@@ -19,67 +19,108 @@
 #ifndef CANVAS_THREADS_MUTEX_H
 #define CANVAS_THREADS_MUTEX_H
 
-/** @brief add documentation here! */
-#define CE_MTX_TYPE int
-#define CE_MTX_PLAIN 0
-#define CE_MTX_TIMED 1
-#define CE_MTX_RECURSIVE_BIT 2
+/**
+ * @ingroup threading_objects
+ * @brief add documentation here!
+ */
+enum ce_mtx_kind {
+	CE_MTX_PLAIN           = 0, /* add documentation here! */
+	CE_MTX_TIMED           = 1, /* add documentation here! */
+	CE_MTX_RECURSIVE       = 2, /* add documentation here! */
+	CE_MTX_TIMED_RECURSIVE = 3, /* add documentation here! */
+};
 
-/** @brief Initializes a ce_mtx. */
+/**
+ * @ingroup threading_objects
+ * @brief Initializes a ce_mtx.
+ */
 #define CE_MTX_INIT_PLAIN /* implementation-defined */
 
-/** @brief Initializes a ce_mtx for recursive use. */
+/**
+ * @ingroup threading_objects
+ * @brief Initializes a ce_mtx for recursive use.
+ */
 #define CE_MTX_INIT_TIMED /* implementation-defined */
 
-/** @brief If the implementation suports it, initializes a ce_mtx for recursive use. */
+/**
+ * @ingroup threading_objects
+ * @brief If the implementation suports it, initializes a ce_mtx for recursive use.
+ */
 #define CE_MTX_INIT_RECURSIVE /* implementation-defined */
 
-/** @brief If the implementation suports it, initializes a ce_mtx for timed recursive use. */
+/**
+ * @ingroup threading_objects
+ * @brief If the implementation suports it, initializes a ce_mtx for timed recursive use.
+ */
 #define CE_MTX_INIT_TIMED_RECURSIVE /* implementation-defined */
 
-/** @brief add documentation here! */
-#define ce_mtx /* implementation-defined */
-
 #include <canvas/threads/thread.h>
+
+#ifndef ICE_DOXY
 #include <canvas/threads/details/mutex.h.inl>
+#endif /* !ICE_DOXY */
+
+/**
+ * @ingroup threading_objects
+ * @brief add documentation here!
+ */
+typedef ice_mtx ce_mtx;
 
 ICE_NAMESPACE_BEGIN
 
 #ifdef CANVAS_HAS_THREADS
 
-/** @brief add documentation here! */
+/**
+ * @ingroup threading_objects
+ * @brief add documentation here!
+ */
 CE_API
 ce_err ce_mtx_init(
-	ce_mtx*     mtx,
-	CE_MTX_TYPE type
+	ce_mtx*          mtx,
+	enum ce_mtx_kind type
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup threading_objects
+ * @brief add documentation here!
+ */
 CE_API
 ce_err ce_mtx_lock(
 	ce_mtx* mtx
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup threading_objects
+ * @brief add documentation here!
+ */
 CE_API
 ce_err ce_mtx_timedlock(
 	ce_mtx* CE_RESTRICT                 mtx,
 	const struct ce_time_t* CE_RESTRICT time_point
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup threading_objects
+ * @brief add documentation here!
+ */
 CE_API
 ce_err ce_mtx_trylock(
 	ce_mtx* mtx
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup threading_objects
+ * @brief add documentation here!
+ */
 CE_API
 ce_err ce_mtx_unlock(
 	ce_mtx* mtx
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup threading_objects
+ * @brief add documentation here!
+ */
 CE_API
 void ce_mtx_destroy(
 	ce_mtx* mtx

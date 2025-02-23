@@ -19,6 +19,20 @@
 #ifndef CANVAS_H
 #define CANVAS_H
 
+/**
+ * @defgroup arrays            Arrays
+ * @defgroup atomic_types      Atomic Types
+ * @defgroup configuration     Configuration
+ * @defgroup error_handling    Error Handling
+ * @defgroup gpu_devices       GPU Devices
+ * @defgroup memory            Memory
+ * @defgroup time              Time
+ * @defgroup threading_objects Threading Objects
+ * @defgroup types             Types
+ * @defgroup utility           Utility
+ * @defgroup vector_types      Vector Types
+ */	
+
 #include <canvas/core.h>
 #ifdef CANVAS_GRAPHICS
 #include <canvas/graphics.h>

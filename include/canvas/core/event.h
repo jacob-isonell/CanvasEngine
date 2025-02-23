@@ -16,50 +16,15 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#include "ivk_proto.h"
+#ifndef CANVAS_CORE_EVENT_H
+#define CANVAS_CORE_EVENT_H
 
-#undef IVK_PROTO_MACRO
-#undef IVK_PROTO_DECL
-#undef IVK_PROTO_NO_UNDEF
+#include <canvas/core/memory.h>
 
-#include "ivk_proto/global.inl"
-#include "ivk_proto/1.0.inl"
-#include "ivk_proto/1.1.inl"
-#include "ivk_proto/1.2.inl"
-#include "ivk_proto/1.3.inl"
-#include "ivk_proto/1.4.inl"
+ICE_NAMESPACE_BEGIN
 
-#ifdef CANVAS_DEBUG
-ICE_API void ivk_impl_check_pfn_value(
-	cebool       is_empty,
-	const char*  name,
-	const char*  func,
-	const char*  file,
-	unsigned int line
-) {
-	if (!is_empty) {
-		return;
-	}
-	
-	fprintf(stderr, "Vulkan function pointer \"%s\" was null at %s %s:%u\n", name, func, file, line);
-	abort();
-}
-#endif /* !CANVAS_DEBUG */
 
-#define IVK_PROTO_DECL(name) \
-	ICE_API PFN_##name ice_##name = NULL;
 
-#include "ivk_proto/global.inl"
-#include "ivk_proto/1.0.inl"
-#ifdef VK_API_VERSION_1_1
-#include "ivk_proto/1.1.inl"
-#endif /* !VK_API_VERSION_1_1 */
-#ifdef VK_API_VERSION_1_2
-#include "ivk_proto/1.2.inl"
-#endif /* !VK_API_VERSION_1_2 */
-#ifdef VK_API_VERSION_1_3
-#include "ivk_proto/1.3.inl"
-#endif /* !VK_API_VERSION_1_3 */
-#ifdef VK_API_VERSION_1_4
-#include "ivk_proto/1.4.inl"
-#endif /* !VK_API_VERSION_1_4 */
+ICE_NAMESPACE_END
+
+#endif /* !CANVAS_CORE_EVENT_H */

@@ -27,7 +27,7 @@
 ICE_NAMESPACE_BEGIN
 
 #if defined(ICE_THREADS_POSIX)
-#define ce_mtx pthread_mutex_t
+#define ice_mtx pthread_mutex_t
 #define CE_MTX_INIT_PLAIN PTHREAD_MUTEX_INITIALIZER
 #define CE_MTX_INIT_TIMED PTHREAD_MUTEX_INITIALIZER
 #ifdef PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
@@ -39,13 +39,13 @@ struct ice_mtx_impl {
 	SRWLOCK     lock;
 	size_t      refcount;
 	DWORD       owner;
-	CE_MTX_TYPE flags;
+	enum ce_mtx_kind flags;
 };
-#define ce_mtx struct ice_mtx_impl
-#define CE_MTX_INIT_PLAIN { SRWLOCK_INIT, 0, CE_MTX_PLAIN }
-#define CE_MTX_INIT_TIMED { SRWLOCK_INIT, 0, CE_MTX_TIMED }
-#define CE_MTX_INIT_RECURSIVE { SRWLOCK_INIT, 0, CE_MTX_PLAIN | CE_MTX_RECURSIVE_BIT }
-#define CE_MTX_INIT_TIMED_RECURSIVE { SRWLOCK_INIT, 0, CE_MTX_TIMED | CE_MTX_RECURSIVE_BIT }
+#define ice_mtx struct ice_mtx_impl
+#define CE_MTX_INIT_PLAIN { SRWLOCK_INIT, 0, 0, CE_MTX_PLAIN }
+#define CE_MTX_INIT_TIMED { SRWLOCK_INIT, 0, 0, CE_MTX_TIMED }
+#define CE_MTX_INIT_RECURSIVE { SRWLOCK_INIT, 0, 0, CE_MTX_RECURSIVE }
+#define CE_MTX_INIT_TIMED_RECURSIVE { SRWLOCK_INIT, 0, 0, CE_MTX_TIMED_RECURSIVE }
 #endif
 
 ICE_NAMESPACE_END

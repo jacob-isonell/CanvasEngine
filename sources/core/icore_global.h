@@ -35,7 +35,7 @@ struct icore_t {
 	
 	struct {
 		char name[256];
-		int version;
+		unsigned int version;
 	} app_info, engine_info;
 };
 

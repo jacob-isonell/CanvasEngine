@@ -16,50 +16,28 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#include "ivk_proto.h"
+#ifndef IVK_PROTO_NO_UNDEF
+#	undef vkCreateInstance
+#	ifdef VK_VERSION_1_1
+#		undef vkEnumerateInstanceVersion
+#	endif /* !VK_VERSION_1_1 */
+#	undef vkEnumerateInstanceExtensionProperties
+#	undef vkEnumerateInstanceLayerProperties
+#endif /* !IVK_PROTO_NO_UNDEF */
 
-#undef IVK_PROTO_MACRO
-#undef IVK_PROTO_DECL
-#undef IVK_PROTO_NO_UNDEF
-
-#include "ivk_proto/global.inl"
-#include "ivk_proto/1.0.inl"
-#include "ivk_proto/1.1.inl"
-#include "ivk_proto/1.2.inl"
-#include "ivk_proto/1.3.inl"
-#include "ivk_proto/1.4.inl"
-
-#ifdef CANVAS_DEBUG
-ICE_API void ivk_impl_check_pfn_value(
-	cebool       is_empty,
-	const char*  name,
-	const char*  func,
-	const char*  file,
-	unsigned int line
-) {
-	if (!is_empty) {
-		return;
-	}
-	
-	fprintf(stderr, "Vulkan function pointer \"%s\" was null at %s %s:%u\n", name, func, file, line);
-	abort();
-}
-#endif /* !CANVAS_DEBUG */
-
-#define IVK_PROTO_DECL(name) \
-	ICE_API PFN_##name ice_##name = NULL;
-
-#include "ivk_proto/global.inl"
-#include "ivk_proto/1.0.inl"
-#ifdef VK_API_VERSION_1_1
-#include "ivk_proto/1.1.inl"
-#endif /* !VK_API_VERSION_1_1 */
-#ifdef VK_API_VERSION_1_2
-#include "ivk_proto/1.2.inl"
-#endif /* !VK_API_VERSION_1_2 */
-#ifdef VK_API_VERSION_1_3
-#include "ivk_proto/1.3.inl"
-#endif /* !VK_API_VERSION_1_3 */
-#ifdef VK_API_VERSION_1_4
-#include "ivk_proto/1.4.inl"
-#endif /* !VK_API_VERSION_1_4 */
+#ifdef IVK_PROTO_MACRO
+#	define vkCreateInstance IVK_PROTO_MACRO(vkCreateInstance)
+#	ifdef VK_VERSION_1_1
+#		define vkEnumerateInstanceVersion IVK_PROTO_MACRO(vkEnumerateInstanceVersion)
+#	endif /* !VK_VERSION_1_1 */
+#	define vkEnumerateInstanceExtensionProperties IVK_PROTO_MACRO(vkEnumerateInstanceExtensionProperties)
+#	define vkEnumerateInstanceLayerProperties IVK_PROTO_MACRO(vkEnumerateInstanceLayerProperties)
+#	define vkCreateInstance IVK_PROTO_MACRO(vkCreateInstance)
+#elif defined(IVK_PROTO_DECL)
+IVK_PROTO_DECL(vkCreateInstance)
+#	ifdef VK_VERSION_1_1
+IVK_PROTO_DECL(vkEnumerateInstanceVersion)
+#	endif /* !VK_VERSION_1_1 */
+IVK_PROTO_DECL(vkEnumerateInstanceExtensionProperties)
+IVK_PROTO_DECL(vkEnumerateInstanceLayerProperties)
+#endif /* !IVK_PROTO_MACRO */

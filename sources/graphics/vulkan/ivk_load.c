@@ -30,6 +30,7 @@ static struct ce_lib* ivulkan_lib = NULL;
 #undef IVK_PROTO_MACRO
 #undef IVK_PROTO_DECL
 
+#include "ivk_proto/global.inl"
 #include "ivk_proto/1.0.inl"
 #include "ivk_proto/1.1.inl"
 #include "ivk_proto/1.2.inl"
@@ -50,6 +51,7 @@ static struct ce_lib* ivulkan_lib = NULL;
 		return CE_EOK; \
 	}
 
+#include "ivk_proto/global.inl"
 #include "ivk_proto/1.0.inl"
 #ifdef VK_API_VERSION_1_1
 #include "ivk_proto/1.1.inl"
@@ -64,37 +66,34 @@ static struct ce_lib* ivulkan_lib = NULL;
 #include "ivk_proto/1.4.inl"
 #endif /* !VK_API_VERSION_1_4 */
 
-#define LOAD(name) IERRDO(iload_##name(NULL))
-#undef IVK_PROTO_DECL
-#define IVK_PROTO_DECL(name) LOAD(name);
-
-static ce_err iload_1_0(void);
+static ce_err iload_global(void);
+static ce_err iload_1_0(VkInstance inst);
 
 #ifdef VK_API_VERSION_1_1
-static ce_err iload_1_1(void);
+static ce_err iload_1_1(VkInstance inst);
 #else
 #define iload_1_1() CE_EOK
 #endif /* !VK_API_VERSION_1_1 */
 
 #ifdef VK_API_VERSION_1_2
-static ce_err iload_1_2(void);
+static ce_err iload_1_2(VkInstance inst);
 #else
 #define iload_1_2() CE_EOK
 #endif /* !VK_API_VERSION_1_2 */
 
 #ifdef VK_API_VERSION_1_3
-static ce_err iload_1_3(void);
+static ce_err iload_1_3(VkInstance inst);
 #else
 #define iload_1_3() CE_EOK
 #endif /* !VK_API_VERSION_1_3 */
 
 #ifdef VK_API_VERSION_1_4
-static ce_err iload_1_4(void);
+static ce_err iload_1_4(VkInstance inst);
 #else
 #define iload_1_4() CE_EOK
 #endif /* !VK_API_VERSION_1_4 */
 
-ICE_API ce_err ivk_load(void) {
+ICE_API ce_err ivk_load_global(void) {
 	IERRBEGIN {
 		union {
 			PFN_vkVoidFunction in;
@@ -104,12 +103,19 @@ ICE_API ce_err ivk_load(void) {
 		IERRDO(ce_lib_open(&ivulkan_lib, IVK_DLL_FILE, CE_LIB_FLAG_NONE));
 		IERRDO(ce_lib_load(ivulkan_lib, "vkGetInstanceProcAddr", &cast.in));
 		vkGetInstanceProcAddr = cast.out;
-		
-		IERRDO(iload_1_0());
-		IERRDO(iload_1_1());
-		IERRDO(iload_1_2());
-		IERRDO(iload_1_3());
-		IERRDO(iload_1_4());
+		return iload_global();
+	} IERREND { }
+	return IERRVAL;
+}
+
+ICE_API ce_err ivk_load(VkInstance inst) {
+	IERRBEGIN {
+		ICE_ASSERT(vkGetInstanceProcAddr != NULL);
+		IERRDO(iload_1_0(inst));
+		IERRDO(iload_1_1(inst));
+		IERRDO(iload_1_2(inst));
+		IERRDO(iload_1_3(inst));
+		IERRDO(iload_1_4(inst));
 	} IERREND { }
 	return IERRVAL;
 }
@@ -119,17 +125,32 @@ ICE_API void ivk_unload(void) {
 	ivulkan_lib = NULL;
 }
 
-static ce_err iload_1_0(void) {
+#define LOAD(name) IERRDO(iload_##name(VK_NULL_HANDLE))
+#undef IVK_PROTO_DECL
+#define IVK_PROTO_DECL(name) LOAD(name);
+
+static ce_err iload_global(void) {
+	IERRBEGIN {
+#include "ivk_proto/global.inl"
+	} IERREND { }
+	return IERRVAL;
+}
+
+#undef LOAD
+#define LOAD(name) IERRDO(iload_##name(inst))
+static ce_err iload_1_0(VkInstance inst) {
 	IERRBEGIN {
 #include "ivk_proto/1.0.inl"
 	} IERREND { }
 	return IERRVAL;
 }
 
-ICE_WARN_DISABLE_MSVC(4102) /* temporary */
+/* Temporary */
+ICE_WARN_DISABLE_MSVC(4102)
+ICE_WARN_DISABLE_GNU("-Wunused-label")
 
 #ifdef VK_API_VERSION_1_1
-static ce_err iload_1_1(void) {
+static ce_err iload_1_1(VkInstance inst) {
 	IERRBEGIN {
 #include "ivk_proto/1.1.inl"
 	} IERREND { }
@@ -138,7 +159,7 @@ static ce_err iload_1_1(void) {
 #endif /* !VK_API_VERSION_1_1 */
 
 #ifdef VK_API_VERSION_1_2
-static ce_err iload_1_2(void) {
+static ce_err iload_1_2(VkInstance inst) {
 	IERRBEGIN {
 #include "ivk_proto/1.2.inl"
 	} IERREND { }
@@ -147,7 +168,7 @@ static ce_err iload_1_2(void) {
 #endif /* !VK_API_VERSION_1_2 */
 
 #ifdef VK_API_VERSION_1_3
-static ce_err iload_1_3(void) {
+static ce_err iload_1_3(VkInstance inst) {
 	IERRBEGIN {
 #include "ivk_proto/1.3.inl"
 	} IERREND { }
@@ -156,7 +177,7 @@ static ce_err iload_1_3(void) {
 #endif /* !VK_API_VERSION_1_3 */
 
 #ifdef VK_API_VERSION_1_4
-static ce_err iload_1_4(void) {
+static ce_err iload_1_4(VkInstance inst) {
 	IERRBEGIN {
 #include "ivk_proto/1.4.inl"
 	} IERREND { }

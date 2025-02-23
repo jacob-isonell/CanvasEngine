@@ -27,13 +27,6 @@
 #undef CANVAS_ATOMIC_LONG_LOCK_FREE
 #undef CANVAS_ATOMIC_LLONG_LOCK_FREE
 #undef CANVAS_ATOMIC_POINTER_LOCK_FREE
-#undef CE_MEMORD
-#undef CE_MEMORD_RELAXED
-#undef CE_MEMORD_CONSUME
-#undef CE_MEMORD_ACQUIRE
-#undef CE_MEMORD_RELEASE
-#undef CE_MEMORD_ACQ_REL
-#undef CE_MEMORD_SEQ_CST
 #undef ce_kill_dependency
 #undef ce_atomic_is_lock_free
 #undef ce_atomic_store
@@ -84,8 +77,6 @@
 
 ICE_NAMESPACE_BEGIN
 
-#define CE_MEMORD int
-
 /* Temporary */
 #undef ICE_ATOMICS_MTXIMPL
 #undef ICE_ATOMICS_WIN32
@@ -108,12 +99,6 @@ ICE_NAMESPACE_BEGIN
 #	else
 #		define CANVAS_ATOMIC_CHAR8_T_LOCK_FREE ATOMIC_CHAR_LOCK_FREE
 #	endif
-#	define CE_MEMORD_RELAXED ((int)::std::memory_order_relaxed)
-#	define CE_MEMORD_CONSUME ((int)::std::memory_order_consume)
-#	define CE_MEMORD_ACQUIRE ((int)::std::memory_order_acquire)
-#	define CE_MEMORD_RELEASE ((int)::std::memory_order_release)
-#	define CE_MEMORD_ACQ_REL ((int)::std::memory_order_acq_rel)
-#	define CE_MEMORD_SEQ_CST ((int)::std::memory_order_seq_cst)
 
 #	define ICE_ATOMIC_DECL(type) struct { ::std::atomic<type> val; }
 #	define ce_atomic_flag ::std::atomic_flag
@@ -166,12 +151,6 @@ ICE_NAMESPACE_BEGIN
 #	else
 #		define CANVAS_ATOMIC_CHAR8_T_LOCK_FREE ATOMIC_CHAR_LOCK_FREE
 #	endif
-#	define CE_MEMORD_RELAXED memory_order_relaxed
-#	define CE_MEMORD_CONSUME memory_order_consume
-#	define CE_MEMORD_ACQUIRE memory_order_acquire
-#	define CE_MEMORD_RELEASE memory_order_release
-#	define CE_MEMORD_ACQ_REL memory_order_acq_rel
-#	define CE_MEMORD_SEQ_CST memory_order_seq_cst
 
 #	define ICE_ATOMIC_DECL(type) struct { _Atomic type val; }
 #	define ce_atomic_flag atomic_flag
@@ -223,12 +202,6 @@ ICE_NAMESPACE_BEGIN
 #	else
 #		define CANVAS_ATOMIC_CHAR8_T_LOCK_FREE CANVAS_ATOMIC_CHAR_LOCK_FREE
 #	endif
-#	define CE_MEMORD_RELAXED __ATOMIC_RELAXED
-#	define CE_MEMORD_CONSUME __ATOMIC_CONSUME
-#	define CE_MEMORD_ACQUIRE __ATOMIC_ACQUIRE
-#	define CE_MEMORD_RELEASE __ATOMIC_RELEASE
-#	define CE_MEMORD_ACQ_REL __ATOMIC_ACQ_REL
-#	define CE_MEMORD_SEQ_CST __ATOMIC_SEQ_CST
 
 #	define ICE_ATOMIC_DECL(type) struct { _Atomic type val; }
 #	define ce_atomic_flag atomic_flag
@@ -280,12 +253,6 @@ ICE_NAMESPACE_BEGIN
 #	else
 #		define CANVAS_ATOMIC_CHAR8_T_LOCK_FREE CANVAS_ATOMIC_CHAR_LOCK_FREE
 #	endif
-#	define CE_MEMORD_RELAXED __ATOMIC_RELAXED
-#	define CE_MEMORD_CONSUME __ATOMIC_CONSUME
-#	define CE_MEMORD_ACQUIRE __ATOMIC_ACQUIRE
-#	define CE_MEMORD_RELEASE __ATOMIC_RELEASE
-#	define CE_MEMORD_ACQ_REL __ATOMIC_ACQ_REL
-#	define CE_MEMORD_SEQ_CST __ATOMIC_SEQ_CST
 
 #	define ICE_ATOMIC_DECL(type) struct { type val; }
 #	define ce_atomic_flag atomic_flag
@@ -336,12 +303,6 @@ ICE_NAMESPACE_BEGIN
 #	define CANVAS_ATOMIC_LLONG_LOCK_FREE    0
 #	define CANVAS_ATOMIC_POINTER_LOCK_FREE  0
 #	define CANVAS_ATOMIC_CHAR8_T_LOCK_FREE CANVAS_ATOMIC_CHAR_LOCK_FREE
-#	define CE_MEMORD_RELAXED 0
-#	define CE_MEMORD_CONSUME 1
-#	define CE_MEMORD_ACQUIRE 2
-#	define CE_MEMORD_RELEASE 3
-#	define CE_MEMORD_ACQ_REL 4
-#	define CE_MEMORD_SEQ_CST 5
 
 #	define ICE_ATOMIC_DECL(type) struct { volatile type val; }
 #	define ce_atomic_flag atomic_flag
@@ -420,12 +381,6 @@ ice_impl_atomic_signal_fence((memory_order)(order))
 #	define CANVAS_ATOMIC_LLONG_LOCK_FREE    0
 #	define CANVAS_ATOMIC_POINTER_LOCK_FREE  0
 #	define CANVAS_ATOMIC_CHAR8_T_LOCK_FREE CANVAS_ATOMIC_CHAR_LOCK_FREE
-#	define CE_MEMORD_RELAXED 0
-#	define CE_MEMORD_CONSUME 1
-#	define CE_MEMORD_ACQUIRE 2
-#	define CE_MEMORD_RELEASE 3
-#	define CE_MEMORD_ACQ_REL 4
-#	define CE_MEMORD_SEQ_CST 5
 
 #	define ICE_ATOMIC_DECL(type) struct { volatile type val; ce_mtx lock; }
 #define ice_atomic_bool ICE_ATOMIC_DECL(cebool)

@@ -17,14 +17,11 @@
 **************************************************************************/
 
 #ifndef IVK_PROTO_NO_UNDEF
-#undef vkCreateInstance
 #undef vkDestroyInstance
 #endif /* !IVK_PROTO_NO_UNDEF */
 
 #ifdef IVK_PROTO_MACRO
-#define vkCreateInstance IVK_PROTO_MACRO(vkCreateInstance)
 #define vkDestroyInstance IVK_PROTO_MACRO(vkDestroyInstance)
 #elif defined(IVK_PROTO_DECL)
-IVK_PROTO_DECL(vkCreateInstance)
 IVK_PROTO_DECL(vkDestroyInstance)
 #endif /* !IVK_PROTO_MACRO */

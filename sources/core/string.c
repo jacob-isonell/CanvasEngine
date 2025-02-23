@@ -19,15 +19,30 @@
 #include "icore_base.h"
 #include <canvas/core/string.h>
 
-/*ICE_API size_t icore_str2wcs(wchar_t* buffer, size_t buffer_count, const char* src, size_t opt_srclen) {
-	// wcsrtombs()
-}
-
-ICE_API size_t icore_wcs2str(char* buffer, size_t buffer_count, const wchar_t* src, size_t opt_srclen) {
+/*ICE_API
+ce_err icore_str2wcs(
+	wchar_t*    buffer,
+	size_t      buffer_count,
+	const char* src,
+	size_t      opt_srclen,
+	size_t*     opt_out_len
+) {
 	
 }
 
-ICE_API wchar_t* icore_str2wcsd(const char* src, size_t opt_srclen) {
+ICE_API
+ce_err icore_wcs2str(
+	char*          buffer,
+	size_t         buffer_count,
+	const wchar_t* src,
+	size_t         opt_srclen,
+	size_t*        opt_out_len
+) {
+	mbstate_t s = {0};
+	wcsrtombs();
+}*/
+
+/*ICE_API wchar_t* icore_str2wcsd(const char* src, size_t opt_srclen) {
 	
 }
 

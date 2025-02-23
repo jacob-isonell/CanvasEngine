@@ -25,10 +25,16 @@
 
 ICE_NAMESPACE_BEGIN
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 #define CE_TIME_UTC 1
 
-/** @brief Describes a span of time or the time span since the unix epoch time (january 1st 1970 00:00:00). */
+/**
+ * @ingroup time
+ * @brief Describes a span of time or the time span since the unix epoch time (january 1st 1970 00:00:00).
+ */
 struct ce_time_t {
 	
 	/** Seconds. */
@@ -38,226 +44,336 @@ struct ce_time_t {
 	unsigned long long int nsec;
 };
 
-/** @brief Gets the current time. */
+/**
+ * @ingroup time
+ * @brief Gets the current time.
+ */
 CE_API ce_err ce_time_get(
 	struct ce_time_t* out,
 	int               base
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 struct ce_time_t ce_time_add(
 	struct ce_time_t lhs,
 	struct ce_time_t rhs
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 struct ce_time_t ce_time_sub(
 	struct ce_time_t lhs,
 	struct ce_time_t rhs
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 int ce_time_cmp(
 	struct ce_time_t lhs,
 	struct ce_time_t rhs
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 unsigned long long int ce_time_to_inano(
 	struct ce_time_t in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 unsigned long long int ce_time_to_imicro(
 	struct ce_time_t in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 unsigned long long int ce_time_to_imilli(
 	struct ce_time_t in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 unsigned long long int ce_time_to_iseconds(
 	struct ce_time_t in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 double ce_time_to_nano(
 	struct ce_time_t in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 double ce_time_to_micro(
 	struct ce_time_t in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 double ce_time_to_milli(
 	struct ce_time_t in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 double ce_time_to_seconds(
 	struct ce_time_t in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 float ce_time_to_fnano(
 	struct ce_time_t in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 float ce_time_to_fmicro(
 	struct ce_time_t in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 float ce_time_to_fmilli(
 	struct ce_time_t in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 float ce_time_to_fseconds(
 	struct ce_time_t in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 long double ce_time_to_lnano(
 	struct ce_time_t in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 long double ce_time_to_lmicro(
 	struct ce_time_t in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 long double ce_time_to_lmilli(
 	struct ce_time_t in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 long double ce_time_to_lseconds(
 	struct ce_time_t in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 struct ce_time_t ce_time_inano(
 	unsigned long long int in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 struct ce_time_t ce_time_imicro(
 	unsigned long long int in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 struct ce_time_t ce_time_imilli(
 	unsigned long long int in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 struct ce_time_t ce_time_iseconds(
 	unsigned long long int in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 struct ce_time_t ce_time_nano(
 	double in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 struct ce_time_t ce_time_micro(
 	double in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 struct ce_time_t ce_time_milli(
 	double in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 struct ce_time_t ce_time_seconds(
 	double in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 struct ce_time_t ce_time_fnano(
 	float in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 struct ce_time_t ce_time_fmicro(
 	float in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 struct ce_time_t ce_time_fmilli(
 	float in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 struct ce_time_t ce_time_fseconds(
 	float in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 struct ce_time_t ce_time_lnano(
 	long double in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 struct ce_time_t ce_time_lmicro(
 	long double in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 struct ce_time_t ce_time_lmilli(
 	long double in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup time
+ * @brief add documentation here!
+ */
 ICE_INLINE
 struct ce_time_t ce_time_lseconds(
 	long double in
 );
 
+#ifndef ICE_DOXY
 #include <canvas/core/details/time.h.inl>
+#endif /* !ICE_DOXY */
 
 ICE_NAMESPACE_END
 

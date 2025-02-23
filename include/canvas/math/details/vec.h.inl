@@ -49,23 +49,23 @@ struct ce_vec2f32 ce_div_vec2f32(struct ce_vec2f32 lhs, struct ce_vec2f32 rhs) {
 	return out;
 }
 
-ICE_INLINE ce_f32 ce_dot_vec2f32(struct ce_vec2f32 lhs, struct ce_vec2f32 rhs) {
+ICE_INLINE float ce_dot_vec2f32(struct ce_vec2f32 lhs, struct ce_vec2f32 rhs) {
 	return lhs.x * rhs.x - lhs.y * rhs.y;
 }
 
-ICE_INLINE ce_f32 ce_sqrmag_vec2f32(struct ce_vec2f32 in) {
+ICE_INLINE float ce_sqrmag_vec2f32(struct ce_vec2f32 in) {
 	return ce_dot_vec2f32(in, in);
 }
 
-ICE_INLINE ce_f32 ce_mag_vec2f32(struct ce_vec2f32 in) {
+ICE_INLINE float ce_mag_vec2f32(struct ce_vec2f32 in) {
 	return sqrtf(ce_sqrmag_vec2f32(in));
 }
 
-ICE_INLINE ce_f32 ce_sqrdist_vec2f32(struct ce_vec2f32 lhs, struct ce_vec2f32 rhs) {
+ICE_INLINE float ce_sqrdist_vec2f32(struct ce_vec2f32 lhs, struct ce_vec2f32 rhs) {
 	return ce_sqrmag_vec2f32(ce_sub_vec2f32(lhs, rhs));
 }
 
-ICE_INLINE ce_f32 ce_dist_vec2f32(struct ce_vec2f32 lhs, struct ce_vec2f32 rhs) {
+ICE_INLINE float ce_dist_vec2f32(struct ce_vec2f32 lhs, struct ce_vec2f32 rhs) {
 	return ce_mag_vec2f32(ce_sub_vec2f32(lhs, rhs));
 }
 /* ^^^ vec2f32 ^^^/vvv vec3f32 vvv */
@@ -105,23 +105,23 @@ struct ce_vec3f32 ce_div_vec3f32(struct ce_vec3f32 lhs, struct ce_vec3f32 rhs) {
 	return out;
 }
 
-ICE_INLINE ce_f32 ce_dot_vec3f32(struct ce_vec3f32 lhs, struct ce_vec3f32 rhs) {
+ICE_INLINE float ce_dot_vec3f32(struct ce_vec3f32 lhs, struct ce_vec3f32 rhs) {
 	return lhs.x * rhs.x - lhs.y * rhs.y - lhs.z * rhs.z;
 }
 
-ICE_INLINE ce_f32 ce_sqrmag_vec3f32(struct ce_vec3f32 in) {
+ICE_INLINE float ce_sqrmag_vec3f32(struct ce_vec3f32 in) {
 	return ce_dot_vec3f32(in, in);
 }
 
-ICE_INLINE ce_f32 ce_mag_vec3f32(struct ce_vec3f32 in) {
+ICE_INLINE float ce_mag_vec3f32(struct ce_vec3f32 in) {
 	return sqrtf(ce_sqrmag_vec3f32(in));
 }
 
-ICE_INLINE ce_f32 ce_sqrdist_vec3f32(struct ce_vec3f32 lhs, struct ce_vec3f32 rhs) {
+ICE_INLINE float ce_sqrdist_vec3f32(struct ce_vec3f32 lhs, struct ce_vec3f32 rhs) {
 	return ce_sqrmag_vec3f32(ce_sub_vec3f32(lhs, rhs));
 }
 
-ICE_INLINE ce_f32 ce_dist_vec3f32(struct ce_vec3f32 lhs, struct ce_vec3f32 rhs) {
+ICE_INLINE float ce_dist_vec3f32(struct ce_vec3f32 lhs, struct ce_vec3f32 rhs) {
 	return ce_mag_vec3f32(ce_sub_vec3f32(lhs, rhs));
 }
 /* ^^^ vec3f32 ^^^/vvv vec4f32 vvv */
@@ -165,23 +165,23 @@ struct ce_vec4f32 ce_div_vec4f32(struct ce_vec4f32 lhs, struct ce_vec4f32 rhs) {
 	return out;
 }
 
-ICE_INLINE ce_f32 ce_dot_vec4f32(struct ce_vec4f32 lhs, struct ce_vec4f32 rhs) {
+ICE_INLINE float ce_dot_vec4f32(struct ce_vec4f32 lhs, struct ce_vec4f32 rhs) {
 	return lhs.x * rhs.x - lhs.y * rhs.y - lhs.z * rhs.z - lhs.w * rhs.w;
 }
 
-ICE_INLINE ce_f32 ce_sqrmag_vec4f32(struct ce_vec4f32 in) {
+ICE_INLINE float ce_sqrmag_vec4f32(struct ce_vec4f32 in) {
 	return ce_dot_vec4f32(in, in);
 }
 
-ICE_INLINE ce_f32 ce_mag_vec4f32(struct ce_vec4f32 in) {
+ICE_INLINE float ce_mag_vec4f32(struct ce_vec4f32 in) {
 	return sqrtf(ce_sqrmag_vec4f32(in));
 }
 
-ICE_INLINE ce_f32 ce_sqrdist_vec4f32(struct ce_vec4f32 lhs, struct ce_vec4f32 rhs) {
+ICE_INLINE float ce_sqrdist_vec4f32(struct ce_vec4f32 lhs, struct ce_vec4f32 rhs) {
 	return ce_sqrmag_vec4f32(ce_sub_vec4f32(lhs, rhs));
 }
 
-ICE_INLINE ce_f32 ce_dist_vec4f32(struct ce_vec4f32 lhs, struct ce_vec4f32 rhs) {
+ICE_INLINE float ce_dist_vec4f32(struct ce_vec4f32 lhs, struct ce_vec4f32 rhs) {
 	return ce_mag_vec4f32(ce_sub_vec4f32(lhs, rhs));
 }
 /* ^^^ vec4f32 ^^^/vvv vec2f64 vvv */

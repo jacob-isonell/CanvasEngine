@@ -41,7 +41,7 @@ static void* i_thread_start(void* in) {
 static unsigned int CE_STDCALL i_thread_start(void* in) {
 	struct i_thread_start_data_t data = *(struct i_thread_start_data_t*)in;
 	ce_free(in);
-	return (int)data.func(data.arg);
+	return (unsigned int)data.func(data.arg);
 }
 #endif
 

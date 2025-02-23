@@ -19,27 +19,45 @@
 #ifndef CANVAS_THREADS_THREAD_H
 #define CANVAS_THREADS_THREAD_H
 
-/** @brief If macro is defined if the thread API is available for CanvasEngine. */
+/**
+ * @ingroup threading_objects
+ * @brief If macro is defined if the thread API is available for CanvasEngine.
+ */
 #define CANVAS_HAS_THREADS /* implementation-defined */
 
-/** @brief missing documentation. */
-#define ce_thrd /* implementation-defined */
-
-/** @brief missing documentation. */
-#define ce_once_flag /* implementation-defined */
-
-/** @brief missing documentation. */
+/**
+ * @ingroup threading_objects
+ * @brief missing documentation.
+ */
 #define CE_ONCE_FLAG_INIT /* implementation-defined */
 
 #include <canvas/core/time.h>
+
+#ifndef ICE_DOXY
 #include <canvas/threads/details/check.inl>
 #include <canvas/threads/details/thread.h.inl>
+#endif /* !ICE_DOXY */
+
+/**
+ * @ingroup threading_objects
+ * @brief missing documentation.
+ */
+typedef ice_thrd ce_thrd;
+
+/**
+ * @ingroup threading_objects
+ * @brief missing documentation.
+ */
+typedef ice_once_flag ce_once_flag;
 
 ICE_NAMESPACE_BEGIN
 
 #ifdef CANVAS_HAS_THREADS
 
-/** @brief missing documentation. */
+/**
+ * @ingroup threading_objects
+ * @brief missing documentation.
+ */
 CE_API
 ce_err ce_thrd_create(
 	ce_thrd* out,
@@ -47,65 +65,95 @@ ce_err ce_thrd_create(
 	void*    arg
 );
 
-/** @brief missing documentation. */
+/**
+ * @ingroup threading_objects
+ * @brief missing documentation.
+ */
 CE_API
 cebool ce_thrd_equal(
 	ce_thrd lhs,
 	ce_thrd rhs
 );
 
-/** @brief missing documentation. */
+/**
+ * @ingroup threading_objects
+ * @brief missing documentation.
+ */
 CE_API
 ce_thrd ce_thrd_current(
 	void
 );
 
-/** @brief missing documentation. */
+/**
+ * @ingroup threading_objects
+ * @brief missing documentation.
+ */
 CE_API
 unsigned long ce_thrd_id(
 	ce_thrd thrd
 );
 
-/** @brief missing documentation. */
+/**
+ * @ingroup threading_objects
+ * @brief missing documentation.
+ */
 CE_API
 ce_err ce_thrd_sleep(
 	const struct ce_time_t* duration,
 	struct ce_time_t*       opt_remaining
 );
 
-/** @brief missing documentation. */
+/**
+ * @ingroup threading_objects
+ * @brief missing documentation.
+ */
 CE_API
 ce_err ce_thrd_yield(
 	void
 );
 
-/** @brief missing documentation. */
+/**
+ * @ingroup threading_objects
+ * @brief missing documentation.
+ */
 CE_ATTR_NORET CE_API
 void ce_thrd_exit(
 	int res
 );
 
-/** @brief missing documentation. */
+/**
+ * @ingroup threading_objects
+ * @brief missing documentation.
+ */
 CE_API
 ce_err ce_thrd_detach(
 	ce_thrd thrd
 );
 
-/** @brief missing documentation. */
+/**
+ * @ingroup threading_objects
+ * @brief missing documentation.
+ */
 CE_API
 ce_err ce_thrd_join(
 	ce_thrd thrd,
 	int*    opt_res
 );
 
-/** @brief missing documentation. */
+/**
+ * @ingroup threading_objects
+ * @brief missing documentation.
+ */
 CE_API
 ce_err ce_thrd_run(
 	int (*func)(void*),
 	void* arg
 );
 
-/** @brief missing documentation. */
+/**
+ * @ingroup threading_objects
+ * @brief missing documentation.
+ */
 CE_API
 ce_err ce_call_once(
 	ce_once_flag* flag,

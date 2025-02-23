@@ -277,18 +277,16 @@
 #define CE_CXX20_STD ICE_CXX_CHECK_STANDARD(202002L)
 #define CE_CXX23_STD ICE_CXX_CHECK_STANDARD(202302L)
 
-#undef cebool
-
 #if CE_CXX
-#	define cebool bool
+#define icebool bool
 #	define CE_RESTRICT __restrict
 #	define ICE_INLINE inline
 #elif CE_C99_STD
-#	define cebool _Bool
+#define icebool _Bool
 #	define CE_RESTRICT restrict
 #	define ICE_INLINE static inline
 #else
-#	define cebool unsigned char
+#define icebool unsigned char
 #	define CE_RESTRICT
 #	if CANVAS_COMPILER_GNU
 #		define ICE_INLINE static __inline
@@ -326,7 +324,7 @@
 	abort(); \
 }))
 #elif CANVAS_COMPILER_MSVC
-#define CE_UNREACHABLE() (__debugbreak(), __fastfail(1))
+#define CE_UNREACHABLE() (__debugbreak(), __fastfail(1), __assume(0))
 #else
 #define CE_UNREACHABLE() (abort())
 #endif

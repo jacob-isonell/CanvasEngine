@@ -21,30 +21,42 @@
 
 #ifdef CANVAS_HAS_THREADS
 
-static cebool s_check_mtx_type(CE_MTX_TYPE type) {
+static cebool s_check_mtx_type(enum ce_mtx_kind type) {
 	switch (type) {
 	case CE_MTX_PLAIN:
 	case CE_MTX_TIMED:
-	case CE_MTX_PLAIN | CE_MTX_RECURSIVE_BIT:
-	case CE_MTX_TIMED | CE_MTX_RECURSIVE_BIT:
+	case CE_MTX_RECURSIVE:
+	case CE_MTX_TIMED_RECURSIVE:
 		return cetrue;
 	default: return cefalse;
 	}
 }
 
+static cebool s_is_recursive(enum ce_mtx_kind type) {
+	switch (type) {
+		default: CE_UNREACHABLE();
+		case CE_MTX_PLAIN:
+		case CE_MTX_TIMED:
+			return cefalse;
+		case CE_MTX_RECURSIVE:
+		case CE_MTX_TIMED_RECURSIVE:
+			return cetrue;
+	}
+}
+
 #ifdef ICE_THREADS_POSIX
-static int s_to_pthread(CE_MTX_TYPE type) {
+static int s_to_pthread(enum ce_mtx_kind type) {
 	switch (type) {
 	case CE_MTX_PLAIN: return PTHREAD_MUTEX_DEFAULT;
 	case CE_MTX_TIMED: return PTHREAD_MUTEX_DEFAULT;
-	case CE_MTX_PLAIN | CE_MTX_RECURSIVE_BIT: return PTHREAD_MUTEX_RECURSIVE;
-	case CE_MTX_TIMED | CE_MTX_RECURSIVE_BIT: return PTHREAD_MUTEX_RECURSIVE;
+	case CE_MTX_RECURSIVE: return PTHREAD_MUTEX_RECURSIVE;
+	case CE_MTX_TIMED_RECURSIVE: return PTHREAD_MUTEX_RECURSIVE;
 	default: CE_UNREACHABLE();
 	}
 }
 #endif
 
-CE_API ce_err ce_mtx_init(ce_mtx* mtx, CE_MTX_TYPE type) {
+CE_API ce_err ce_mtx_init(ce_mtx* mtx, enum ce_mtx_kind type) {
 	if (mtx == NULL || !s_check_mtx_type(type)) {
 		return CE_EINVAL;
 	}
@@ -67,6 +79,7 @@ CE_API ce_err ce_mtx_init(ce_mtx* mtx, CE_MTX_TYPE type) {
 	return CE_EOK;
 #endif
 }
+
 CE_API ce_err ce_mtx_lock(ce_mtx* mtx) {
 	if (mtx == NULL) {
 		return CE_EINVAL;
@@ -76,7 +89,7 @@ CE_API ce_err ce_mtx_lock(ce_mtx* mtx) {
 	return ierrno(pthread_mutex_lock(mtx));
 #elif defined(ICE_THREADS_WIN32)
 	if (mtx->owner == GetCurrentThreadId()) {
-		if (mtx->flags & CE_MTX_RECURSIVE_BIT) {
+		if (s_is_recursive(mtx->flags)) {
 			++mtx->refcount;
 			return CE_EOK;
 		} else return CE_EDEADLOCK;
@@ -84,7 +97,7 @@ CE_API ce_err ce_mtx_lock(ce_mtx* mtx) {
 	
 	AcquireSRWLockExclusive(&mtx->lock);
 	mtx->owner = GetCurrentThreadId();
-	if (mtx->flags & CE_MTX_RECURSIVE_BIT) {
+	if (s_is_recursive(mtx->flags)) {
 		++mtx->refcount;
 	}
 	return CE_EOK;
@@ -104,7 +117,7 @@ CE_API ce_err ce_mtx_timedlock(ce_mtx* CE_RESTRICT mtx, const struct ce_time_t* 
 #elif defined(ICE_THREADS_WIN32)
 	ICE_NOIMPL();
 	/*if (mtx->owner == GetCurrentThreadId()) {
-		if (mtx->flags & CE_MTX_RECURSIVE_BIT) {
+		if (s_is_recursive(mtx->flags)) {
 			++mtx->refcount;
 			return CE_EOK;
 		} else return CE_EDEADLK;
@@ -113,7 +126,7 @@ CE_API ce_err ce_mtx_timedlock(ce_mtx* CE_RESTRICT mtx, const struct ce_time_t* 
 	// Add locking scheme here
 	
 	mtx->owner = GetCurrentThreadId();
-	if (mtx->flags & CE_MTX_RECURSIVE_BIT) {
+	if (s_is_recursive(mtx->flags)) {
 		++mtx->refcount;
 	}
 	return CE_EOK; */
@@ -129,7 +142,7 @@ CE_API ce_err ce_mtx_trylock(ce_mtx* mtx) {
 	return ierrno(pthread_mutex_trylock(mtx));
 #elif defined(ICE_THREADS_WIN32)
 	if (mtx->owner == GetCurrentThreadId()) {
-		if (mtx->flags & CE_MTX_RECURSIVE_BIT) {
+		if (s_is_recursive(mtx->flags)) {
 			++mtx->refcount;
 			return CE_EOK;
 		} else return CE_EDEADLK;
@@ -140,7 +153,7 @@ CE_API ce_err ce_mtx_trylock(ce_mtx* mtx) {
 	}
 	
 	mtx->owner = GetCurrentThreadId();
-	if (mtx->flags & CE_MTX_RECURSIVE_BIT) {
+	if (s_is_recursive(mtx->flags)) {
 		++mtx->refcount;
 	}
 	return CE_EOK;
@@ -159,7 +172,7 @@ CE_API ce_err ce_mtx_unlock(ce_mtx* mtx) {
 		return CE_EPERM;
 	}
 	
-	if (mtx->flags & CE_MTX_RECURSIVE_BIT && --mtx->refcount) {
+	if (s_is_recursive(mtx->flags) && --mtx->refcount) {
 		return CE_EOK;
 	}
 	

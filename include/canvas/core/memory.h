@@ -23,13 +23,22 @@
 
 ICE_NAMESPACE_BEGIN
 
-/** @brief add documentation here! */
+/**
+ * @ingroup memory
+ * @brief Function pointer type for a
+ */
 typedef void* (*ce_pfunc_alloc)(size_t bytecount, void* usr);
 
-/** @brief add documentation here! */
+/**
+ * @ingroup memory
+ * @brief add documentation here!
+ */
 typedef void (*ce_pfunc_free)(void* address, size_t bytecount, void* usr);
 
-/** @brief add documentation here! */
+/**
+ * @ingroup memory
+ * @brief add documentation here!
+ */
 struct ce_alloc_t {
 	
 	/** add documentation here! */
@@ -42,59 +51,100 @@ struct ce_alloc_t {
 	ce_pfunc_free  free;
 };
 
-/** @brief add documentation here! */
+/**
+ * @ingroup memory
+ * @brief add documentation here!
+ */
 CE_API
 ce_err ce_set_alloc(
 	struct ce_alloc_t in
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup memory
+ * @brief add documentation here!
+ */
 CE_API
 void* ce_alloc_s(
 	size_t  bytes,
 	ce_err* opt_err
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup memory
+ * @brief add documentation here!
+ */
 CE_API
 void* ce_alloc(
 	size_t bytes
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup memory
+ * @brief add documentation here!
+ */
 CE_API
 ce_err ce_free(
 	void* addr
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup memory
+ * @brief add documentation here!
+ */
 #define ce_realloc(inout, new_size) /* implementation-defined */
 
-/** @brief add documentation here! */
+/**
+ * @ingroup arrays
+ * @brief add documentation here!
+ */
 #define ce_arr(type) /* implementation-defined */
 
-/** @brief add documentation here! */
+/**
+ * @ingroup arrays
+ * @brief add documentation here!
+ */
 #define CE_ARRINIT /* implementation-defined */
 
-/** @brief add documentation here! */
+/**
+ * @ingroup arrays
+ * @brief add documentation here!
+ */
 #define ce_arr_alloc(out, reserve) /* implementation-defined */
 
-/** @brief add documentation here! */
+/**
+ * @ingroup arrays
+ * @brief add documentation here!
+ */
 #define ce_arr_free(arr) /* implementation-defined */
 
-/** @brief add documentation here! */
+/**
+ * @ingroup arrays
+ * @brief add documentation here!
+ */
 #define ce_arr_at(arr, index) /* implementation-defined */
 
-/** @brief add documentation here! */
+/**
+ * @ingroup arrays
+ * @brief add documentation here!
+ */
 #define ce_arr_size(arr) /* implementation-defined */
 
-/** @brief add documentation here! */
+/**
+ * @ingroup arrays
+ * @brief add documentation here!
+ */
 #define ce_arr_cap(arr) /* implementation-defined */
 
-/** @brief add documentation here! */
+/**
+ * @ingroup arrays
+ * @brief add documentation here!
+ */
 #define ce_arr_data(arr) /* implementation-defined */
 
+#ifndef ICE_DOXY
 #include <canvas/core/details/memory.h.inl>
+#endif /* !ICE_DOXY */
 
 ICE_NAMESPACE_END
 

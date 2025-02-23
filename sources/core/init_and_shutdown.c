@@ -24,12 +24,15 @@
 struct iitem_pairs {
 	ce_err (*init)(void);
 	void (*term)(void);
+#ifdef CANVAS_DEBUG
+	const char* debug_name;
+#endif
 };
 
 static const struct iitem_pairs s_items[] = {
-	{ &icore_init, &icore_shutdown },
+	{ &icore_init, &icore_shutdown, ICE_DEB("core") },
 #ifdef CANVAS_GRAPHICS
-	{ &ifx_init, &ifx_shutdown }
+	{ &ifx_init, &ifx_shutdown, ICE_DEB("graphics") }
 #endif
 };
 
@@ -45,10 +48,12 @@ CE_API ce_err ce_init(void) {
 			++i;
 		}
 	} IERREND {
-	while (0 < i) {
-		s_items[i--].term();
+		IPRERROR("Failed to initialize %s module (0x%08X) \"%s\"\n", s_items[i].debug_name, IERRVAL, ce_errstr(IERRVAL));
+		while (0 < i) {
+			s_items[i--].term();
+		}
 	}
-} return IERRVAL;
+	return IERRVAL;
 }
 
 CE_API void ce_shutdown(void) {

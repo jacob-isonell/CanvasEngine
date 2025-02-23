@@ -23,16 +23,26 @@
 
 ICE_NAMESPACE_BEGIN
 
-/** @brief CanvasEngine's error type. Based on errno. Zero is a success value and any non-zero value is an error. */
+/**
+ * @ingroup error_handling
+ * @brief CanvasEngine's error type. Based on errno. Zero is a success value and any non-zero value is an error. 
+ */
 typedef int ce_err;
 
-/** @brief add documentation here! */
+/**
+ * @ingroup error_handling
+ * @brief add documentation here!
+ */
 #define ce_success(code) ((code) == 0)
 
-/** @brief add documentation here! */
+/**
+ * @ingroup error_handling
+ * @brief add documentation here!
+ */
 #define ce_failure(code) (!ce_success(code))
 
 /**
+ * @ingroup error_handling
  * @brief Gets the error message associated with the error code.
  * @return A pointer to a c-style string stored in static memory.
  *         This pointer should not be free-ed or written to.

@@ -52,13 +52,13 @@ static void s_deffree(void* addr, size_t bytes, void* arg) {
 
 ICE_API ce_err icore_init(void) {
 	IERRBEGIN {
-		IERRDO(ce_mtx_init(&icore.mem.lck, CE_MTX_PLAIN));
+		
 	} IERREND { }
 	return IERRVAL;
 }
 
 ICE_API void icore_shutdown(void) {
-	ce_mtx_destroy(&icore.mem.lck);
+	
 }
 
 ICE_API struct icore_t icore = {

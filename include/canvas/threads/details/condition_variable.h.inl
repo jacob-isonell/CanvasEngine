@@ -24,13 +24,13 @@
 ICE_NAMESPACE_BEGIN
 
 #if defined(ICE_THREADS_POSIX)
-#define ce_cnd pthread_cond_t
+#define ice_cnd pthread_cond_t
 #define CE_COND_INIT PTHREAD_COND_INITIALIZER
 #elif defined(ICE_THREADS_WIN32)
 struct ice_cnd_impl {
 	CONDITION_VARIABLE var;
 };
-#define ce_cnd struct ice_cnd_impl
+#define ice_cnd struct ice_cnd_impl
 #define CE_COND_INIT {CONDITION_VARIABLE_INIT}
 #endif
 

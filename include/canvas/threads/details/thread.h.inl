@@ -25,8 +25,8 @@
 ICE_NAMESPACE_BEGIN
 
 #if defined(ICE_THREADS_POSIX)
-#define ce_thrd pthread_t
-#define ce_once_flag pthread_once_t
+#define ice_thrd pthread_t
+#define ice_once_flag pthread_once_t
 #define CE_ONCE_FLAG_INIT PTHREAD_ONCE_INIT
 #elif defined(ICE_THREADS_WIN32)
 struct ice_thread_impl {
@@ -38,8 +38,8 @@ struct ice_once_flag {
 	cebool called;
 };
 
-#define ce_thrd struct ice_thread_impl
-#define ce_once_flag struct ice_once_flag
+#define ice_thrd struct ice_thread_impl
+#define ice_once_flag struct ice_once_flag
 #define CE_ONCE_FLAG_INIT {0}
 #endif
 

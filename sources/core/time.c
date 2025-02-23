@@ -32,7 +32,7 @@ CE_API ce_err ce_time_get(struct ce_time_t* out, int base) {
 	}
 	
 	struct timespec now;
-	if (timespec_get(&now, base) == 0) {
+	if (timespec_get(&now, s_convert_base(base)) == 0) {
 		return CE_EUNKNOWN;
 	}
 	

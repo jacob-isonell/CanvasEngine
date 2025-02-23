@@ -27,6 +27,7 @@ ICE_NAMESPACE_BEGIN
 #undef IVK_PROTO_DECL
 #undef IVK_PROTO_NO_UNDEF
 
+#include "ivk_proto/global.inl"
 #include "ivk_proto/1.0.inl"
 #include "ivk_proto/1.1.inl"
 #include "ivk_proto/1.2.inl"
@@ -34,7 +35,13 @@ ICE_NAMESPACE_BEGIN
 #include "ivk_proto/1.4.inl"
 
 #ifdef CANVAS_DEBUG
-ICE_API void ivk_impl_check_pfn_value(cebool is_empty, const char* name, const char* func, const char* file, unsigned int line);
+ICE_API void ivk_impl_check_pfn_value(
+	cebool       is_empty,
+	const char*  name,
+	const char*  func,
+	const char*  file,
+	unsigned int line
+);
 #else
 #define ivk_impl_check_pfn_value(...) ((void)(__VA_ARGS__))
 #endif /* !CANVAS_DEBUG */
@@ -42,10 +49,11 @@ ICE_API void ivk_impl_check_pfn_value(cebool is_empty, const char* name, const c
 #define IVK_PROTO_DECL(name) \
 	ICE_API extern PFN_##name ice_##name; \
 	ICE_INLINE PFN_##name ice_get_##name(const char* func, const char* file, unsigned int line) { \
-		ivk_impl_check_pfn_value(ice_##name != NULL, #name, func, file, line); \
+		ivk_impl_check_pfn_value(ice_##name == NULL, #name, func, file, line); \
 		return ice_##name; \
 	}
 
+#include "ivk_proto/global.inl"
 #include "ivk_proto/1.0.inl"
 #ifdef VK_API_VERSION_1_1
 #include "ivk_proto/1.1.inl"
@@ -62,6 +70,7 @@ ICE_API void ivk_impl_check_pfn_value(cebool is_empty, const char* name, const c
 
 #define IVK_PROTO_MACRO(name) ice_get_##name(__func__, __FILE__, __LINE__)
 
+#include "ivk_proto/global.inl"
 #include "ivk_proto/1.0.inl"
 #ifdef VK_API_VERSION_1_1
 #include "ivk_proto/1.1.inl"

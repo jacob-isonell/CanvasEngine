@@ -21,6 +21,7 @@
 
 #include <canvas/core/base.h>
 #include <canvas/core/error.h>
+#include <canvas/core/event.h>
 #include <canvas/core/library.h>
 #include <canvas/core/memory.h>
 #include <canvas/core/setup.h>

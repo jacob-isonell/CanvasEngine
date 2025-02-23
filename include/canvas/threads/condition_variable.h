@@ -19,45 +19,69 @@
 #ifndef CANVAS_THREADS_CONDITION_VARIABLE_H
 #define CANVAS_THREADS_CONDITION_VARIABLE_H
 
-/** @brief add documentation here! */
+#include <canvas/threads/mutex.h>
+
+/**
+ * @ingroup threading_objects
+ * @brief add documentation here!
+ */
 #define CE_COND_INIT /* implementation-defined */
 
-/** @brief add documentation here! */
-#define ce_cnd /* implementation-defined */
-
-#include <canvas/threads/mutex.h>
+#ifndef ICE_DOXY
 #include <canvas/threads/details/condition_variable.h.inl>
+#endif /* !ICE_DOXY */
+
+/**
+ * @ingroup threading_objects
+ * @brief add documentation here!
+ */
+typedef ice_cnd ce_cnd;
 
 ICE_NAMESPACE_BEGIN
 
 #ifdef CANVAS_HAS_THREADS
 
-/** @brief add documentation here! */
+/**
+ * @ingroup threading_objects
+ * @brief add documentation here!
+ */
 CE_API
 ce_err cnd_init(
 	ce_cnd* cond
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup threading_objects
+ * @brief add documentation here!
+ */
 CE_API
 ce_err cnd_signal(
 	ce_cnd* cond
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup threading_objects
+ * @brief add documentation here!
+ */
 CE_API
 ce_err cnd_broadcast(
 	ce_cnd* cond
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup threading_objects
+ * @brief add documentation here!
+ */
 CE_API
 ce_err cnd_wait(
 	ce_cnd* cond,
 	ce_mtx* mutex
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup threading_objects
+ * @brief add documentation here!
+ */
 CE_API
 ce_err cnd_timedwait(
 	ce_cnd* CE_RESTRICT                 cond,
@@ -65,7 +89,10 @@ ce_err cnd_timedwait(
 	const struct ce_time_t* CE_RESTRICT time_point
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup threading_objects
+ * @brief add documentation here!
+ */
 CE_API
 void cnd_destroy(
 	ce_cnd* cond

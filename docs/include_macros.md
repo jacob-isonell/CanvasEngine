@@ -16,3 +16,6 @@ Exposes native access to Wayland objects used by CanvasEngine. This requires man
 
 #### CANVAS_EXPOSE_X11 ([`canvas/graphics/graphics.h`](@ref canvas/graphics/graphics.h))
 Exposes native access to Xlib objects used by CanvasEngine. This requires manually including the Xlib headers before including the CanvasEngine headers.
+
+#### CANVAS_NO_MUTEX_ATOMICS ([`canvas/threads/atomic.h`](@ref canvas/threads/atomic.h))
+If no atomics implementation is available, a mutex is used to lock the variable. Defining this macro disables this behaviour and no atomics API will be available.

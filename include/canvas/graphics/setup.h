@@ -23,13 +23,32 @@
 
 ICE_NAMESPACE_BEGIN
 
-/** @brief add documentation here! */
-struct ce_graphics_t {
-	/** @brief add documentation here! */
-	int unused;
+/**
+ * @ingroup configuration
+ * @brief add documentation here!
+ */
+struct ce_graphics_vulkan_t {
+	struct {
+		size_t count;
+		struct {
+			char name[256];
+		}* names;
+	} instance_layers, instance_extensions;
 };
 
-/** @brief add documentation here! */
+/**
+ * @ingroup configuration
+ * @brief add documentation here!
+ */
+struct ce_graphics_t {
+	/** add documentation here! */
+	struct ce_graphics_vulkan_t vulkan;
+};
+
+/**
+ * @ingroup configuration
+ * @brief add documentation here!
+ */
 CE_API
 ce_err ce_graphics_options(
 	const struct ce_graphics_t* options

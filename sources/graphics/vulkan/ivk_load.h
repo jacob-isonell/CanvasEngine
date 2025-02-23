@@ -29,7 +29,8 @@ ICE_NAMESPACE_BEGIN
 #define IVK_DLL_FILE "libvulkan.so.1"
 #endif
 
-ICE_API ce_err ivk_load(void);
+ICE_API ce_err ivk_load_global(void);
+ICE_API ce_err ivk_load(VkInstance inst);
 ICE_API void ivk_unload(void);
 
 ICE_API extern PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;

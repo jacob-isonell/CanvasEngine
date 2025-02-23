@@ -45,7 +45,14 @@ struct iarr_data_t {
 #define IARRSTRIDE in_arr_stride
 
 static struct imemdata* igetmemdata(void* in) {
-	return (struct imemdata*)((unsigned char*)in - offsetof(struct imemdata, buffer));
+	union {
+		unsigned char* in;
+		struct imemdata* out;
+	} p;
+	
+	p.in = in;
+	p.in -= offsetof(struct imemdata, buffer);
+	return p.out;
 }
 
 CE_API ce_err ce_set_alloc(struct ce_alloc_t in) {

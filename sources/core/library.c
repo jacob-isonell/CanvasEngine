@@ -23,7 +23,12 @@
 #include <dlfcn.h>
 #endif
 
-CE_API ce_err ce_lib_open(struct ce_lib** handle, const char* filepath, ce_lib_flags flags) {
+CE_API
+ce_err ce_lib_open(
+	struct ce_lib**   handle,
+	const char*       filepath,
+	enum ce_lib_flags flags
+) {
 #if CANVAS_PLATFORM_WINDOWS
 	(void)flags;
 	const HMODULE mod = LoadLibraryExA(filepath, NULL, 0);
@@ -48,7 +53,12 @@ CE_API ce_err ce_lib_open(struct ce_lib** handle, const char* filepath, ce_lib_f
 #endif
 }
 
-CE_API ce_err ce_lib_wopen(struct ce_lib** handle, const wchar_t* filepath, ce_lib_flags flags) {
+CE_API
+ce_err ce_lib_wopen(
+	struct ce_lib**   handle,
+	const wchar_t*    filepath,
+	enum ce_lib_flags flags
+) {
 #if CANVAS_PLATFORM_WINDOWS
 	(void)flags;
 	const HMODULE hmod = LoadLibraryExW(filepath, NULL, 0);
@@ -63,7 +73,12 @@ CE_API ce_err ce_lib_wopen(struct ce_lib** handle, const wchar_t* filepath, ce_l
 #endif
 }
 
-CE_API ce_err ce_lib_load(struct ce_lib* handle, const char* name, void* out) {
+CE_API
+ce_err ce_lib_load(
+	struct ce_lib* handle,
+	const char*    name,
+	void*          out
+) {
 	if (handle == NULL || name == NULL || out == NULL) {
 		return CE_EINVAL;
 	}
@@ -91,7 +106,10 @@ CE_API ce_err ce_lib_load(struct ce_lib* handle, const char* name, void* out) {
 #endif
 }
 
-CE_API void ce_lib_close(struct ce_lib* handle) {
+CE_API
+void ce_lib_close(
+	struct ce_lib* handle
+) {
 	if (handle == NULL) {
 		return;
 	}

@@ -23,35 +23,47 @@
 
 ICE_NAMESPACE_BEGIN
 
-/** @brief add documentation here! */
+/**
+ * @ingroup configuration
+ * @brief add documentation here!
+ */
 struct ce_core_t {
 	
-	/** @brief add documentation here! */
+	/** add documentation here! */
 	char app_name[256];
 	
-	/** @brief add documentation here! */
+	/** add documentation here! */
 	unsigned int app_version;
 	
-	/** @brief add documentation here! */
+	/** add documentation here! */
 	char engine_name[256];
 	
-	/** @brief add documentation here! */
+	/** add documentation here! */
 	unsigned int engine_version;
 };
 
-/** @brief add documentation here! */
+/**
+ * @ingroup configuration
+ * @brief add documentation here!
+ */
 CE_API
 ce_err ce_core_options(
 	const struct ce_core_t* ops
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup configuration
+ * @brief add documentation here!
+ */
 CE_API
 ce_err ce_init(
 	void
 );
 
-/** @brief add documentation here! */
+/**
+ * @ingroup configuration
+ * @brief add documentation here!
+ */
 CE_API
 void ce_shutdown(
 	void
