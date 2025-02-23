@@ -19,6 +19,7 @@
 #ifndef CANVAS_THREADS_MUTEX_H
 #define CANVAS_THREADS_MUTEX_H
 
+/** @brief add documentation here! */
 #define CE_MTX_TYPE int
 #define CE_MTX_PLAIN 0
 #define CE_MTX_TIMED 1
@@ -36,6 +37,7 @@
 /** @brief If the implementation suports it, initializes a ce_mtx for timed recursive use. */
 #define CE_MTX_INIT_TIMED_RECURSIVE /* implementation-defined */
 
+/** @brief add documentation here! */
 #define ce_mtx /* implementation-defined */
 
 #include <canvas/threads/thread.h>
@@ -45,12 +47,43 @@ ICE_NAMESPACE_BEGIN
 
 #ifdef CANVAS_HAS_THREADS
 
-CE_API ce_err ce_mtx_init(ce_mtx* mtx, CE_MTX_TYPE type);
-CE_API ce_err ce_mtx_lock(ce_mtx* mtx);
-CE_API ce_err ce_mtx_timedlock(ce_mtx* CE_RESTRICT mtx, const struct ce_time_t* CE_RESTRICT time_point);
-CE_API ce_err ce_mtx_trylock(ce_mtx* mtx);
-CE_API ce_err ce_mtx_unlock(ce_mtx* mtx);
-CE_API void ce_mtx_destroy(ce_mtx* mtx);
+/** @brief add documentation here! */
+CE_API
+ce_err ce_mtx_init(
+	ce_mtx*     mtx,
+	CE_MTX_TYPE type
+);
+
+/** @brief add documentation here! */
+CE_API
+ce_err ce_mtx_lock(
+	ce_mtx* mtx
+);
+
+/** @brief add documentation here! */
+CE_API
+ce_err ce_mtx_timedlock(
+	ce_mtx* CE_RESTRICT                 mtx,
+	const struct ce_time_t* CE_RESTRICT time_point
+);
+
+/** @brief add documentation here! */
+CE_API
+ce_err ce_mtx_trylock(
+	ce_mtx* mtx
+);
+
+/** @brief add documentation here! */
+CE_API
+ce_err ce_mtx_unlock(
+	ce_mtx* mtx
+);
+
+/** @brief add documentation here! */
+CE_API
+void ce_mtx_destroy(
+	ce_mtx* mtx
+);
 
 #endif /* !CANVAS_HAS_THREADS */
 

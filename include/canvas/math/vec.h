@@ -23,42 +23,116 @@
 
 ICE_NAMESPACE_BEGIN
 
-struct ce_vec2f32 { ce_f32 x, y; };
-struct ce_vec3f32 { ce_f32 x, y, z; };
-struct ce_vec4f32 { ce_f32 x, y, z, w; };
-struct ce_vec2f64 { ce_f64 x, y; };
-struct ce_vec3f64 { ce_f64 x, y, z; };
-struct ce_vec4f64 { ce_f64 x, y, z, w; };
+/** @brief add documentation here! */
+struct ce_vec2f32 {
+	ce_f32 x, y; 
+};
 
-ICE_INLINE struct ce_vec2f32 ce_add_vec2f32    (struct ce_vec2f32 lhs, struct ce_vec2f32 rhs);
-ICE_INLINE struct ce_vec2f32 ce_sub_vec2f32    (struct ce_vec2f32 lhs, struct ce_vec2f32 rhs);
-ICE_INLINE struct ce_vec2f32 ce_mul_vec2f32    (struct ce_vec2f32 lhs, struct ce_vec2f32 rhs);
-ICE_INLINE struct ce_vec2f32 ce_div_vec2f32    (struct ce_vec2f32 lhs, struct ce_vec2f32 rhs);
-ICE_INLINE ce_f32            ce_dot_vec2f32    (struct ce_vec2f32 lhs, struct ce_vec2f32 rhs);
-ICE_INLINE ce_f32            ce_sqrmag_vec2f32 (struct ce_vec2f32 in);
-ICE_INLINE ce_f32            ce_mag_vec2f32    (struct ce_vec2f32 in);
-ICE_INLINE ce_f32            ce_sqrdist_vec2f32(struct ce_vec2f32 lhs, struct ce_vec2f32 rhs);
-ICE_INLINE ce_f32            ce_dist_vec2f32   (struct ce_vec2f32 lhs, struct ce_vec2f32 rhs);
+/** @brief add documentation here! */
+struct ce_vec3f32 {
+	ce_f32 x, y, z; 
+};
 
-ICE_INLINE struct ce_vec3f32 ce_add_vec3f32    (struct ce_vec3f32 lhs, struct ce_vec3f32 rhs);
-ICE_INLINE struct ce_vec3f32 ce_sub_vec3f32    (struct ce_vec3f32 lhs, struct ce_vec3f32 rhs);
-ICE_INLINE struct ce_vec3f32 ce_mul_vec3f32    (struct ce_vec3f32 lhs, struct ce_vec3f32 rhs);
-ICE_INLINE struct ce_vec3f32 ce_div_vec3f32    (struct ce_vec3f32 lhs, struct ce_vec3f32 rhs);
-ICE_INLINE ce_f32            ce_dot_vec3f32    (struct ce_vec3f32 lhs, struct ce_vec3f32 rhs);
-ICE_INLINE ce_f32            ce_sqrmag_vec3f32 (struct ce_vec3f32 in);
-ICE_INLINE ce_f32            ce_mag_vec3f32    (struct ce_vec3f32 in);
-ICE_INLINE ce_f32            ce_sqrdist_vec3f32(struct ce_vec3f32 lhs, struct ce_vec3f32 rhs);
-ICE_INLINE ce_f32            ce_dist_vec3f32   (struct ce_vec3f32 lhs, struct ce_vec3f32 rhs);
+/** @brief add documentation here! */
+struct ce_vec4f32 {
+	ce_f32 x, y, z, w; 
+};
 
-ICE_INLINE struct ce_vec4f32 ce_add_vec4f32    (struct ce_vec4f32 lhs, struct ce_vec4f32 rhs);
-ICE_INLINE struct ce_vec4f32 ce_sub_vec4f32    (struct ce_vec4f32 lhs, struct ce_vec4f32 rhs);
-ICE_INLINE struct ce_vec4f32 ce_mul_vec4f32    (struct ce_vec4f32 lhs, struct ce_vec4f32 rhs);
-ICE_INLINE struct ce_vec4f32 ce_div_vec4f32    (struct ce_vec4f32 lhs, struct ce_vec4f32 rhs);
-ICE_INLINE ce_f32            ce_dot_vec4f32    (struct ce_vec4f32 lhs, struct ce_vec4f32 rhs);
-ICE_INLINE ce_f32            ce_sqrmag_vec4f32 (struct ce_vec4f32 in);
-ICE_INLINE ce_f32            ce_mag_vec4f32    (struct ce_vec4f32 in);
-ICE_INLINE ce_f32            ce_sqrdist_vec4f32(struct ce_vec4f32 lhs, struct ce_vec4f32 rhs);
-ICE_INLINE ce_f32            ce_dist_vec4f32   (struct ce_vec4f32 lhs, struct ce_vec4f32 rhs);
+/** @brief add documentation here! */
+struct ce_vec2f64 {
+	ce_f64 x, y; 
+};
+
+/** @brief add documentation here! */
+struct ce_vec3f64 {
+	ce_f64 x, y, z; 
+};
+
+/** @brief add documentation here! */
+struct ce_vec4f64 {
+	ce_f64 x, y, z, w; 
+};
+
+/** @brief add documentation here! */
+ICE_INLINE struct ce_vec2f32 ce_add_vec2f32(struct ce_vec2f32 lhs, struct ce_vec2f32 rhs);
+
+/** @brief add documentation here! */
+ICE_INLINE struct ce_vec2f32 ce_sub_vec2f32(struct ce_vec2f32 lhs, struct ce_vec2f32 rhs);
+
+/** @brief add documentation here! */
+ICE_INLINE struct ce_vec2f32 ce_mul_vec2f32(struct ce_vec2f32 lhs, struct ce_vec2f32 rhs);
+
+/** @brief add documentation here! */
+ICE_INLINE struct ce_vec2f32 ce_div_vec2f32(struct ce_vec2f32 lhs, struct ce_vec2f32 rhs);
+
+/** @brief add documentation here! */
+ICE_INLINE ce_f32 ce_dot_vec2f32(struct ce_vec2f32 lhs, struct ce_vec2f32 rhs);
+
+/** @brief add documentation here! */
+ICE_INLINE ce_f32 ce_sqrmag_vec2f32(struct ce_vec2f32 in);
+
+/** @brief add documentation here! */
+ICE_INLINE ce_f32 ce_mag_vec2f32(struct ce_vec2f32 in);
+
+/** @brief add documentation here! */
+ICE_INLINE ce_f32 ce_sqrdist_vec2f32(struct ce_vec2f32 lhs, struct ce_vec2f32 rhs);
+
+/** @brief add documentation here! */
+ICE_INLINE ce_f32 ce_dist_vec2f32(struct ce_vec2f32 lhs, struct ce_vec2f32 rhs);
+
+/** @brief add documentation here! */
+ICE_INLINE struct ce_vec3f32 ce_add_vec3f32(struct ce_vec3f32 lhs, struct ce_vec3f32 rhs);
+
+/** @brief add documentation here! */
+ICE_INLINE struct ce_vec3f32 ce_sub_vec3f32(struct ce_vec3f32 lhs, struct ce_vec3f32 rhs);
+
+/** @brief add documentation here! */
+ICE_INLINE struct ce_vec3f32 ce_mul_vec3f32(struct ce_vec3f32 lhs, struct ce_vec3f32 rhs);
+
+/** @brief add documentation here! */
+ICE_INLINE struct ce_vec3f32 ce_div_vec3f32(struct ce_vec3f32 lhs, struct ce_vec3f32 rhs);
+
+/** @brief add documentation here! */
+ICE_INLINE ce_f32 ce_dot_vec3f32(struct ce_vec3f32 lhs, struct ce_vec3f32 rhs);
+
+/** @brief add documentation here! */
+ICE_INLINE ce_f32 ce_sqrmag_vec3f32(struct ce_vec3f32 in);
+
+/** @brief add documentation here! */
+ICE_INLINE ce_f32 ce_mag_vec3f32(struct ce_vec3f32 in);
+
+/** @brief add documentation here! */
+ICE_INLINE ce_f32 ce_sqrdist_vec3f32(struct ce_vec3f32 lhs, struct ce_vec3f32 rhs);
+
+/** @brief add documentation here! */
+ICE_INLINE ce_f32 ce_dist_vec3f32(struct ce_vec3f32 lhs, struct ce_vec3f32 rhs);
+
+/** @brief add documentation here! */
+ICE_INLINE struct ce_vec4f32 ce_add_vec4f32(struct ce_vec4f32 lhs, struct ce_vec4f32 rhs);
+
+/** @brief add documentation here! */
+ICE_INLINE struct ce_vec4f32 ce_sub_vec4f32(struct ce_vec4f32 lhs, struct ce_vec4f32 rhs);
+
+/** @brief add documentation here! */
+ICE_INLINE struct ce_vec4f32 ce_mul_vec4f32(struct ce_vec4f32 lhs, struct ce_vec4f32 rhs);
+
+/** @brief add documentation here! */
+ICE_INLINE struct ce_vec4f32 ce_div_vec4f32(struct ce_vec4f32 lhs, struct ce_vec4f32 rhs);
+
+/** @brief add documentation here! */
+ICE_INLINE ce_f32 ce_dot_vec4f32(struct ce_vec4f32 lhs, struct ce_vec4f32 rhs);
+
+/** @brief add documentation here! */
+ICE_INLINE ce_f32 ce_sqrmag_vec4f32(struct ce_vec4f32 in);
+
+/** @brief add documentation here! */
+ICE_INLINE ce_f32 ce_mag_vec4f32(struct ce_vec4f32 in);
+
+/** @brief add documentation here! */
+ICE_INLINE ce_f32 ce_sqrdist_vec4f32(struct ce_vec4f32 lhs, struct ce_vec4f32 rhs);
+
+/** @brief add documentation here! */
+ICE_INLINE ce_f32 ce_dist_vec4f32(struct ce_vec4f32 lhs, struct ce_vec4f32 rhs);
 
 #include <canvas/math/details/vec.h.inl>
 

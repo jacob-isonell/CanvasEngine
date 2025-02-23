@@ -28,10 +28,10 @@ CE_API ce_err ce_core_options(const struct ce_core_t* ops) {
 		return CE_EINVAL;
 	}
 	
-	strncpy(icore.app_info.name, ops->app_info.name, 256);
-	strncpy(icore.engine_info.name, ops->engine_info.name, 256);
-	icore.app_info.version = ops->app_info.version;
-	icore.engine_info.version = ops->engine_info.version;
+	strncpy(icore.app_info.name, ops->app_name, 256);
+	strncpy(icore.engine_info.name, ops->engine_name, 256);
+	icore.app_info.version = ops->app_version;
+	icore.engine_info.version = ops->engine_version;
 	return CE_EOK;
 }
 
@@ -53,12 +53,6 @@ static void s_deffree(void* addr, size_t bytes, void* arg) {
 ICE_API ce_err icore_init(void) {
 	IERRBEGIN {
 		IERRDO(ce_mtx_init(&icore.mem.lck, CE_MTX_PLAIN));
-		
-		printf("icore.app_info.name : %s\n", icore.app_info.name);
-		/*for (size_t i = 0; i < CE_ARRLEN(icore.app_info.name); ++i) {
-			printf("%02X", icore.app_info.name[i]);
-		}*/
-		
 	} IERREND { }
 	return IERRVAL;
 }
@@ -80,12 +74,8 @@ ICE_API struct icore_t icore = {
 };
 
 ICE_API struct ce_core_t icore_ops = {
-	.app_info = {
-		.name = { 0 },
-		.version = 0,
-	},
-	.engine_info = {
-		.name = { 0 },
-		.version = 0,
-	},
+	.app_name = {0},
+	.app_version = 0,
+	.engine_name = {0},
+	.engine_version = 0,
 };

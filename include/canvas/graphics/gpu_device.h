@@ -23,14 +23,25 @@
 
 ICE_NAMESPACE_BEGIN
 
+/** @brief add documentation here! */
 struct ce_gpu_dev;
 
+/** @brief add documentation here! */
 struct ce_gpy_dev_props {
+	
+	/** @brief add documentation here! */
 	char name[256];
+	
+	/** @brief add documentation here! */
 	ce_ul32 driver_version;
 };
 
-CE_API size_t ce_gpu_dev_get(struct ce_gpu_dev** buffer, size_t buffer_size);
+/** @brief add documentation here! */
+CE_API
+size_t ce_gpu_dev_get(
+	struct ce_gpu_dev** buffer,
+	size_t              buffer_size
+);
 
 ICE_NAMESPACE_END
 

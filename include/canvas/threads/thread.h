@@ -40,37 +40,77 @@ ICE_NAMESPACE_BEGIN
 #ifdef CANVAS_HAS_THREADS
 
 /** @brief missing documentation. */
-CE_API ce_err ce_thrd_create(ce_thrd* out, int (*func)(void*), void* arg);
+CE_API
+ce_err ce_thrd_create(
+	ce_thrd* out,
+	int    (*func)(void*),
+	void*    arg
+);
 
 /** @brief missing documentation. */
-CE_API cebool ce_thrd_equal(ce_thrd lhs, ce_thrd rhs);
+CE_API
+cebool ce_thrd_equal(
+	ce_thrd lhs,
+	ce_thrd rhs
+);
 
 /** @brief missing documentation. */
-CE_API ce_thrd ce_thrd_current(void);
+CE_API
+ce_thrd ce_thrd_current(
+	void
+);
 
 /** @brief missing documentation. */
-CE_API unsigned long ce_thrd_id(ce_thrd thrd);
+CE_API
+unsigned long ce_thrd_id(
+	ce_thrd thrd
+);
 
 /** @brief missing documentation. */
-CE_API ce_err ce_thrd_sleep(const struct ce_time_t* duration, struct ce_time_t* opt_remaining);
+CE_API
+ce_err ce_thrd_sleep(
+	const struct ce_time_t* duration,
+	struct ce_time_t*       opt_remaining
+);
 
 /** @brief missing documentation. */
-CE_API ce_err ce_thrd_yield(void);
+CE_API
+ce_err ce_thrd_yield(
+	void
+);
 
 /** @brief missing documentation. */
-CE_ATTR_NORET CE_API void ce_thrd_exit(int res);
+CE_ATTR_NORET CE_API
+void ce_thrd_exit(
+	int res
+);
 
 /** @brief missing documentation. */
-CE_API ce_err ce_thrd_detach(ce_thrd thrd);
+CE_API
+ce_err ce_thrd_detach(
+	ce_thrd thrd
+);
 
 /** @brief missing documentation. */
-CE_API ce_err ce_thrd_join(ce_thrd thrd, int* opt_res);
+CE_API
+ce_err ce_thrd_join(
+	ce_thrd thrd,
+	int*    opt_res
+);
 
 /** @brief missing documentation. */
-CE_API ce_err ce_thrd_run(int (*func)(void*), void* arg);
+CE_API
+ce_err ce_thrd_run(
+	int (*func)(void*),
+	void* arg
+);
 
 /** @brief missing documentation. */
-CE_API ce_err ce_call_once(ce_once_flag* flag, void (*func)(void));
+CE_API
+ce_err ce_call_once(
+	ce_once_flag* flag,
+	void        (*func)(void)
+);
 
 #endif /* !CANVAS_HAS_THREADS */
 

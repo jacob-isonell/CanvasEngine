@@ -25,10 +25,18 @@ ICE_NAMESPACE_BEGIN
 
 /** @brief add documentation here! */
 struct ce_core_t {
-	struct {
-		char name[256];
-		unsigned int version;
-	} app_info, engine_info;
+	
+	/** @brief add documentation here! */
+	char app_name[256];
+	
+	/** @brief add documentation here! */
+	unsigned int app_version;
+	
+	/** @brief add documentation here! */
+	char engine_name[256];
+	
+	/** @brief add documentation here! */
+	unsigned int engine_version;
 };
 
 /** @brief add documentation here! */

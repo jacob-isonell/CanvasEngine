@@ -24,7 +24,7 @@
 ICE_NAMESPACE_BEGIN
 
 /** @brief CanvasEngine's error type. Based on errno. Zero is a success value and any non-zero value is an error. */
-#define ce_err int
+typedef int ce_err;
 
 /** @brief add documentation here! */
 #define ce_success(code) ((code) == 0)

@@ -19,15 +19,6 @@
 #ifndef CANVAS_CORE_BASE_H
 #define CANVAS_CORE_BASE_H
 
-/**
- * @brief
- * CANVAS_SKIP_COMPILER_CHECKS:
- *   CanvasEngine performs checks during compile time to determine
- *   if the compiler has all the nessecairy features required.
- *   Defining this macro disables these checks and it's up to the programming
- *   to ensure the compiler is able to compile the CanvasEngine library.
- */
-
 /** @brief A boolean type (`bool` in C++ or `_Bool` in C11) */
 #define cebool /* boolean-type */
 
@@ -190,7 +181,7 @@ struct ce_version {
 #define CE_VERSION(major, minor, patch) (((major) << 24) | ((minor) << 24) | (patch))
 
 /** @brief add documentation here! */
-#define CE_CURRVER CE_VERSION(ICE_VERSION_MAJOR, ICE_VERSION_MINOR, ICE_VERSION_PATCH)
+#define CE_CURRVER /* implementation-defined */
 
 #include <canvas/core/details/base.h.inl>
 

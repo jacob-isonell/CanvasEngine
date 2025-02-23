@@ -25,12 +25,17 @@
 
 ICE_NAMESPACE_BEGIN
 
-#define CE_TIME_UTC 1 /* add documentation here! */
+/** @brief add documentation here! */
+#define CE_TIME_UTC 1
 
 /** @brief Describes a span of time or the time span since the unix epoch time (january 1st 1970 00:00:00). */
 struct ce_time_t {
-	unsigned long long int sec;  /** @brief Seconds. */
-	unsigned long long int nsec; /** @brief Nanoseconds. This field must be in the range of 0 to 999'999'999 (or 1 billion - 1). */
+	
+	/** Seconds. */
+	unsigned long long int sec;
+	
+	/** Nanoseconds. This field must be in the range of 0 to 999'999'999 (or 1 billion - 1). */
+	unsigned long long int nsec;
 };
 
 /** @brief Gets the current time. */

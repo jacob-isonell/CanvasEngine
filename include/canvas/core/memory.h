@@ -23,17 +23,23 @@
 
 ICE_NAMESPACE_BEGIN
 
-/** @brief add documentation here! @typedef */
+/** @brief add documentation here! */
 typedef void* (*ce_pfunc_alloc)(size_t bytecount, void* usr);
 
-/** @brief add documentation here! @typedef */
+/** @brief add documentation here! */
 typedef void (*ce_pfunc_free)(void* address, size_t bytecount, void* usr);
 
-/** @brief add documentation here! @struct */
+/** @brief add documentation here! */
 struct ce_alloc_t {
-	void*          user;  /** add documentation here! */
-	ce_pfunc_alloc alloc; /** add documentation here! */
-	ce_pfunc_free  free;  /** add documentation here! */
+	
+	/** add documentation here! */
+	void*          user;
+	
+	/** add documentation here! */
+	ce_pfunc_alloc alloc;
+	
+	/** add documentation here! */
+	ce_pfunc_free  free;
 };
 
 /** @brief add documentation here! */

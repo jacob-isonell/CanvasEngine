@@ -56,7 +56,7 @@
 #undef CE_U16_MAX
 #undef CE_U32_MAX
 #undef CE_U64_MAX
-#undef CE_VERSION
+#undef CE_CURRVER
 
 #if CE_C99_STD
 #	define ce_il8 int_least8_t
@@ -225,12 +225,5 @@
 #	endif
 #endif
 
-#define ICE_VERARG(in) ((unsigned int)(in))
-#define ICE_VERSHIFT(in, shift) (ICE_VERARG(in) << shift)
-
-#define CE_VERSION(major, minor, patch) \
-	(ICE_VERSHIFT(major, 24) \
-	| ICE_VERSHIFT(minor, 14) \
-	| ICE_VERSHIFT(patch, 0))
-
 #define ICE_NOIMPL() abort()
+#define CE_CURRVER CE_VERSION(ICE_VERSION_MAJOR, ICE_VERSION_MINOR, ICE_VERSION_PATCH)

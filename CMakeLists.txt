@@ -35,7 +35,7 @@ include("cmake/configs.cmake")
 add_library(CanvasEngine ${CANVAS_LIBRARY_KIND})
 include("cmake/options.cmake")
 add_subdirectory("cmake/dependencies")
-add_subdirectory("cmake/doxygen")
+include("cmake/doxygen.cmake")
 add_subdirectory("sources")
 
 string(TIMESTAMP CANVAS_BUILD_DATE "%Y%m")

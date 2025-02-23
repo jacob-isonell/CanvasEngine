@@ -19,35 +19,44 @@
 find_package(Doxygen)
 
 cmake_dependent_option(CANVAS_GENERATE_DOXYGEN "Generate documentation with Doxygen" ON "DOXYGEN_FOUND" OFF)
-if (NOT CANVAS_GENERATE_DOXYGEN)
-	return ()
+if (CANVAS_GENERATE_DOXYGEN)
+	set(DOXYGEN_EXCLUDE_PATTERNS
+		"*/details/*"
+	)
+
+	set(DOXYGEN_EXCLUDE_SYMBOLS
+		"ice_*"
+		"ICE_*"
+		"i*"
+		"I*"
+	)
+
+	set(DOXYGEN_PREDEFINED
+		"ICE_NAMESPACE_BEGIN="
+		"ICE_NAMESPACE_END="
+		"ICE_INLINE="
+		"CE_API="
+		"ICE_DOXY="
+	)
+
+	set(DOXYGEN_FILE_PATTERNS
+		"*.h"
+		"*.md"
+		"*.markdown"
+	)
+	
+	set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "./docs/index.md")
+	set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/CanvasDocs")
+	
+	set(DOXYGEN_MACRO_EXPANSION YES)
+	set(DOXYGEN_EXTRACT_ALL YES)
+	set(DOXYGEN_GENERATE_HTML YES)
+	set(DOXYGEN_RECURSIVE YES)
+	set(DOXYGEN_OPTIMIZE_OUTPUT_FOR_C YES)
+	
+	doxygen_add_docs(CanvasDoxygen
+		"./include/"
+		"./docs/"
+		WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+	)
 endif ()
-
-set(DOXYGEN_EXCLUDE_PATTERNS
-	"*/details/*"
-)
-
-set(DOXYGEN_EXCLUDE_SYMBOLS
-	"ice_*"
-	"ICE_*"
-	"i*"
-	"I*"
-)
-
-set(DOXYGEN_PREDEFINED
-	"ICE_NAMESPACE_BEGIN="
-	"ICE_NAMESPACE_END="
-	"ICE_INLINE="
-	"CE_API="
-)
-
-set(DOXYGEN_MACRO_EXPANSION YES)
-set(DOXYGEN_EXTRACT_ALL YES)
-set(DOXYGEN_GENERATE_HTML YES)
-set(DOXYGEN_RECURSIVE YES)
-set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/CanvasDocs")
-set(DOXYGEN_OPTIMIZE_OUTPUT_FOR_C YES)
-
-doxygen_add_docs(CanvasDoxygen
-	"../../include"
-)

@@ -67,9 +67,9 @@
 #	define ICE_NO_ATOMICS
 #endif
 
-#ifndef ICE_THREADS_NONE 
+#if !defined(ICE_THREADS_NONE) || defined(ICE_DOXY)
 #define CANVAS_HAS_THREADS 1
 #endif
-#ifndef ICE_NO_ATOMICS 
+#if !defined(ICE_NO_ATOMICS) || defined(ICE_DOXY)
 #define CANVAS_HAS_ATOMICS 1
 #endif

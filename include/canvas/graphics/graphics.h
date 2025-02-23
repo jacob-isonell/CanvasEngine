@@ -25,12 +25,6 @@
 #error the graphics module for CanvasEngine has been disabled
 #endif
 
-/* CANVAS_EXPOSE_VULKAN
- * CANVAS_EXPOSE_WAYLAND
- * CANVAS_EXPOSE_X11
- * CANVAS_EXPOSE_VULKAN
- */
-
 ICE_NAMESPACE_BEGIN
 
 

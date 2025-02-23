@@ -19,7 +19,10 @@
 #ifndef CANVAS_THREADS_CONDITION_VARIABLE_H
 #define CANVAS_THREADS_CONDITION_VARIABLE_H
 
+/** @brief add documentation here! */
 #define CE_COND_INIT /* implementation-defined */
+
+/** @brief add documentation here! */
 #define ce_cnd /* implementation-defined */
 
 #include <canvas/threads/mutex.h>
@@ -29,12 +32,44 @@ ICE_NAMESPACE_BEGIN
 
 #ifdef CANVAS_HAS_THREADS
 
-CE_API ce_err cnd_init(ce_cnd* cond);
-CE_API ce_err cnd_signal(ce_cnd* cond);
-CE_API ce_err cnd_broadcast(ce_cnd* cond);
-CE_API ce_err cnd_wait(ce_cnd* cond, ce_mtx* mutex);
-CE_API ce_err cnd_timedwait(ce_cnd* CE_RESTRICT cond, ce_mtx* CE_RESTRICT mutex, const struct ce_time_t* CE_RESTRICT time_point);
-CE_API void cnd_destroy(ce_cnd* cond);
+/** @brief add documentation here! */
+CE_API
+ce_err cnd_init(
+	ce_cnd* cond
+);
+
+/** @brief add documentation here! */
+CE_API
+ce_err cnd_signal(
+	ce_cnd* cond
+);
+
+/** @brief add documentation here! */
+CE_API
+ce_err cnd_broadcast(
+	ce_cnd* cond
+);
+
+/** @brief add documentation here! */
+CE_API
+ce_err cnd_wait(
+	ce_cnd* cond,
+	ce_mtx* mutex
+);
+
+/** @brief add documentation here! */
+CE_API
+ce_err cnd_timedwait(
+	ce_cnd* CE_RESTRICT                 cond,
+	ce_mtx* CE_RESTRICT                 mutex,
+	const struct ce_time_t* CE_RESTRICT time_point
+);
+
+/** @brief add documentation here! */
+CE_API
+void cnd_destroy(
+	ce_cnd* cond
+);
 
 #endif /* !CANVAS_HAS_THREADS */
 

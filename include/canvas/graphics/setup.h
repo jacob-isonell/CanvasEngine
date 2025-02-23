@@ -23,11 +23,17 @@
 
 ICE_NAMESPACE_BEGIN
 
+/** @brief add documentation here! */
 struct ce_graphics_t {
+	/** @brief add documentation here! */
 	int unused;
 };
 
-CE_API ce_err ce_graphics_options(const struct ce_graphics_t* options);
+/** @brief add documentation here! */
+CE_API
+ce_err ce_graphics_options(
+	const struct ce_graphics_t* options
+);
 
 ICE_NAMESPACE_END
 
