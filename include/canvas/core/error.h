@@ -53,8 +53,7 @@ const char* ce_errstr(
 );
 
 #define CE_EOK             0x0000
-#define CE_EUNDEF          0xFFFF
-#define CE_EUNKNOWN        0x7FFF
+#define CE_EUNKNOWN        0xFFFF
 #define CE_EPERM           0x0001
 #define CE_ENOENT          0x0002
 #define CE_ESRCH           0x0003

@@ -21,6 +21,8 @@
 
 CE_API const char* ce_errstr(ce_err error) {
 	switch (error) {
+	case CE_EOK              : return "No error";
+	
 	case CE_EPERM            : return "Operation not permitted";
 	case CE_ENOENT           : return "No such file or directory";
 	case CE_ESRCH            : return "No such process";
@@ -165,10 +167,7 @@ CE_API const char* ce_errstr(ce_err error) {
 	case CE_EVKFEAT          : return "Vulkan feature cannot be found";
 	case CE_EVKFORMAT        : return "Vulkan format not supported by device";
 	case CE_EVKSURFACE       : return "Vulkan surface was lost";
-	case CE_EUNDEF           : return "Undefined error";
-		
-	case CE_EOK              : return "No error";
-	
+			
 	default:
 	case CE_EUNKNOWN         : return "Unknown/unspecified error";
 	}

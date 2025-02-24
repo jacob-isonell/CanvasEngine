@@ -107,12 +107,12 @@ CE_API ce_err ce_thrd_sleep(const struct ce_time_t* duration, struct ce_time_t* 
 	
 #if defined(ICE_THREADS_POSIX)
 	struct timespec dur, rem;
-	dur.tv_sec = duration->sec;
-	dur.tv_nsec = duration->nsec;
+	dur.tv_sec = (time_t)duration->sec;
+	dur.tv_nsec = (long)duration->nsec;
 	if (nanosleep(&dur, &rem) != 0) {
 		if (opt_remaining) {
-			opt_remaining->sec = rem.tv_sec;
-			opt_remaining->nsec = rem.tv_nsec;
+			opt_remaining->sec = (unsigned long long)rem.tv_sec;
+			opt_remaining->nsec = (unsigned long long)rem.tv_nsec;
 		}
 		return ierrno(errno);
 	}

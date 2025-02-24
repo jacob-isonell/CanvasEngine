@@ -40,5 +40,6 @@ CE_API ce_err ce_time_get(struct ce_time_t* out, int base) {
 		.sec = (unsigned long long int)now.tv_sec,
 		.nsec = (unsigned long long int)now.tv_nsec,
 	};
+	
 	return CE_EOK;
 }

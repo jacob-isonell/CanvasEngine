@@ -23,7 +23,8 @@
 
 struct iitem_pairs {
 	ce_err (*init)(void);
-	void (*term)(void);
+	void   (*term)(void);
+	
 #ifdef CANVAS_DEBUG
 	const char* debug_name;
 #endif
@@ -48,7 +49,7 @@ CE_API ce_err ce_init(void) {
 			++i;
 		}
 	} IERREND {
-		IPRERROR("Failed to initialize %s module (0x%08X) \"%s\"\n", s_items[i].debug_name, IERRVAL, ce_errstr(IERRVAL));
+		IDEBERROR("Failed to initialize %s module (0x%08X) \"%s\"\n", s_items[i].debug_name, IERRVAL, ce_errstr(IERRVAL));
 		while (0 < i) {
 			s_items[i--].term();
 		}

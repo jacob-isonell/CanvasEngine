@@ -29,27 +29,31 @@ ce_err ce_lib_open(
 	const char*       filepath,
 	enum ce_lib_flags flags
 ) {
-#if CANVAS_PLATFORM_WINDOWS
 	(void)flags;
+	if (handle == NULL || filepath == NULL) {
+		return CE_EINVAL;
+	}
+	
+#if CANVAS_PLATFORM_WINDOWS
+	
 	const HMODULE mod = LoadLibraryExA(filepath, NULL, 0);
 	if (mod == NULL) {
 		return CE_EFAULT;
 	}
 	memcpy(handle, &mod, sizeof(mod));
 	return CE_EOK;
+	
 #elif CANVAS_PLATFORM_UNIX
-	/* dlopen(); */
-	void* const mod = dlopen(filepath, RTLD_NOW);
+	
+	void* const mod = dlopen(filepath, RTLD_NOW | RTLD_GLOBAL);
 	if (mod != NULL) {
 		memcpy(handle, mod, sizeof(mod));
 		return CE_EOK;
 	}
 	
-#if CANVAS_DEBUG
-	fprintf(stderr, "dlclose failed (\"%s\")\n", dlerror());
-#endif
-	
+	IDEBERROR("dlopen failed (\"%s\")\n", dlerror());
 	return CE_ENOENT;
+	
 #endif
 }
 
@@ -59,7 +63,13 @@ ce_err ce_lib_wopen(
 	const wchar_t*    filepath,
 	enum ce_lib_flags flags
 ) {
+	(void)flags;
+	if (handle == NULL || filepath == NULL) {
+		return CE_EINVAL;
+	}
+	
 #if CANVAS_PLATFORM_WINDOWS
+	
 	(void)flags;
 	const HMODULE hmod = LoadLibraryExW(filepath, NULL, 0);
 	if (hmod == NULL) {
@@ -67,9 +77,12 @@ ce_err ce_lib_wopen(
 	}
 	memcpy(handle, &hmod, sizeof(hmod));
 	return CE_EOK;
+	
 #elif CANVAS_PLATFORM_UNIX
-	/* dlopen(); */
+	
+	/* TODO: implement wide to narrow string conversion and call dlopen. */
 	ICE_NOIMPL();
+	
 #endif
 }
 
@@ -82,27 +95,31 @@ ce_err ce_lib_load(
 	if (handle == NULL || name == NULL || out == NULL) {
 		return CE_EINVAL;
 	}
+	
 #if CANVAS_PLATFORM_WINDOWS
+	
 	FARPROC p = GetProcAddress((HMODULE)handle, name);
 	if (p == NULL) {
 		return CE_ENODATA;
 	}
 	memcpy(out, &p, sizeof(void*));
 	return CE_EOK;
+	
 #elif CANVAS_PLATFORM_UNIX
-	(void)dlerror();
+	
+	(void)dlerror(); // Clear previous error;
+	
 	void* const p = dlsym((void*)handle, name);
 	const char* const errstr = dlerror();
+	
 	if (errstr == NULL) {
 		memcpy(out, &p, sizeof(p));
 		return CE_EOK;
 	}
 	
-#if CANVAS_DEBUG
-	fprintf(stderr, "dlclose failed (\"%s\")\n", errstr);
-#endif
-	
+	IDEBERROR("dlclose failed (\"%s\")\n", errstr);
 	return CE_ENOENT;
+	
 #endif
 }
 
@@ -115,8 +132,11 @@ void ce_lib_close(
 	}
 	
 #if CANVAS_PLATFORM_WINDOWS
+	
 	FreeLibrary((HMODULE)handle);
+	
 #elif CANVAS_PLATFORM_UNIX
+	
 #if CANVAS_DEBUG
 	if (dlclose(handle) != 0) {
 		fprintf(stderr, "dlclose failed (\"%s\")\n", dlerror());
@@ -124,5 +144,6 @@ void ce_lib_close(
 #else
 	dlclose(handle);
 #endif
+	
 #endif
 }

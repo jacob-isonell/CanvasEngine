@@ -15,7 +15,6 @@ Descriptions for each of the error codes can be retived with the [`ce_errstr`](@
 
 | Value                 | Meaning                                            |
 | --------------------- | -------------------------------------------------- |
-| `CE_EUNDEF          ` | Undefined error                                    |
 | `CE_EUNKNOWN        ` | Unknown/unspecified error                          |
 | `CE_EPERM           ` | Operation not permitted                            |
 | `CE_ENOENT          ` | No such file or directory                          |

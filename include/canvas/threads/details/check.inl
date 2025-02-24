@@ -51,7 +51,7 @@
 #	define ICE_THREADS_NONE
 #endif
 
-#if CE_CXX
+#if CE_CXX11_STD
 #	define ICE_ATOMICS_CXX11
 #elif CE_C11_STD && !defined(__STDC_NO_ATOMICS__)
 #	define ICE_ATOMICS_C11

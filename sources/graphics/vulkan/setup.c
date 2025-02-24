@@ -30,16 +30,6 @@ ICE_API ce_err ivk_init(void) {
 		IERRDO(ivk_load_global());
 		IERRDO(s_create_instance());
 		IERRDO(ivk_load(ivk_inst));
-		
-		// VkInstanceCreateInfo info;
-		
-		/*vkCreateInstance()
-		
-		VkInstanceCreateInfo info;
-		VkAllocationCallbacks alloc;
-		VkInstance inst;
-		vkCreateInstance(&info, &alloc, &inst);*/
-		
 	} IERREND { }
 	return IERRVAL;
 }
@@ -73,9 +63,20 @@ static ce_err s_create_instance(void) {
 		inst_info.ppEnabledLayerNames = NULL;
 		inst_info.enabledExtensionCount = 0;
 		inst_info.ppEnabledExtensionNames = NULL;
-		IERRDO(ifrom_vk(vkCreateInstance(&inst_info, IVK_ALLOC, &ivk_inst)));
-	} IERREND {
 		
+		IERRDO(ifrom_vk(vkCreateInstance(&inst_info, IVK_ALLOC, &ivk_inst)));
+		
+	} IERREND {
+	#ifdef CANVAS_DEBUG
+		if (ivk_inst && !ivk_has(vkDestroyInstance)) {
+			IDEBWARN("VkInstance was created but cannot be destroyed with vkDestroyInstance");
+		}
+	#endif
+		
+		if (ivk_inst && ivk_has(vkDestroyInstance)) {
+			vkDestroyInstance(ivk_inst, IVK_ALLOC);
+			ivk_inst = NULL;
+		}
 	}
 	return IERRVAL;
 }

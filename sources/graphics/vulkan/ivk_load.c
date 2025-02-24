@@ -30,12 +30,7 @@ static struct ce_lib* ivulkan_lib = NULL;
 #undef IVK_PROTO_MACRO
 #undef IVK_PROTO_DECL
 
-#include "ivk_proto/global.inl"
-#include "ivk_proto/1.0.inl"
-#include "ivk_proto/1.1.inl"
-#include "ivk_proto/1.2.inl"
-#include "ivk_proto/1.3.inl"
-#include "ivk_proto/1.4.inl"
+#include "ivk_proto/all.inl"
 
 #define IVK_PROTO_DECL(name) \
 	static ce_err iload_##name(VkInstance inst) { \
@@ -51,20 +46,7 @@ static struct ce_lib* ivulkan_lib = NULL;
 		return CE_EOK; \
 	}
 
-#include "ivk_proto/global.inl"
-#include "ivk_proto/1.0.inl"
-#ifdef VK_API_VERSION_1_1
-#include "ivk_proto/1.1.inl"
-#endif /* !VK_API_VERSION_1_1 */
-#ifdef VK_API_VERSION_1_2
-#include "ivk_proto/1.2.inl"
-#endif /* !VK_API_VERSION_1_2 */
-#ifdef VK_API_VERSION_1_3
-#include "ivk_proto/1.3.inl"
-#endif /* !VK_API_VERSION_1_3 */
-#ifdef VK_API_VERSION_1_4
-#include "ivk_proto/1.4.inl"
-#endif /* !VK_API_VERSION_1_4 */
+#include "ivk_proto/all.inl"
 
 static ce_err iload_global(void);
 static ce_err iload_1_0(VkInstance inst);
@@ -101,8 +83,10 @@ ICE_API ce_err ivk_load_global(void) {
 		} cast;
 		
 		IERRDO(ce_lib_open(&ivulkan_lib, IVK_DLL_FILE, CE_LIB_FLAG_NONE));
+		
 		IERRDO(ce_lib_load(ivulkan_lib, "vkGetInstanceProcAddr", &cast.in));
 		vkGetInstanceProcAddr = cast.out;
+		
 		return iload_global();
 	} IERREND { }
 	return IERRVAL;
@@ -148,6 +132,7 @@ static ce_err iload_1_0(VkInstance inst) {
 /* Temporary */
 ICE_WARN_DISABLE_MSVC(4102)
 ICE_WARN_DISABLE_GNU("-Wunused-label")
+ICE_WARN_DISABLE_GNU("-Wunused-parameter")
 
 #ifdef VK_API_VERSION_1_1
 static ce_err iload_1_1(VkInstance inst) {

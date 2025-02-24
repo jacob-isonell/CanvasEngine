@@ -32,6 +32,8 @@ static cebool s_check_mtx_type(enum ce_mtx_kind type) {
 	}
 }
 
+ICE_WARN_PUSH
+ICE_WARN_DISABLE_GNU("-Wunused-function")
 static cebool s_is_recursive(enum ce_mtx_kind type) {
 	switch (type) {
 		default: CE_UNREACHABLE();
@@ -43,6 +45,7 @@ static cebool s_is_recursive(enum ce_mtx_kind type) {
 			return cetrue;
 	}
 }
+ICE_WARN_POP
 
 #ifdef ICE_THREADS_POSIX
 static int s_to_pthread(enum ce_mtx_kind type) {
@@ -62,6 +65,7 @@ CE_API ce_err ce_mtx_init(ce_mtx* mtx, enum ce_mtx_kind type) {
 	}
 	
 #if defined(ICE_THREADS_POSIX)
+	
 	pthread_mutexattr_t attr;
 	IERRBEGIN {
 		IERRDO(pthread_mutexattr_init(&attr));
@@ -72,11 +76,14 @@ CE_API ce_err ce_mtx_init(ce_mtx* mtx, enum ce_mtx_kind type) {
 		pthread_mutexattr_destroy(&attr);
 	}
 	return IERRVAL;
+	
 #elif defined(ICE_THREADS_WIN32)
+	
 	InitializeSRWLock(&mtx->lock);
 	mtx->refcount = 0;
 	mtx->flags = type;
 	return CE_EOK;
+	
 #endif
 }
 
@@ -86,8 +93,11 @@ CE_API ce_err ce_mtx_lock(ce_mtx* mtx) {
 	}
 	
 #if defined(ICE_THREADS_POSIX)
+	
 	return ierrno(pthread_mutex_lock(mtx));
+	
 #elif defined(ICE_THREADS_WIN32)
+	
 	if (mtx->owner == GetCurrentThreadId()) {
 		if (s_is_recursive(mtx->flags)) {
 			++mtx->refcount;
@@ -101,6 +111,7 @@ CE_API ce_err ce_mtx_lock(ce_mtx* mtx) {
 		++mtx->refcount;
 	}
 	return CE_EOK;
+	
 #endif
 }
 
@@ -110,11 +121,14 @@ CE_API ce_err ce_mtx_timedlock(ce_mtx* CE_RESTRICT mtx, const struct ce_time_t* 
 	}
 	
 #if defined(ICE_THREADS_POSIX)
+	
 	struct timespec t;
-	t.tv_sec = time_point->sec;
-	t.tv_nsec = time_point->nsec;
+	t.tv_sec = (time_t)time_point->sec;
+	t.tv_nsec = (long)time_point->nsec;
 	return ierrno(pthread_mutex_timedlock(mtx, &t));
+	
 #elif defined(ICE_THREADS_WIN32)
+	
 	ICE_NOIMPL();
 	/*if (mtx->owner == GetCurrentThreadId()) {
 		if (s_is_recursive(mtx->flags)) {
@@ -130,6 +144,7 @@ CE_API ce_err ce_mtx_timedlock(ce_mtx* CE_RESTRICT mtx, const struct ce_time_t* 
 		++mtx->refcount;
 	}
 	return CE_EOK; */
+	
 #endif
 }
 
@@ -139,13 +154,18 @@ CE_API ce_err ce_mtx_trylock(ce_mtx* mtx) {
 	}
 	
 #if defined(ICE_THREADS_POSIX)
+	
 	return ierrno(pthread_mutex_trylock(mtx));
+	
 #elif defined(ICE_THREADS_WIN32)
+	
 	if (mtx->owner == GetCurrentThreadId()) {
 		if (s_is_recursive(mtx->flags)) {
 			++mtx->refcount;
 			return CE_EOK;
-		} else return CE_EDEADLK;
+		} else {
+			return CE_EDEADLK;
+		}
 	}
 	
 	if (!TryAcquireSRWLockExclusive(&mtx->lock)) {
@@ -153,10 +173,13 @@ CE_API ce_err ce_mtx_trylock(ce_mtx* mtx) {
 	}
 	
 	mtx->owner = GetCurrentThreadId();
+	
 	if (s_is_recursive(mtx->flags)) {
 		++mtx->refcount;
 	}
+	
 	return CE_EOK;
+	
 #endif
 }
 

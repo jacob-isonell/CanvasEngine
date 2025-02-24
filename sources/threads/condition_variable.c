@@ -76,8 +76,8 @@ CE_API ce_err cnd_timedwait(ce_cnd* CE_RESTRICT cond, ce_mtx* CE_RESTRICT mtx, c
 	
 #if defined(ICE_THREADS_POSIX)
 	struct timespec t;
-	t.tv_sec = time_point->sec;
-	t.tv_nsec = time_point->nsec;
+	t.tv_sec = (time_t)time_point->sec;
+	t.tv_nsec = (long)time_point->nsec;
 	return ierrno(pthread_cond_timedwait(cond, mtx, &t));
 #elif defined(ICE_THREADS_WIN32)
 	ICE_NOIMPL();

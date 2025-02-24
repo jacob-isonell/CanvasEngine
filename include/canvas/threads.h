@@ -22,6 +22,9 @@
 #include <canvas/threads/thread.h>
 #include <canvas/threads/mutex.h>
 #include <canvas/threads/condition_variable.h>
+
+#if defined(ICE_DOXY) || CE_CXX11_STD || CE_C11_STD
 #include <canvas/threads/atomic.h>
+#endif
 
 #endif /* !CANVAS_THREADS_H */

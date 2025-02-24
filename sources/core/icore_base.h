@@ -64,9 +64,9 @@
 #include <canvas/core/setup.h>
 #if CANVAS_PLATFORM_UNIX
 #	include <unistd.h>
-/*#	if _POSIX_VERSION < 200809L
+#	if _POSIX_VERSION < 200809L
 #		error CanvasEngine requires POSIX.1-2008 compatibility
-#	endif*/
+#	endif
 #elif CANVAS_PLATFORM_WINDOWS
 #	define WIN32_LEAN_AND_MEAN
 #	define NOMINMAX
@@ -101,6 +101,7 @@ ICE_NAMESPACE_BEGIN
 
 #define ISTRIFYX(in) #in
 #define ISTRIFY(in) ISTRIFYX(in)
+
 #define IASCII_ESCAPE "\x1B"
 #define IASCII_BLACK         IASCII_ESCAPE "[0;30m"
 #define IASCII_RED           IASCII_ESCAPE "[0;31m"
@@ -160,45 +161,66 @@ ICE_NAMESPACE_BEGIN
 #define IASCII_HIBG_WHITE    IASCII_ESCAPE "[0;107m"
 #define IASCII_RESET         IASCII_ESCAPE "[0m"
 
-#define IERRBEGIN ce_err IERRVAL = CE_EOK;
-#define IERRDO(expr) do { \
-	IERRVAL = (expr); \
+#define ICE_REQ_INIT() ICE_ASSERT(ihas_initialized())
+
+/* Starts an error checking scope (similar to a try/catch scope).
+ */
+#define IERRBEGIN ce_err IERRVAL = CE_EOK; do
+
+/* Ends an error checking scope. Any error causes a jump to the end
+ * of the error checking scope to perform error handling.
+ */
+#define IERREND \
+while (0); IERR_ERRTHROW:\
+	for (cebool ierr_cond = cetrue; ce_failure(IERRVAL) && ierr_cond; ierr_cond = cefalse)
+
+/* Checks if `in` holds an error value. If it does then
+ * a jump to `IERREND` is performed.
+ */
+#define IERRDO(in) do { \
+	IERRVAL = (in); \
 	if (ce_success(IERRVAL)) break; \
 	goto IERR_ERRTHROW; \
 } while (0)
 
-#define IERREND IERR_ERRTHROW: for (cebool ierr_cond = cetrue; ce_failure(IERRVAL) && ierr_cond; ierr_cond = cefalse)
-
-#define ICE_REQ_INIT() ICE_ASSERT(ihas_initialized())
 
 #ifdef CANVAS_DEBUG
 
-static inline void ilog_impl(FILE* stream, const char* pre_text, const char* fmt, ...) {
+static inline void ilog_impl(
+	FILE*       stream,
+	const char* pre_text,
+	const char* fmt, ...
+) {
 	va_list args;
 	va_start(args, fmt);
 	fputs(pre_text, stream);
 	vfprintf(stream, fmt, args);
-	fputs(IASCII_RESET, stream);
+	fputs(IASCII_RESET "\n", stream);
 	va_end(args);
 }
 
-#define IPRLOG(...)   ilog_impl(stdout, IASCII_CYAN "[CE_LOG] " __FILE__ ":" ISTRIFY(__LINE__) " ", __VA_ARGS__)
-#define IPRWARN(...)  ilog_impl(stdout, IASCII_CYAN "[CE_WARN] " __FILE__ ":" ISTRIFY(__LINE__) " ", __VA_ARGS__)
-#define IPRERROR(...) ilog_impl(stdout, IASCII_CYAN "[CE_ERR] " __FILE__ ":" ISTRIFY(__LINE__) " ", __VA_ARGS__)
+#define IDEBLOG(...)   ilog_impl(stdout, IASCII_CYAN "[CE_LOG] " __FILE__ ":" ISTRIFY(__LINE__) " ", __VA_ARGS__)
+#define IDEBWARN(...)  ilog_impl(stdout, IASCII_CYAN "[CE_WARN] " __FILE__ ":" ISTRIFY(__LINE__) " ", __VA_ARGS__)
+#define IDEBERROR(...) ilog_impl(stdout, IASCII_CYAN "[CE_ERR] " __FILE__ ":" ISTRIFY(__LINE__) " ", __VA_ARGS__)
 #else
-#define IPRLOG(...)   ((void)0)
-#define IPRWARN(...)  ((void)0)
-#define IPRERROR(...) ((void)0)
+#define IDEBLOG(...)   ((void)0)
+#define IDEBWARN(...)  ((void)0)
+#define IDEBERROR(...) ((void)0)
 #endif
+
+ICE_API ce_err icore_init(void);
+ICE_API void icore_shutdown(void);
+
+/* Bool is the CanvasEngine library has been initalized (same as checking `icore.init_count > 0`).
+ * Used for implementing `ICE_REQ_INIT` without including `icore_global.h`.
+ */
+ICE_API cebool ihas_initialized(void);
+
+/* Convert errno value to ce_err. */
+ICE_API ce_err ierrno(int in);
 
 ICE_API ce_err icore_str2wcs(wchar_t* buffer, size_t buffer_count, const char* src, size_t opt_srclen, size_t* opt_out_len);
 ICE_API ce_err icore_wcs2str(char* buffer, size_t buffer_count, const wchar_t* src, size_t opt_srclen, size_t* opt_out_len);
-ICE_API wchar_t* icore_str2wcsd(const char* src, size_t opt_srclen);
-ICE_API char* icore_wcs2strd(const wchar_t* src, size_t opt_srclen);
-ICE_API ce_err icore_init(void);
-ICE_API void icore_shutdown(void);
-ICE_API cebool ihas_initialized(void);
-ICE_API ce_err ierrno(int in);
 
 #define ICE_ASSERT(cond) assert(cond)
 

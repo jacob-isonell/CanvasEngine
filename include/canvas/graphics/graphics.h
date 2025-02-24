@@ -27,13 +27,12 @@
 
 ICE_NAMESPACE_BEGIN
 
-struct ice_vk_layer_extension_str {
+struct ce_vk_layer_str {
 	char name[256];
 };
 
-struct ce_vk_layers {
-	size_t count;
-	ice_vk_layer_extension_str*
+struct ce_vk_ext_str {
+	char name[256];
 };
 
 ICE_NAMESPACE_END

@@ -32,6 +32,7 @@ CE_API ce_err ce_core_options(const struct ce_core_t* ops) {
 	strncpy(icore.engine_info.name, ops->engine_name, 256);
 	icore.app_info.version = ops->app_version;
 	icore.engine_info.version = ops->engine_version;
+	
 	return CE_EOK;
 }
 
@@ -51,14 +52,12 @@ static void s_deffree(void* addr, size_t bytes, void* arg) {
 }
 
 ICE_API ce_err icore_init(void) {
-	IERRBEGIN {
-		
-	} IERREND { }
-	return IERRVAL;
+	/* Nothing to do here as of now. */
+	return CE_EOK;
 }
 
 ICE_API void icore_shutdown(void) {
-	
+	/* Nothing to do here as of now. */
 }
 
 ICE_API struct icore_t icore = {

@@ -28,12 +28,10 @@ ICE_NAMESPACE_BEGIN
  * @brief add documentation here!
  */
 struct ce_graphics_vulkan_t {
-	struct {
-		size_t count;
-		struct {
-			char name[256];
-		}* names;
-	} instance_layers, instance_extensions;
+	size_t instance_layers_count;
+	struct ce_vk_layer_str* instance_layers;
+	size_t instance_extensions_count;
+	struct ce_vk_ext_str* instance_extensions;
 };
 
 /**
