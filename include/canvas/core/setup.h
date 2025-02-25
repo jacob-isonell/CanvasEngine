@@ -46,28 +46,19 @@ struct ce_core_t {
  * @ingroup configuration
  * @brief add documentation here!
  */
-CE_API
-ce_err ce_core_options(
-	const struct ce_core_t* ops
-);
+CE_API ce_err ce_core_options(const struct ce_core_t* ops);
 
 /**
  * @ingroup configuration
  * @brief add documentation here!
  */
-CE_API
-ce_err ce_init(
-	void
-);
+CE_API ce_err ce_init(void);
 
 /**
  * @ingroup configuration
  * @brief add documentation here!
  */
-CE_API
-void ce_shutdown(
-	void
-);
+CE_API void ce_shutdown(void);
 
 ICE_NAMESPACE_END
 

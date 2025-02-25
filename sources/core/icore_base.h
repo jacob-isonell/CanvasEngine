@@ -195,7 +195,7 @@ static inline void ilog_impl(
 	va_start(args, fmt);
 	fputs(pre_text, stream);
 	vfprintf(stream, fmt, args);
-	fputs(IASCII_RESET "\n", stream);
+	fputs(IASCII_RESET, stream);
 	va_end(args);
 }
 

@@ -280,18 +280,18 @@
 #if CE_CXX
 #define icebool bool
 #	define CE_RESTRICT __restrict
-#	define ICE_INLINE inline
+#	define CE_INLINE inline
 #elif CE_C99_STD
 #define icebool _Bool
 #	define CE_RESTRICT restrict
-#	define ICE_INLINE static inline
+#	define CE_INLINE static inline
 #else
 #define icebool unsigned char
 #	define CE_RESTRICT
 #	if CANVAS_COMPILER_GNU
-#		define ICE_INLINE static __inline
+#		define CE_INLINE static __inline
 #	else
-#		define ICE_INLINE static
+#		define CE_INLINE static
 #	endif
 #endif
 

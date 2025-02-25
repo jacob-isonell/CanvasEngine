@@ -30,6 +30,10 @@ ICE_NAMESPACE_BEGIN
 #define IVK_CURRVER VK_HEADER_VERSION_COMPLETE
 #define IVK_MINVER VK_MAKE_API_VERSION(0, 1, 3, 0)
 
+#ifndef VK_VERSION_1_3
+#	error CanvasEngine graphics requires VulkanAPI 1.3 or later
+#endif
+
 /* Used to fill in a `VkAllocationCallbacks*` function argument. Currently just `NULL` */
 #define IVK_ALLOC NULL
 ICE_API extern VkInstance ivk_inst;

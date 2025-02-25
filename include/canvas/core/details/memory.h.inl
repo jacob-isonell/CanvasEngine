@@ -29,7 +29,7 @@
 ICE_NAMESPACE_BEGIN
 
 #ifdef CANVAS_DEBUG
-ICE_INLINE
+CE_INLINE
 size_t ice_assert_arr_at(size_t index, size_t length) {
 	if (index < length) {
 		return index;

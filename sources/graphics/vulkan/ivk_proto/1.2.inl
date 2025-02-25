@@ -17,11 +17,49 @@
 **************************************************************************/
 
 #ifndef IVK_PROTO_NO_UNDEF
-/* #undef *NAME**/ 
+#undef vkCmdBeginRenderPass2
+#undef vkCmdDrawIndexedIndirectCount
+#undef vkCmdDrawIndirectCount
+#undef vkCmdEndRenderPass2
+#undef vkCmdNextSubpass2
+#undef vkCreateRenderPass2
+#undef vkGetBufferDeviceAddress
+#undef vkGetBufferOpaqueCaptureAddress
+#undef vkGetDeviceMemoryOpaqueCaptureAddress
+#undef vkGetSemaphoreCounterValue
+#undef vkResetQueryPool
+#undef vkSignalSemaphore
+#undef vkWaitSemaphores
 #endif /* !IVK_PROTO_NO_UNDEF */
 
+#ifdef VK_VERSION_1_2
 #ifdef IVK_PROTO_MACRO
-/* #define *NAME* IVK_PROTO_MACRO(*NAME*)*/ 
+#define vkCmdBeginRenderPass2 IVK_PROTO_MACRO(vkCmdBeginRenderPass2)
+#define vkCmdDrawIndexedIndirectCount IVK_PROTO_MACRO(vkCmdDrawIndexedIndirectCount)
+#define vkCmdDrawIndirectCount IVK_PROTO_MACRO(vkCmdDrawIndirectCount)
+#define vkCmdEndRenderPass2 IVK_PROTO_MACRO(vkCmdEndRenderPass2)
+#define vkCmdNextSubpass2 IVK_PROTO_MACRO(vkCmdNextSubpass2)
+#define vkCreateRenderPass2 IVK_PROTO_MACRO(vkCreateRenderPass2)
+#define vkGetBufferDeviceAddress IVK_PROTO_MACRO(vkGetBufferDeviceAddress)
+#define vkGetBufferOpaqueCaptureAddress IVK_PROTO_MACRO(vkGetBufferOpaqueCaptureAddress)
+#define vkGetDeviceMemoryOpaqueCaptureAddress IVK_PROTO_MACRO(vkGetDeviceMemoryOpaqueCaptureAddress)
+#define vkGetSemaphoreCounterValue IVK_PROTO_MACRO(vkGetSemaphoreCounterValue)
+#define vkResetQueryPool IVK_PROTO_MACRO(vkResetQueryPool)
+#define vkSignalSemaphore IVK_PROTO_MACRO(vkSignalSemaphore)
+#define vkWaitSemaphores IVK_PROTO_MACRO(vkWaitSemaphores)
 #elif defined(IVK_PROTO_DECL)
-/* IVK_PROTO_DECL(*NAME*)*/ 
+IVK_PROTO_DECL(vkCmdBeginRenderPass2)
+IVK_PROTO_DECL(vkCmdDrawIndexedIndirectCount)
+IVK_PROTO_DECL(vkCmdDrawIndirectCount)
+IVK_PROTO_DECL(vkCmdEndRenderPass2)
+IVK_PROTO_DECL(vkCmdNextSubpass2)
+IVK_PROTO_DECL(vkCreateRenderPass2)
+IVK_PROTO_DECL(vkGetBufferDeviceAddress)
+IVK_PROTO_DECL(vkGetBufferOpaqueCaptureAddress)
+IVK_PROTO_DECL(vkGetDeviceMemoryOpaqueCaptureAddress)
+IVK_PROTO_DECL(vkGetSemaphoreCounterValue)
+IVK_PROTO_DECL(vkResetQueryPool)
+IVK_PROTO_DECL(vkSignalSemaphore)
+IVK_PROTO_DECL(vkWaitSemaphores)
 #endif /* !IVK_PROTO_MACRO */
+#endif /* !VK_VERSION_1_2 */

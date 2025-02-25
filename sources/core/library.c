@@ -47,7 +47,7 @@ ce_err ce_lib_open(
 	
 	void* const mod = dlopen(filepath, RTLD_NOW | RTLD_GLOBAL);
 	if (mod != NULL) {
-		memcpy(handle, mod, sizeof(mod));
+		memcpy(handle, &mod, sizeof(mod));
 		return CE_EOK;
 	}
 	

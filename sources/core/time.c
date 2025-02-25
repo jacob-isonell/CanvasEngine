@@ -26,7 +26,11 @@ static int s_convert_base(int in) {
 	}
 }
 
-CE_API ce_err ce_time_get(struct ce_time_t* out, int base) {
+CE_API
+ce_err ce_time_get(
+	struct ce_time_t* out,
+	int               base
+) {
 	if (out == NULL) {
 		return CE_EINVAL;
 	}
@@ -36,10 +40,8 @@ CE_API ce_err ce_time_get(struct ce_time_t* out, int base) {
 		return CE_EUNKNOWN;
 	}
 	
-	*out = CE_STRUCT_INIT(struct ce_time_t) {
-		.sec = (unsigned long long int)now.tv_sec,
-		.nsec = (unsigned long long int)now.tv_nsec,
-	};
+	out->sec = (unsigned long long int)now.tv_sec;
+	out->nsec = (unsigned long long int)now.tv_nsec;
 	
 	return CE_EOK;
 }

@@ -28,10 +28,28 @@ ICE_NAMESPACE_BEGIN
  * @brief add documentation here!
  */
 struct ce_graphics_vulkan_t {
-	size_t instance_layers_count;
-	struct ce_vk_layer_str* instance_layers;
-	size_t instance_extensions_count;
-	struct ce_vk_ext_str* instance_extensions;
+	
+	/**
+	 * @brief An array of vulkan instance layers that are required by the running program.
+	 * @note Querying for instance layers and assinging them to these fields is incorrect usage.
+	 *   These fields are for specifying instance layers that are required for the application
+	 *   to run properly. CanvasEngine by default requires certain instance layers to function.
+	 */
+	struct {
+		size_t count;
+		const struct ce_vk_layer_str* layers;
+	} inst_layers;
+	
+	/**
+	 * @brief An array of vulkan instance extensions that are required by the running program.
+	 * @note Querying for instance extensions and assinging them to these fields is incorrect usage.
+	 *   These fields are for specifying instance extensions that are required for the application
+	 *   to run properly. CanvasEngine by default requires certain instance extensions to function.
+	 */
+	struct {
+		size_t count;
+		const struct ce_vk_ext_str* exts;
+	} inst_exts;
 };
 
 /**

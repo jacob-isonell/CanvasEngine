@@ -43,7 +43,7 @@ ICE_API void ivk_impl_check_pfn_value(
 
 #define IVK_PROTO_DECL(name) \
 	ICE_API extern PFN_##name ice_##name; \
-	ICE_INLINE PFN_##name ice_get_##name(const char* func, const char* file, unsigned int line) { \
+	CE_INLINE PFN_##name ice_get_##name(const char* func, const char* file, unsigned int line) { \
 		ivk_impl_check_pfn_value(ice_##name == NULL, #name, func, file, line); \
 		return ice_##name; \
 	}

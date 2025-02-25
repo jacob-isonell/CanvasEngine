@@ -47,10 +47,7 @@ typedef int ce_err;
  * @return A pointer to a c-style string stored in static memory.
  *         This pointer should not be free-ed or written to.
  */
-CE_API
-const char* ce_errstr(
-	const ce_err error
-);
+CE_API const char* ce_errstr(const ce_err error);
 
 #define CE_EOK             0x0000
 #define CE_EUNKNOWN        0xFFFF

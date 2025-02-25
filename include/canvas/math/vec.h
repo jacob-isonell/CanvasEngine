@@ -75,7 +75,7 @@ struct ce_vec4f64 {
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 struct ce_vec2f32 ce_add_vec2f32(
 	struct ce_vec2f32 lhs,
 	struct ce_vec2f32 rhs
@@ -85,7 +85,7 @@ struct ce_vec2f32 ce_add_vec2f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 struct ce_vec2f32 ce_sub_vec2f32(
 	struct ce_vec2f32 lhs,
 	struct ce_vec2f32 rhs
@@ -95,7 +95,7 @@ struct ce_vec2f32 ce_sub_vec2f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 struct ce_vec2f32 ce_mul_vec2f32(
 	struct ce_vec2f32 lhs,
 	struct ce_vec2f32 rhs
@@ -105,7 +105,7 @@ struct ce_vec2f32 ce_mul_vec2f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 struct ce_vec2f32 ce_div_vec2f32(
 	struct ce_vec2f32 lhs,
 	struct ce_vec2f32 rhs
@@ -115,7 +115,7 @@ struct ce_vec2f32 ce_div_vec2f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 float ce_dot_vec2f32(
 	struct ce_vec2f32 lhs,
 	struct ce_vec2f32 rhs
@@ -125,7 +125,7 @@ float ce_dot_vec2f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 float ce_sqrmag_vec2f32(
 	struct ce_vec2f32 in
 );
@@ -134,7 +134,7 @@ float ce_sqrmag_vec2f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 float ce_mag_vec2f32(
 	struct ce_vec2f32 in
 );
@@ -143,7 +143,7 @@ float ce_mag_vec2f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 float ce_sqrdist_vec2f32(
 	struct ce_vec2f32 lhs,
 	struct ce_vec2f32 rhs
@@ -153,7 +153,7 @@ float ce_sqrdist_vec2f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 float ce_dist_vec2f32(
 	struct ce_vec2f32 lhs,
 	struct ce_vec2f32 rhs
@@ -163,7 +163,7 @@ float ce_dist_vec2f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 struct ce_vec3f32 ce_add_vec3f32(
 	struct ce_vec3f32 lhs,
 	struct ce_vec3f32 rhs
@@ -173,7 +173,7 @@ struct ce_vec3f32 ce_add_vec3f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 struct ce_vec3f32 ce_sub_vec3f32(
 	struct ce_vec3f32 lhs,
 	struct ce_vec3f32 rhs
@@ -183,7 +183,7 @@ struct ce_vec3f32 ce_sub_vec3f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 struct ce_vec3f32 ce_mul_vec3f32(
 	struct ce_vec3f32 lhs,
 	struct ce_vec3f32 rhs
@@ -193,7 +193,7 @@ struct ce_vec3f32 ce_mul_vec3f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 struct ce_vec3f32 ce_div_vec3f32(
 	struct ce_vec3f32 lhs,
 	struct ce_vec3f32 rhs
@@ -203,7 +203,7 @@ struct ce_vec3f32 ce_div_vec3f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 float ce_dot_vec3f32(
 	struct ce_vec3f32 lhs,
 	struct ce_vec3f32 rhs
@@ -213,7 +213,7 @@ float ce_dot_vec3f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 float ce_sqrmag_vec3f32(
 	struct ce_vec3f32 in
 );
@@ -222,7 +222,7 @@ float ce_sqrmag_vec3f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 float ce_mag_vec3f32(
 	struct ce_vec3f32 in
 );
@@ -231,7 +231,7 @@ float ce_mag_vec3f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 float ce_sqrdist_vec3f32(
 	struct ce_vec3f32 lhs,
 	struct ce_vec3f32 rhs
@@ -241,7 +241,7 @@ float ce_sqrdist_vec3f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 float ce_dist_vec3f32(
 	struct ce_vec3f32 lhs,
 	struct ce_vec3f32 rhs
@@ -251,7 +251,7 @@ float ce_dist_vec3f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 struct ce_vec4f32 ce_add_vec4f32(
 	struct ce_vec4f32 lhs,
 	struct ce_vec4f32 rhs
@@ -261,7 +261,7 @@ struct ce_vec4f32 ce_add_vec4f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 struct ce_vec4f32 ce_sub_vec4f32(
 	struct ce_vec4f32 lhs,
 	struct ce_vec4f32 rhs
@@ -271,7 +271,7 @@ struct ce_vec4f32 ce_sub_vec4f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 struct ce_vec4f32 ce_mul_vec4f32(
 	struct ce_vec4f32 lhs,
 	struct ce_vec4f32 rhs
@@ -281,7 +281,7 @@ struct ce_vec4f32 ce_mul_vec4f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 struct ce_vec4f32 ce_div_vec4f32(
 	struct ce_vec4f32 lhs,
 	struct ce_vec4f32 rhs
@@ -291,7 +291,7 @@ struct ce_vec4f32 ce_div_vec4f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 float ce_dot_vec4f32(
 	struct ce_vec4f32 lhs,
 	struct ce_vec4f32 rhs
@@ -301,7 +301,7 @@ float ce_dot_vec4f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 float ce_sqrmag_vec4f32(
 	struct ce_vec4f32 in
 );
@@ -310,7 +310,7 @@ float ce_sqrmag_vec4f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 float ce_mag_vec4f32(
 	struct ce_vec4f32 in
 );
@@ -319,7 +319,7 @@ float ce_mag_vec4f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 float ce_sqrdist_vec4f32(
 	struct ce_vec4f32 lhs,
 	struct ce_vec4f32 rhs
@@ -329,7 +329,7 @@ float ce_sqrdist_vec4f32(
  * @ingroup vector_types
  * @brief add documentation here!
  */
-ICE_INLINE
+CE_INLINE
 float ce_dist_vec4f32(
 	struct ce_vec4f32 lhs,
 	struct ce_vec4f32 rhs

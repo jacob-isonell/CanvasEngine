@@ -70,10 +70,7 @@ ce_err ce_lib_load(
 /**
  * @brief add documentation here!
  */
-CE_API
-void ce_lib_close(
-	struct ce_lib* handle
-);
+CE_API void ce_lib_close(struct ce_lib* handle);
 
 ICE_NAMESPACE_END
 

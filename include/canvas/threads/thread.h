@@ -69,29 +69,19 @@ ce_err ce_thrd_create(
  * @ingroup threading_objects
  * @brief missing documentation.
  */
-CE_API
-cebool ce_thrd_equal(
-	ce_thrd lhs,
-	ce_thrd rhs
-);
+CE_API cebool ce_thrd_equal(ce_thrd lhs, ce_thrd rhs);
 
 /**
  * @ingroup threading_objects
  * @brief missing documentation.
  */
-CE_API
-ce_thrd ce_thrd_current(
-	void
-);
+CE_API ce_thrd ce_thrd_current(void);
 
 /**
  * @ingroup threading_objects
  * @brief missing documentation.
  */
-CE_API
-unsigned long ce_thrd_id(
-	ce_thrd thrd
-);
+CE_API unsigned long ce_thrd_id(ce_thrd thrd);
 
 /**
  * @ingroup threading_objects
@@ -107,58 +97,38 @@ ce_err ce_thrd_sleep(
  * @ingroup threading_objects
  * @brief missing documentation.
  */
-CE_API
-ce_err ce_thrd_yield(
-	void
-);
+CE_API ce_err ce_thrd_yield(void);
 
 /**
  * @ingroup threading_objects
  * @brief missing documentation.
  */
-CE_ATTR_NORET CE_API
-void ce_thrd_exit(
-	int res
-);
+CE_ATTR_NORET
+CE_API void ce_thrd_exit(int res);
 
 /**
  * @ingroup threading_objects
  * @brief missing documentation.
  */
-CE_API
-ce_err ce_thrd_detach(
-	ce_thrd thrd
-);
+CE_API ce_err ce_thrd_detach(ce_thrd thrd);
 
 /**
  * @ingroup threading_objects
  * @brief missing documentation.
  */
-CE_API
-ce_err ce_thrd_join(
-	ce_thrd thrd,
-	int*    opt_res
-);
+CE_API ce_err ce_thrd_join(ce_thrd thrd,	int* opt_res);
 
 /**
  * @ingroup threading_objects
  * @brief missing documentation.
  */
-CE_API
-ce_err ce_thrd_run(
-	int (*func)(void*),
-	void* arg
-);
+CE_API ce_err ce_thrd_run(int (*func)(void*), void* arg);
 
 /**
  * @ingroup threading_objects
  * @brief missing documentation.
  */
-CE_API
-ce_err ce_call_once(
-	ce_once_flag* flag,
-	void        (*func)(void)
-);
+CE_API ce_err ce_call_once(ce_once_flag* flag, void (*func)(void));
 
 #endif /* !CANVAS_HAS_THREADS */
 

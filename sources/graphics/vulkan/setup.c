@@ -20,6 +20,7 @@
 #include "icore_global.h"
 #include "ivk_proto.h"
 #include <canvas/core/library.h>
+#include <inttypes.h>
 
 ICE_API VkInstance ivk_inst = VK_NULL_HANDLE;
 
@@ -27,8 +28,26 @@ static ce_err s_create_instance(void);
 
 ICE_API ce_err ivk_init(void) {
 	IERRBEGIN {
+		IDEBLOG("Loading global vulkan commands\n");
 		IERRDO(ivk_load_global());
+		
+		uint32_t vkver;
+		IERRDO(ifrom_vk(vkEnumerateInstanceVersion(&vkver)));
+		if (vkver < IVK_MINVER) {
+			IDEBERROR(
+				"Current loaded vulkan version is v%u.%u.%u.%u but CanvasEngine requires at least v0.1.3.0\n",
+				VK_API_VERSION_VARIANT(vkver),
+				VK_API_VERSION_MAJOR(vkver),
+				VK_API_VERSION_MINOR(vkver),
+				VK_API_VERSION_PATCH(vkver)
+			);
+			return CE_EDRIVER;
+		}
+		
+		IDEBLOG("Creating vulkan instance\n");
 		IERRDO(s_create_instance());
+		
+		IDEBLOG("Loading vulkan commands\n");
 		IERRDO(ivk_load(ivk_inst));
 	} IERREND { }
 	return IERRVAL;
@@ -69,7 +88,7 @@ static ce_err s_create_instance(void) {
 	} IERREND {
 	#ifdef CANVAS_DEBUG
 		if (ivk_inst && !ivk_has(vkDestroyInstance)) {
-			IDEBWARN("VkInstance was created but cannot be destroyed with vkDestroyInstance");
+			IDEBWARN("VkInstance was created but cannot be destroyed with vkDestroyInstance\n");
 		}
 	#endif
 		

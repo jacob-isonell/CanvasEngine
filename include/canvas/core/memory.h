@@ -55,38 +55,25 @@ struct ce_alloc_t {
  * @ingroup memory
  * @brief add documentation here!
  */
-CE_API
-ce_err ce_set_alloc(
-	struct ce_alloc_t in
-);
+CE_API ce_err ce_set_alloc(struct ce_alloc_t in);
 
 /**
  * @ingroup memory
  * @brief add documentation here!
  */
-CE_API
-void* ce_alloc_s(
-	size_t  bytes,
-	ce_err* opt_err
-);
+CE_API void* ce_alloc_s(size_t bytes, ce_err* opt_err);
 
 /**
  * @ingroup memory
  * @brief add documentation here!
  */
-CE_API
-void* ce_alloc(
-	size_t bytes
-);
+CE_API void* ce_alloc(size_t bytes);
 
 /**
  * @ingroup memory
  * @brief add documentation here!
  */
-CE_API
-ce_err ce_free(
-	void* addr
-);
+CE_API ce_err ce_free(void* addr);
 
 /**
  * @ingroup memory

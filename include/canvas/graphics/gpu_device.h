@@ -39,7 +39,7 @@ struct ce_gpu_dev_props {
 	char name[256];
 	
 	/** add documentation here! */
-	unsigned int driver_version;
+	unsigned long driver_version;
 };
 
 /**

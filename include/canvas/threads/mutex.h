@@ -74,20 +74,19 @@ ICE_NAMESPACE_BEGIN
  * @ingroup threading_objects
  * @brief add documentation here!
  */
-CE_API
-ce_err ce_mtx_init(
-	ce_mtx*          mtx,
-	enum ce_mtx_kind type
-);
+CE_API ce_err ce_mtx_init(ce_mtx* mtx, enum ce_mtx_kind type);
 
 /**
  * @ingroup threading_objects
  * @brief add documentation here!
  */
-CE_API
-ce_err ce_mtx_lock(
-	ce_mtx* mtx
-);
+CE_API void ce_mtx_destroy(ce_mtx* mtx);
+
+/**
+ * @ingroup threading_objects
+ * @brief add documentation here!
+ */
+CE_API ce_err ce_mtx_lock(ce_mtx* mtx);
 
 /**
  * @ingroup threading_objects
@@ -103,28 +102,13 @@ ce_err ce_mtx_timedlock(
  * @ingroup threading_objects
  * @brief add documentation here!
  */
-CE_API
-ce_err ce_mtx_trylock(
-	ce_mtx* mtx
-);
+CE_API ce_err ce_mtx_trylock(ce_mtx* mtx);
 
 /**
  * @ingroup threading_objects
  * @brief add documentation here!
  */
-CE_API
-ce_err ce_mtx_unlock(
-	ce_mtx* mtx
-);
-
-/**
- * @ingroup threading_objects
- * @brief add documentation here!
- */
-CE_API
-void ce_mtx_destroy(
-	ce_mtx* mtx
-);
+CE_API ce_err ce_mtx_unlock(ce_mtx* mtx);
 
 #endif /* !CANVAS_HAS_THREADS */
 

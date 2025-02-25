@@ -16,6 +16,7 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
+#define ICE_TIME_T unsigned long long
 #define ICE_SEC2MILLI_V   1000
 #define ICE_SEC2MICRO_V   1000000
 #define ICE_SEC2NANO_V    1000000000
@@ -44,7 +45,7 @@
 
 ICE_NAMESPACE_BEGIN
 
-ICE_INLINE
+CE_INLINE
 struct ce_time_t ce_time_add(struct ce_time_t a, struct ce_time_t b) {
 	struct ce_time_t out;
 	out.sec = a.sec + b.sec + ICE_NANO2SEC(a.nsec + b.nsec);
@@ -52,7 +53,7 @@ struct ce_time_t ce_time_add(struct ce_time_t a, struct ce_time_t b) {
 	return out;
 }
 
-ICE_INLINE
+CE_INLINE
 struct ce_time_t ce_time_sub(struct ce_time_t a, struct ce_time_t b) {
 	/* This function does not return the correct result when 'nsec' is greater than
 	 * or equal to 1 billion. But 'nsec' is only suppose to go from 0 up to
@@ -66,7 +67,7 @@ struct ce_time_t ce_time_sub(struct ce_time_t a, struct ce_time_t b) {
 	return ce_time_add(a, neg);
 }
 
-ICE_INLINE
+CE_INLINE
 int ce_time_cmp(struct ce_time_t a, struct ce_time_t b) {
 	if (a.sec < b.sec) {
 		return -1;
@@ -83,210 +84,210 @@ int ce_time_cmp(struct ce_time_t a, struct ce_time_t b) {
 	return 0;
 }
 
-ICE_INLINE
-unsigned long long int ce_time_to_inano(struct ce_time_t in) {
+CE_INLINE
+unsigned long long ce_time_to_inano(struct ce_time_t in) {
 	return ICE_SEC2NANO(in.sec) + in.nsec;
 }
 
-ICE_INLINE
-unsigned long long int ce_time_to_imicro(struct ce_time_t in) {
+CE_INLINE
+unsigned long long ce_time_to_imicro(struct ce_time_t in) {
 	return ICE_SEC2MICRO(in.sec) + ICE_NANO2MICRO(in.nsec);
 }
 
-ICE_INLINE
-unsigned long long int ce_time_to_imilli(struct ce_time_t in) {
+CE_INLINE
+unsigned long long ce_time_to_imilli(struct ce_time_t in) {
 	return ICE_SEC2MILLI(in.sec) + ICE_NANO2MILLI(in.nsec);
 }
 
-ICE_INLINE
-unsigned long long int ce_time_to_iseconds(struct ce_time_t in) {
+CE_INLINE
+unsigned long long ce_time_to_iseconds(struct ce_time_t in) {
 	return in.sec + ICE_NANO2SEC(in.nsec);
 }
 
-ICE_INLINE
+CE_INLINE
 double ce_time_to_nano(struct ce_time_t in) {
 	return ICE_SEC2NANO((double)in.sec) + (double)in.nsec;
 }
 
-ICE_INLINE
+CE_INLINE
 double ce_time_to_micro(struct ce_time_t in) {
 	return ICE_SEC2MICRO((double)in.sec) + ICE_NANO2MICRO((double)in.nsec);
 }
 
-ICE_INLINE
+CE_INLINE
 double ce_time_to_milli(struct ce_time_t in) {
 	return ICE_SEC2MILLI((double)in.sec) + ICE_NANO2MILLI((double)in.nsec);
 }
 
-ICE_INLINE
+CE_INLINE
 double ce_time_to_seconds(struct ce_time_t in) {
 	return (double)in.sec + ICE_NANO2SEC((double)in.nsec);
 }
 
-ICE_INLINE
+CE_INLINE
 float ce_time_to_fnano(struct ce_time_t in) {
 	return ICE_SEC2NANO((float)in.sec) + (float)in.nsec;
 }
 
-ICE_INLINE
+CE_INLINE
 float ce_time_to_fmicro(struct ce_time_t in) {
 	return ICE_SEC2MICRO((float)in.sec) + ICE_NANO2MICRO((float)in.nsec);
 }
 
-ICE_INLINE
+CE_INLINE
 float ce_time_to_fmilli(struct ce_time_t in) {
 	return ICE_SEC2MILLI((float)in.sec) + ICE_NANO2MILLI((float)in.nsec);
 }
 
-ICE_INLINE
+CE_INLINE
 float ce_time_to_fseconds(struct ce_time_t in) {
 	return (float)in.sec + ICE_NANO2SEC((float)in.nsec);
 }
 
-ICE_INLINE
+CE_INLINE
 long double ce_time_to_lnano(struct ce_time_t in) {
 	return ICE_SEC2NANO((long double)in.sec) + (long double)in.nsec;
 }
 
-ICE_INLINE
+CE_INLINE
 long double ce_time_to_lmicro(struct ce_time_t in) {
 	return ICE_SEC2MICRO((long double)in.sec) + ICE_NANO2MICRO((long double)in.nsec);
 }
 
-ICE_INLINE
+CE_INLINE
 long double ce_time_to_lmilli(struct ce_time_t in) {
 	return ICE_SEC2MILLI((long double)in.sec) + ICE_NANO2MILLI((long double)in.nsec);
 }
 
-ICE_INLINE
+CE_INLINE
 long double ce_time_to_lseconds(struct ce_time_t in) {
 	return (long double)in.sec + ICE_NANO2SEC((long double)in.nsec);
 }
 
-ICE_INLINE
-struct ce_time_t ce_time_inano(unsigned long long int in) {
+CE_INLINE
+struct ce_time_t ce_time_inano(unsigned long long in) {
 	struct ce_time_t out;
 	out.sec = ICE_NANO2SEC(in),
 	out.nsec = in % ICE_NANO2SEC_V;
 	return out;
 }
 
-ICE_INLINE
-struct ce_time_t ce_time_imicro(unsigned long long int in) {
+CE_INLINE
+struct ce_time_t ce_time_imicro(unsigned long long in) {
 	struct ce_time_t out;
 	out.sec = ICE_MICRO2SEC(in),
 	out.nsec = ICE_MICRO2NANO(in % ICE_MICRO2SEC_V);
 	return out;
 }
 
-ICE_INLINE
-struct ce_time_t ce_time_imilli(unsigned long long int in) {
+CE_INLINE
+struct ce_time_t ce_time_imilli(unsigned long long in) {
 	struct ce_time_t out;
 	out.sec = ICE_MILLI2SEC(in),
 	out.nsec = ICE_MILLI2NANO(in % ICE_MILLI2SEC_V);
 	return out;
 }
 
-ICE_INLINE
-struct ce_time_t ce_time_iseconds(unsigned long long int in) {
+CE_INLINE
+struct ce_time_t ce_time_iseconds(unsigned long long in) {
 	struct ce_time_t out;
 	out.sec = in,
 	out.nsec = 0;
 	return out;
 }
 
-ICE_INLINE
+CE_INLINE
 struct ce_time_t ce_time_nano(double in) {
 	struct ce_time_t out;
-	out.sec = (unsigned long long int)ICE_NANO2SEC(in),
-	out.nsec = (unsigned long long int)fmod(in, ICE_NANO2SEC_V);
+	out.sec = (ICE_TIME_T)ICE_NANO2SEC(in),
+	out.nsec = (ICE_TIME_T)fmod(in, ICE_NANO2SEC_V);
 	return out;
 }
 
-ICE_INLINE
+CE_INLINE
 struct ce_time_t ce_time_micro(double in) {
 	struct ce_time_t out;
-	out.sec = (unsigned long long int)ICE_MICRO2SEC(in);
-	out.nsec = (unsigned long long int)ICE_MICRO2NANO(fmod(in, ICE_MICRO2SEC_V));
+	out.sec = (ICE_TIME_T)ICE_MICRO2SEC(in);
+	out.nsec = (ICE_TIME_T)ICE_MICRO2NANO(fmod(in, ICE_MICRO2SEC_V));
 	return out;
 }
 
-ICE_INLINE
+CE_INLINE
 struct ce_time_t ce_time_milli(double in) {
 	struct ce_time_t out;
-	out.sec = (unsigned long long int)ICE_MILLI2SEC(in);
-	out.nsec = (unsigned long long int)ICE_MILLI2NANO(fmod(in, ICE_MILLI2SEC_V));
+	out.sec = (ICE_TIME_T)ICE_MILLI2SEC(in);
+	out.nsec = (ICE_TIME_T)ICE_MILLI2NANO(fmod(in, ICE_MILLI2SEC_V));
 	return out;
 }
 
-ICE_INLINE
+CE_INLINE
 struct ce_time_t ce_time_seconds(double in) {
 	struct ce_time_t out;
-	out.sec = (unsigned long long int)in;
+	out.sec = (ICE_TIME_T)in;
 	out.nsec = 0;
 	return out;
 }
 
-ICE_INLINE
+CE_INLINE
 struct ce_time_t ce_time_fnano(float in) {
 	struct ce_time_t out;
-	out.sec = (unsigned long long int)ICE_NANO2SEC(in);
-	out.nsec = (unsigned long long int)fmodf(in, ICE_NANO2SEC_V);
+	out.sec = (ICE_TIME_T)ICE_NANO2SEC(in);
+	out.nsec = (ICE_TIME_T)fmodf(in, ICE_NANO2SEC_V);
 	return out;
 }
 
-ICE_INLINE
+CE_INLINE
 struct ce_time_t ce_time_fmicro(float in) {
 	struct ce_time_t out;
-	out.sec = (unsigned long long int)ICE_MICRO2SEC(in);
-	out.nsec = (unsigned long long int)ICE_MICRO2NANO(fmodf(in, ICE_MICRO2SEC_V));
+	out.sec = (ICE_TIME_T)ICE_MICRO2SEC(in);
+	out.nsec = (ICE_TIME_T)ICE_MICRO2NANO(fmodf(in, ICE_MICRO2SEC_V));
 	return out;
 }
 
-ICE_INLINE
+CE_INLINE
 struct ce_time_t ce_time_fmilli(float in) {
 	struct ce_time_t out;
-	out.sec = (unsigned long long int)ICE_MILLI2SEC(in);
-	out.nsec = (unsigned long long int)ICE_MILLI2NANO(fmodf(in, ICE_MILLI2SEC_V));
+	out.sec = (ICE_TIME_T)ICE_MILLI2SEC(in);
+	out.nsec = (ICE_TIME_T)ICE_MILLI2NANO(fmodf(in, ICE_MILLI2SEC_V));
 	return out;
 }
 
-ICE_INLINE
+CE_INLINE
 struct ce_time_t ce_time_fseconds(float in) {
 	struct ce_time_t out;
-	out.sec = (unsigned long long int)in;
+	out.sec = (ICE_TIME_T)in;
 	out.nsec = 0;
 	return out;
 }
 
-ICE_INLINE
+CE_INLINE
 struct ce_time_t ce_time_lnano(long double in) {
 	struct ce_time_t out;
-	out.sec = (unsigned long long int)ICE_NANO2SEC(in);
-	out.nsec = (unsigned long long int)fmodl(in, ICE_NANO2SEC_V);
+	out.sec = (ICE_TIME_T)ICE_NANO2SEC(in);
+	out.nsec = (ICE_TIME_T)fmodl(in, ICE_NANO2SEC_V);
 	return out;
 }
 
-ICE_INLINE
+CE_INLINE
 struct ce_time_t ce_time_lmicro(long double in) {
 	struct ce_time_t out;
-	out.sec = (unsigned long long int)ICE_MICRO2SEC(in);
-	out.nsec = (unsigned long long int)ICE_MICRO2NANO(fmodl(in, ICE_MICRO2SEC_V));
+	out.sec = (ICE_TIME_T)ICE_MICRO2SEC(in);
+	out.nsec = (ICE_TIME_T)ICE_MICRO2NANO(fmodl(in, ICE_MICRO2SEC_V));
 	return out;
 }
 
-ICE_INLINE
+CE_INLINE
 struct ce_time_t ce_time_lmilli(long double in) {
 	struct ce_time_t out;
-	out.sec = (unsigned long long int)ICE_MILLI2SEC(in);
-	out.nsec = (unsigned long long int)ICE_MILLI2NANO(fmodl(in, ICE_MILLI2SEC_V));
+	out.sec = (ICE_TIME_T)ICE_MILLI2SEC(in);
+	out.nsec = (ICE_TIME_T)ICE_MILLI2NANO(fmodl(in, ICE_MILLI2SEC_V));
 	return out;
 }
 
-ICE_INLINE
+CE_INLINE
 struct ce_time_t ce_time_lseconds(long double in) {
 	struct ce_time_t out;
-	out.sec = (unsigned long long int)in;
+	out.sec = (ICE_TIME_T)in;
 	out.nsec = 0;
 	return out;
 }

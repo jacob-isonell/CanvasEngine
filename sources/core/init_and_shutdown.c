@@ -39,20 +39,23 @@ static const struct iitem_pairs s_items[] = {
 
 CE_API ce_err ce_init(void) {
 	if (icore.init_count++) {
+		IDEBLOG("CanvasEngine has already been initialized. Incrementing reference count\n");
 		return CE_EOK;
 	}
 	
-	size_t i = 0;
+	const struct iitem_pairs* it = s_items;
+	const struct iitem_pairs* const end = s_items + CE_ARRLEN(s_items);
 	IERRBEGIN {
-		while (i < CE_ARRLEN(s_items)) {
-			IERRDO(s_items[i].init());
-			++i;
+		for (; it != end; ++it) {
+			IDEBLOG("Initializing CanvasEngine module \"%s\"\n", it->debug_name);
+			IERRDO(it->init());
 		}
 	} IERREND {
-		IDEBERROR("Failed to initialize %s module (0x%08X) \"%s\"\n", s_items[i].debug_name, IERRVAL, ce_errstr(IERRVAL));
-		while (0 < i) {
-			s_items[i--].term();
-		}
+		IDEBERROR("Failed to initialize %s module (0x%08X) \"%s\"\n", it->debug_name, IERRVAL, ce_errstr(IERRVAL));
+		do {
+			IDEBWARN("Terminating CanvasEngine module \"%s\"\n", it->debug_name);
+			it->term();
+		} while (it-- != s_items);
 	}
 	return IERRVAL;
 }
@@ -66,8 +69,11 @@ CE_API void ce_shutdown(void) {
 		return;
 	}
 	
-	size_t i = CE_ARRLEN(s_items);
-	while (0 < i) {
-		s_items[--i].term();
+	IDEBLOG("Shuting down CanvasEngine\n");
+	const struct iitem_pairs* it = s_items;
+	const struct iitem_pairs* const end = s_items + CE_ARRLEN(s_items);
+	for (; it != end; ++it) {
+		IDEBLOG("Terminating CanvasEngine module \"%s\"\n", it->debug_name);
+		it->term();
 	}
 }

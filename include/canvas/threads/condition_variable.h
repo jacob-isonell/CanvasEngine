@@ -45,38 +45,31 @@ ICE_NAMESPACE_BEGIN
  * @ingroup threading_objects
  * @brief add documentation here!
  */
-CE_API
-ce_err cnd_init(
-	ce_cnd* cond
-);
+CE_API ce_err cnd_init(ce_cnd* cond);
 
 /**
  * @ingroup threading_objects
  * @brief add documentation here!
  */
-CE_API
-ce_err cnd_signal(
-	ce_cnd* cond
-);
+CE_API void cnd_destroy(ce_cnd* cond);
 
 /**
  * @ingroup threading_objects
  * @brief add documentation here!
  */
-CE_API
-ce_err cnd_broadcast(
-	ce_cnd* cond
-);
+CE_API ce_err cnd_signal(ce_cnd* cond);
 
 /**
  * @ingroup threading_objects
  * @brief add documentation here!
  */
-CE_API
-ce_err cnd_wait(
-	ce_cnd* cond,
-	ce_mtx* mutex
-);
+CE_API ce_err cnd_broadcast(ce_cnd* cond);
+
+/**
+ * @ingroup threading_objects
+ * @brief add documentation here!
+ */
+CE_API ce_err cnd_wait(ce_cnd* cond, ce_mtx* mutex);
 
 /**
  * @ingroup threading_objects
@@ -87,15 +80,6 @@ ce_err cnd_timedwait(
 	ce_cnd* CE_RESTRICT                 cond,
 	ce_mtx* CE_RESTRICT                 mutex,
 	const struct ce_time_t* CE_RESTRICT time_point
-);
-
-/**
- * @ingroup threading_objects
- * @brief add documentation here!
- */
-CE_API
-void cnd_destroy(
-	ce_cnd* cond
 );
 
 #endif /* !CANVAS_HAS_THREADS */

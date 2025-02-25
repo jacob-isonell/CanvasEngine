@@ -40,8 +40,10 @@ static struct ce_lib* ivulkan_lib = NULL;
 		} cast; \
 		cast.in = vkGetInstanceProcAddr(inst, #name); \
 		if (cast.in == NULL) { \
+			IDEBERROR("Failed to load \"" #name "\"\n"); \
 			return CE_ENODATA; \
 		} \
+		IDEBLOG("Loaded \"" #name "\"\n"); \
 		ice_##name = cast.out; \
 		return CE_EOK; \
 	}
@@ -95,11 +97,12 @@ ICE_API ce_err ivk_load_global(void) {
 ICE_API ce_err ivk_load(VkInstance inst) {
 	IERRBEGIN {
 		ICE_ASSERT(vkGetInstanceProcAddr != NULL);
-		IERRDO(iload_1_0(inst));
-		IERRDO(iload_1_1(inst));
-		IERRDO(iload_1_2(inst));
-		IERRDO(iload_1_3(inst));
-		IERRDO(iload_1_4(inst));
+		
+		IDEBLOG("Loading vulkan 1.0 commands\n"); IERRDO(iload_1_0(inst));
+		IDEBLOG("Loading vulkan 1.1 commands\n"); IERRDO(iload_1_1(inst));
+		IDEBLOG("Loading vulkan 1.2 commands\n"); IERRDO(iload_1_2(inst));
+		IDEBLOG("Loading vulkan 1.3 commands\n"); IERRDO(iload_1_3(inst));
+		IDEBLOG("Loading vulkan 1.4 commands\n"); IERRDO(iload_1_4(inst));
 	} IERREND { }
 	return IERRVAL;
 }
