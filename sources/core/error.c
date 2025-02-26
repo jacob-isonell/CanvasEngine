@@ -572,3 +572,14 @@ ICE_API ce_err ierrno(int in) {
 #endif /* !EHWPOISON */
 	}
 }
+
+ICE_API ce_err ierrno_cls(int in) {
+	switch (in) {
+	case 0: return CE_EOK;
+	default: {
+		const ce_err out = ierrno(in);
+		errno = 0; // Clear error.
+		return out;
+	}
+	}
+}

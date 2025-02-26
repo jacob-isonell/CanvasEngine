@@ -397,6 +397,14 @@
 #define CE_ATTR_NORET
 #endif
 
+#if CE_CXX11_STD
+#define ICE_NOEXCEPT nothrow
+#elif CE_CXX98_STD
+#define ICE_NOEXCEPT throw()
+#else
+#define ICE_NOEXCEPT
+#endif
+
 #ifdef CANVAS_SHARED
 #	ifdef ICE_BUILD
 #		define CE_API CE_ATTR_DLLEXPORT

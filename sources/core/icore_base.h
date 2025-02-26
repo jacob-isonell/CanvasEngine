@@ -219,6 +219,9 @@ ICE_API cebool ihas_initialized(void);
 /* Convert errno value to ce_err. */
 ICE_API ce_err ierrno(int in);
 
+/* Convert errno value to ce_err and clear `errno`. */
+ICE_API ce_err ierrno_cls(int in);
+
 ICE_API ce_err icore_str2wcs(wchar_t* buffer, size_t buffer_count, const char* src, size_t opt_srclen, size_t* opt_out_len);
 ICE_API ce_err icore_wcs2str(char* buffer, size_t buffer_count, const wchar_t* src, size_t opt_srclen, size_t* opt_out_len);
 

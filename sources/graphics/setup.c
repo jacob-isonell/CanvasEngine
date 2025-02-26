@@ -20,11 +20,12 @@
 #include "ifx_vk.h"
 
 CE_API ce_err ce_graphics_options(const struct ce_graphics_t* options) {
+	if (ihas_initialized()) {
+		return CE_EPERM;
+	}
+	
 	if (options == NULL) {
 		return CE_EINVAL;
-	}
-	if (ihas_initialized()) {
-		return CE_EACCES;
 	}
 	
 	return CE_EOK;

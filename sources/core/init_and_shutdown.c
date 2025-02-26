@@ -50,6 +50,7 @@ CE_API ce_err ce_init(void) {
 			IDEBLOG("Initializing CanvasEngine module \"%s\"\n", it->debug_name);
 			IERRDO(it->init());
 		}
+		IDEBLOG("CanvasEngine initialization complete\n");
 	} IERREND {
 		IDEBERROR("Failed to initialize %s module (0x%08X) \"%s\"\n", it->debug_name, IERRVAL, ce_errstr(IERRVAL));
 		do {

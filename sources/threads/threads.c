@@ -114,7 +114,7 @@ CE_API ce_err ce_thrd_sleep(const struct ce_time_t* duration, struct ce_time_t* 
 			opt_remaining->sec = (unsigned long long)rem.tv_sec;
 			opt_remaining->nsec = (unsigned long long)rem.tv_nsec;
 		}
-		return ierrno(errno);
+		return ierrno_cls(errno);
 	}
 	return CE_EOK;
 #elif defined(ICE_THREADS_WIN32)
@@ -142,7 +142,7 @@ CE_API ce_err ce_thrd_yield(void) {
 	if (sched_yield() == 0) {
 		return CE_EOK;
 	}
-	return ierrno(errno);
+	return ierrno_cls(errno);
 #elif defined(ICE_THREADS_WIN32)
 	switch (SwitchToThread()) {
 	case FALSE: return CE_EUNKNOWN;

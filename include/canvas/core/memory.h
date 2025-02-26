@@ -97,19 +97,7 @@ CE_API ce_err ce_free(void* addr);
  * @ingroup arrays
  * @brief add documentation here!
  */
-#define ce_arr_alloc(out, reserve) /* implementation-defined */
-
-/**
- * @ingroup arrays
- * @brief add documentation here!
- */
 #define ce_arr_free(arr) /* implementation-defined */
-
-/**
- * @ingroup arrays
- * @brief add documentation here!
- */
-#define ce_arr_at(arr, index) /* implementation-defined */
 
 /**
  * @ingroup arrays
@@ -127,7 +115,13 @@ CE_API ce_err ce_free(void* addr);
  * @ingroup arrays
  * @brief add documentation here!
  */
-#define ce_arr_data(arr) /* implementation-defined */
+#define ce_arr_resize(inout_array, new_size) /* implementation-defined */
+
+/**
+ * @ingroup arrays
+ * @brief add documentation here!
+ */
+#define ce_arr_reserve(inout_array, new_capacity) /* implementation-defined */
 
 #ifndef ICE_DOXY
 #include <canvas/core/details/memory.h.inl>

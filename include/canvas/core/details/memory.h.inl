@@ -18,15 +18,30 @@
 
 #undef ce_arr
 #undef CE_ARRINIT
-#undef ce_arr_alloc
+#undef ce_arr_resize
+#undef ce_arr_reserve
 #undef ce_arr_free
-#undef ce_arr_at
 #undef ce_arr_size
 #undef ce_arr_cap
-#undef ce_arr_data
 #undef ce_realloc
 
-ICE_NAMESPACE_BEGIN
+CE_API ce_err ice_realloc(void* inout, size_t new_size);
+#define ce_realloc(inout, new_size) ice_realloc((void**)(inout), (sizeof(**(inout)), (new_size)))
+
+#if CE_CXX
+template<typename T>
+inline void** ice_to_voidpp(T** in) ICE_NOEXCEPT {
+	void** out;
+	memcpy(&out, &in, sizeof(void*));
+	return out;
+}
+#else
+CE_INLINE void** ice_to_voidpp(void* in) {
+	void** out;
+	memcpy(&out, &in, sizeof(void*));
+	return out;
+}
+#endif
 
 #ifdef CANVAS_DEBUG
 CE_INLINE
@@ -40,23 +55,16 @@ size_t ice_assert_arr_at(size_t index, size_t length) {
 #define ice_assert_arr_at(index, length) (index) 
 #endif
 
-#define ICE_ARRPAIR(arr) ((void**)(arr)), sizeof((arr)->m_data)
-#define ICE_ARRPAIR_ARG void** inout_arr_arg, size_t in_arr_stride
+CE_API ce_err ice_arr_free(void* array);
+CE_API ce_err ice_arr_resize(void** inout_arr, size_t stride, size_t new_size);
+CE_API ce_err ice_arr_reserve(void** inout_arr, size_t stride, size_t new_capacity);
+CE_API size_t ice_arr_len(void* array);
+CE_API size_t ice_arr_cap(void* array);
 
-CE_API ce_err ice_realloc(void* inout, size_t new_size);
-CE_API ce_err ice_arr_alloc(ICE_ARRPAIR_ARG, size_t reserve);
-CE_API void ice_arr_free(void* array);
-CE_API ce_err ice_arr_resize(ICE_ARRPAIR_ARG, size_t new_size);
-CE_API ce_err ice_arr_reserve(ICE_ARRPAIR_ARG, size_t new_capacity);
-
-#define ce_realloc(inout, new_size) ice_realloc((void**)(inout), (sizeof(**(inout)), (new_size)))
-#define ce_arr(type) struct { size_t m_capacity; size_t m_count; type* m_data; }
-#define CE_ARRINIT {0,0,NULL}
-#define ce_arr_alloc(out, reserve) ice_arr_alloc(ICE_ARRPAIR(out), (reserve))
-#define ce_arr_free(arr) ice_arr_free((arr)->m_data)
-#define ce_arr_at(arr, index) ((arr).m_data[ice_assert_arr_at((index), (arr).m_count)])
-#define ce_arr_size(arr) ((const size_t)((arr).m_count))
-#define ce_arr_cap(arr) ((const size_t)((arr).m_capacity))
-#define ce_arr_data(arr) ((arr).m_data)
-
-ICE_NAMESPACE_END
+#define ce_arr(type) type*
+#define CE_ARRINIT NULL
+#define ce_arr_free(arr) ice_arr_free(arr)
+#define ce_arr_size(arr) ice_arr_len(arr)
+#define ce_arr_cap(arr) ice_arr_cap(arr)
+#define ce_arr_resize(inout_array, new_size) ice_arr_resize(ice_to_voidpp(inout_array), sizeof(**(inout_array)), (new_size))
+#define ce_arr_reserve(inout_array, new_capacity) ice_arr_reserve(ice_to_voidpp(inout_array), sizeof(**(inout_array)), (new_capacity))
