@@ -20,61 +20,67 @@ find_package(Doxygen)
 
 cmake_dependent_option(CANVAS_GENERATE_DOXYGEN "Generate documentation with Doxygen" ON "DOXYGEN_FOUND" OFF)
 if (CANVAS_GENERATE_DOXYGEN)
-	set(DOXYGEN_EXCLUDE_PATTERNS
-		"*/details/*"
-	)
+  set(DOXYGEN_EXCLUDE_PATTERNS
+    "*/details/*"
+  )
 
-	set(DOXYGEN_EXCLUDE_SYMBOLS
-		"ice_*"
-		"ICE_*"
-		"i*"
-		"I*"
-	)
+  set(DOXYGEN_EXCLUDE_SYMBOLS
+    "ice_*"
+    "ICE_*"
+    "i*"
+    "I*"
+  )
 
-	set(DOXYGEN_PREDEFINED
-		"ICE_NAMESPACE_BEGIN="
-		"ICE_NAMESPACE_END="
-		"CE_INLINE="
-		"CE_API="
-		"ICE_DOXY="
-		"CE_CXX98_STD=1"
-		"CE_CXX11_STD=1"
-		"CE_CXX14_STD=1"
-		"CE_CXX17_STD=1"
-		"CE_CXX20_STD=1"
-		"CE_CXX23_STD=1"
-		"CE_C89_STD=1"
-		"CE_C99_STD=1"
-		"CE_C11_STD=1"
-		"CE_C17_STD=1"
-		"CE_C23_STD=1"
-	)
+  set(DOXYGEN_PREDEFINED
+    "ICE_NAMESPACE_BEGIN="
+    "ICE_NAMESPACE_END="
+    "CE_INLINE="
+    "CE_API="
+    "ICE_DOXY="
+    "CE_CXX98_STD=1"
+    "CE_CXX11_STD=1"
+    "CE_CXX14_STD=1"
+    "CE_CXX17_STD=1"
+    "CE_CXX20_STD=1"
+    "CE_CXX23_STD=1"
+    "CE_C89_STD=1"
+    "CE_C99_STD=1"
+    "CE_C11_STD=1"
+    "CE_C17_STD=1"
+    "CE_C23_STD=1"
+    "ICE_FXHANDLE(x)=typedef struct x x"
+  )
 
-	set(DOXYGEN_FILE_PATTERNS
-		"*.h"
-		"*.md"
-		"*.markdown"
-	)
-	
-	set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "../docs/index.md")
-	set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/CanvasDocs")
-	
-	set(DOXYGEN_SORT_MEMBER_DOCS NO)
-	set(DOXYGEN_MACRO_EXPANSION YES)
-	set(DOXYGEN_EXTRACT_ALL YES)
-	set(DOXYGEN_GENERATE_HTML YES)
-	set(DOXYGEN_RECURSIVE YES)
-	set(DOXYGEN_ALLOW_UNICODE_NAMES YES)
-	set(DOXYGEN_OUTPUT_LANGUAGE "English")
-	set(DOXYGEN_OPTIMIZE_OUTPUT_FOR_C YES)
-	
-	set(DOXYGEN_DISABLE_INDEX NO)
-	set(DOXYGEN_GENERATE_TREEVIEW NO)
-	set(DOXYGEN_FULL_SIDEBAR NO)
-	
-	doxygen_add_docs(CanvasDoxygen
-		"./"
-		"../docs"
-		WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include"
-	)
+  set(DOXYGEN_FILE_PATTERNS
+    "*.h"
+    "*.md"
+    "*.markdown"
+  )
+  
+  set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "../docs/index.md")
+  set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/CanvasDocs")
+  
+  set(DOXYGEN_SORT_MEMBER_DOCS NO)
+  set(DOXYGEN_MACRO_EXPANSION YES)
+  set(DOXYGEN_EXTRACT_ALL YES)
+  set(DOXYGEN_GENERATE_HTML YES)
+  set(DOXYGEN_RECURSIVE YES)
+  set(DOXYGEN_ALLOW_UNICODE_NAMES YES)
+  set(DOXYGEN_OUTPUT_LANGUAGE "English")
+  set(DOXYGEN_OPTIMIZE_OUTPUT_FOR_C YES)
+  
+  set(DOXYGEN_DISABLE_INDEX NO)
+  set(DOXYGEN_GENERATE_TREEVIEW NO)
+  set(DOXYGEN_FULL_SIDEBAR NO)
+  
+  doxygen_add_docs(CanvasDoxygen
+    "./"
+    "../docs"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include"
+  )
+  
+  set_target_properties(CanvasDoxygen
+  PROPERTIES
+    FOLDER "CanvasEngine"
+  )
 endif ()

@@ -19,62 +19,83 @@
 #include "icore_global.h"
 #include <canvas/core/setup.h>
 
-CE_API ce_err ce_core_options(const struct ce_core_t* ops) {
-	if (ihas_initialized()) {
-		return CE_EPERM;
-	}
-	
-	if (ops == NULL) {
-		return CE_EINVAL;
-	}
-	
-	strncpy(icore.app_info.name, ops->app_name, 256);
-	strncpy(icore.engine_info.name, ops->engine_name, 256);
-	icore.app_info.version = ops->app_version;
-	icore.engine_info.version = ops->engine_version;
-	
-	return CE_EOK;
+CE_API ce_err ce_core_set(const ce_core* ops) {
+  return iset_ops(&icore_ops, ops, sizeof(*ops));
 }
 
+#ifdef CANVAS_DEBUG
+ICE_API cebool ideblog_enabled = cetrue;
+CE_API void ce_disable_debug_logs(void) {
+  ideblog_enabled = cefalse;
+}
+#endif /* !CANVAS_DEBUG */
+
 ICE_API cebool ihas_initialized(void) {
-	return icore.init_count != 0;
+  return icore.init_count != 0;
 }
 
 static void* s_defalloc(size_t bytes, void* arg) {
-	(void)arg;
-	return malloc(bytes);
+  (void)arg;
+  return malloc(bytes);
 }
 
 static void s_deffree(void* addr, size_t bytes, void* arg) {
-	(void)bytes;
-	(void)arg;
-	free(addr);
+  (void)bytes;
+  (void)arg;
+  free(addr);
 }
 
 ICE_API ce_err icore_init(void) {
-	/* Nothing to do here as of now. */
-	return CE_EOK;
+  if (icore_ops.app_name) {
+    ce_err e;
+    icore.app_info.name = ce_alloc_s(strlen(icore_ops.app_name), &e);
+    strcpy(icore.app_info.name, icore_ops.app_name);
+    if (ce_failure(e)) {
+      return e;
+    }
+  }
+  
+  if (icore_ops.engine_name) {
+    ce_err e;
+    icore.engine_info.name = ce_alloc_s(strlen(icore_ops.engine_name), &e);
+    strcpy(icore.engine_info.name, icore_ops.engine_name);
+    if (ce_failure(e)) {
+      return e;
+    }
+  }
+  
+  icore.app_info.version = icore_ops.app_version;
+  icore.engine_info.version = icore_ops.engine_version;
+  return CE_EOK;
 }
 
 ICE_API void icore_shutdown(void) {
-	/* Nothing to do here as of now. */
+  if (icore.app_info.name) {
+    ce_free(icore.app_info.name);
+    icore.app_info.name = NULL;
+  }
+  
+  if (icore.engine_info.name) {
+    ce_free(icore.engine_info.name);
+    icore.engine_info.name = NULL;
+  }
 }
 
-ICE_API struct icore_t icore = {
-	.init_count = 0,
-	.mem = {
-		.alloc = {
-			.alloc = &s_defalloc,
-			.free = &s_deffree,
-			.user = NULL
-		},
-		.lck = CE_MTX_INIT_PLAIN
-	}
+ICE_API ce_core icore_ops = {
+  .app_name = NULL,
+  .app_version = 0,
+  .engine_name = NULL,
+  .engine_version = 0,
 };
 
-ICE_API struct ce_core_t icore_ops = {
-	.app_name = {0},
-	.app_version = 0,
-	.engine_name = {0},
-	.engine_version = 0,
+ICE_API icore_t icore = {
+  .init_count = 0,
+  .mem = {
+    .alloc = {
+      .alloc = &s_defalloc,
+      .free = &s_deffree,
+      .user = NULL
+    },
+    .lck = CE_MTX_INIT_PLAIN
+  }
 };

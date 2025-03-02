@@ -16,17 +16,17 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_CORE_H
-#define CANVAS_CORE_H
+#ifndef CANVAS_CORE_RANDOM_H
+#define CANVAS_CORE_RANDOM_H
 
-#include <canvas/core/base.h>
 #include <canvas/core/error.h>
-#include <canvas/core/library.h>
-#include <canvas/core/memory.h>
-#include <canvas/core/setup.h>
-#include <canvas/core/signal.h>
-#include <canvas/core/string.h>
-#include <canvas/core/time.h>
-#include <canvas/core/uuid.h>
 
-#endif /* !CANVAS_CORE_H */
+ICE_NAMESPACE_BEGIN
+
+typedef int ce_seed;
+
+CE_API ce_err ce_rand(ce_seed seed, int* out);
+
+ICE_NAMESPACE_END
+
+#endif /* !CANVAS_CORE_RANDOM_H */

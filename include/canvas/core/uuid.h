@@ -16,17 +16,19 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_CORE_H
-#define CANVAS_CORE_H
+#ifndef CANVAS_CORE_UUID_H
+#define CANVAS_CORE_UUID_H
 
-#include <canvas/core/base.h>
 #include <canvas/core/error.h>
-#include <canvas/core/library.h>
-#include <canvas/core/memory.h>
-#include <canvas/core/setup.h>
-#include <canvas/core/signal.h>
-#include <canvas/core/string.h>
-#include <canvas/core/time.h>
-#include <canvas/core/uuid.h>
 
-#endif /* !CANVAS_CORE_H */
+ICE_NAMESPACE_BEGIN
+
+typedef struct ce_uuid {
+  unsigned char buffer[16];
+} ce_uuid;
+
+CE_API ce_err ce_uuid_gen(ce_uuid* out);
+
+ICE_NAMESPACE_END
+
+#endif /* !CANVAS_CORE_UUID_H */

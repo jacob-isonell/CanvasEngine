@@ -23,7 +23,14 @@
 
 ICE_NAMESPACE_BEGIN
 
+ICE_FXHANDLE(ce_dev);
 
+typedef struct ce_dev_create_info {
+  ce_gpu_dev* gpu_dev;
+} ce_dev_create_info;
+
+CE_API ce_err ce_dev_create(ce_dev** dev_out, const ce_dev_create_info* info);
+CE_API void ce_dev_delete(ce_dev* dev);
 
 ICE_NAMESPACE_END
 

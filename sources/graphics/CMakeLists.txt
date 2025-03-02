@@ -18,9 +18,9 @@
 
 target_sources(CanvasEngine
 PRIVATE
-	"setup.c"
+  "setup.c"
 )
 
 if (ICE_VULKAN)
-	ICE_ADDDIR("vulkan")
+  ICE_ADDDIR("vulkan")
 endif ()

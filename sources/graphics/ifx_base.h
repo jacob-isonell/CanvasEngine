@@ -25,7 +25,7 @@
 
 ICE_NAMESPACE_BEGIN
 
-ICE_API extern struct ce_graphics_t ifx_ops;
+ICE_API extern ce_graphics ifx_ops;
 ICE_API ce_err ifx_init(void);
 ICE_API void ifx_shutdown(void);
 

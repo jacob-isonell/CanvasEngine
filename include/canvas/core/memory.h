@@ -39,23 +39,23 @@ typedef void (*ce_pfunc_free)(void* address, size_t bytecount, void* usr);
  * @ingroup memory
  * @brief add documentation here!
  */
-struct ce_alloc_t {
-	
-	/** add documentation here! */
-	void*          user;
-	
-	/** add documentation here! */
-	ce_pfunc_alloc alloc;
-	
-	/** add documentation here! */
-	ce_pfunc_free  free;
-};
+typedef struct ce_alloc_t {
+  
+  /** add documentation here! */
+  void*          user;
+  
+  /** add documentation here! */
+  ce_pfunc_alloc alloc;
+  
+  /** add documentation here! */
+  ce_pfunc_free  free;
+} ce_alloc_t;
 
 /**
  * @ingroup memory
  * @brief add documentation here!
  */
-CE_API ce_err ce_set_alloc(struct ce_alloc_t in);
+CE_API ce_err ce_set_alloc(ce_alloc_t in);
 
 /**
  * @ingroup memory

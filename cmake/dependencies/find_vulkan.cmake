@@ -17,16 +17,16 @@
 #########################################################################
 
 macro(ICEFindVulkan)
-	find_package(Vulkan)
+  find_package(Vulkan)
 endmacro()
 
 macro(ICELinkVulkan out_target linking_kind)
-	ICEFindVulkan()
-	cmake_dependent_option(CANVAS_GRAPHICS_ENABLE_VULKAN "Enable support for VulkanAPI" ON "CANVAS_GRAPHICS;Vulkan_FOUND" OFF)
-	if (CANVAS_GRAPHICS_ENABLE_VULKAN)
-		target_link_libraries(${out_target} ${linking_kind}
-			Vulkan::Headers
-		)
-		set(ICE_VULKAN ON CACHE BOOL "ICE_VULKAN")
-	endif ()
+  ICEFindVulkan()
+  cmake_dependent_option(CANVAS_ENABLE_VULKAN "Enable support for VulkanAPI" ON "CANVAS_GRAPHICS;Vulkan_FOUND" OFF)
+  if (CANVAS_ENABLE_VULKAN)
+    target_link_libraries(${out_target} ${linking_kind}
+      Vulkan::Headers
+    )
+    set(ICE_VULKAN ON CACHE BOOL "ICE_VULKAN")
+  endif ()
 endmacro()

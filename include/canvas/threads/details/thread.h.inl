@@ -29,17 +29,17 @@ ICE_NAMESPACE_BEGIN
 #define ice_once_flag pthread_once_t
 #define CE_ONCE_FLAG_INIT PTHREAD_ONCE_INIT
 #elif defined(ICE_THREADS_WIN32)
-struct ice_thread_impl {
-	HANDLE handle;
-};
+typedef struct ice_thread_impl {
+  HANDLE handle;
+} ice_thread_impl;
 
-struct ice_once_flag {
-	CRITICAL_SECTION mtx;
-	cebool called;
-};
+typedef struct ice_once_flag {
+  CRITICAL_SECTION mtx;
+  cebool called;
+} ice_once_flag;
 
-#define ice_thrd struct ice_thread_impl
-#define ice_once_flag struct ice_once_flag
+#define ice_thrd ice_thread_impl
+#define ice_once_flag ice_once_flag
 #define CE_ONCE_FLAG_INIT {0}
 #endif
 

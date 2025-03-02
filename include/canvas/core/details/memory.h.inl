@@ -31,25 +31,25 @@ CE_API ce_err ice_realloc(void* inout, size_t new_size);
 #if CE_CXX
 template<typename T>
 inline void** ice_to_voidpp(T** in) ICE_NOEXCEPT {
-	void** out;
-	memcpy(&out, &in, sizeof(void*));
-	return out;
+  void** out;
+  memcpy(&out, &in, sizeof(void*));
+  return out;
 }
 #else
 CE_INLINE void** ice_to_voidpp(void* in) {
-	void** out;
-	memcpy(&out, &in, sizeof(void*));
-	return out;
+  void** out;
+  memcpy(&out, &in, sizeof(void*));
+  return out;
 }
 #endif
 
 #ifdef CANVAS_DEBUG
 CE_INLINE
 size_t ice_assert_arr_at(size_t index, size_t length) {
-	if (index < length) {
-		return index;
-	}
-	abort();
+  if (index < length) {
+    return index;
+  }
+  abort();
 }
 #else
 #define ice_assert_arr_at(index, length) (index) 

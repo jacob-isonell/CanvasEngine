@@ -16,15 +16,11 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_CORE_EVENT_H
-#define CANVAS_CORE_EVENT_H
+#include "icore_base.h"
+#include <canvas/core/random.h>
 
-#include <canvas/core/memory.h>
-
-ICE_NAMESPACE_BEGIN
-
-
-
-ICE_NAMESPACE_END
-
-#endif /* !CANVAS_CORE_EVENT_H */
+CE_API ce_err ce_rand(ce_seed seed, int* out) {
+  if (out == NULL) {
+    return CE_EINVAL;
+  }
+}

@@ -27,47 +27,47 @@ ICE_NAMESPACE_BEGIN
  * @ingroup configuration
  * @brief add documentation here!
  */
-struct ce_graphics_vulkan_t {
-	
-	/**
-	 * @brief An array of vulkan instance layers that are required by the running program.
-	 * @note Querying for instance layers and assinging them to these fields is incorrect usage.
-	 *   These fields are for specifying instance layers that are required for the application
-	 *   to run properly. CanvasEngine by default requires certain instance layers to function.
-	 */
-	struct {
-		size_t count;
-		const struct ce_vk_layer_str* layers;
-	} inst_layers;
-	
-	/**
-	 * @brief An array of vulkan instance extensions that are required by the running program.
-	 * @note Querying for instance extensions and assinging them to these fields is incorrect usage.
-	 *   These fields are for specifying instance extensions that are required for the application
-	 *   to run properly. CanvasEngine by default requires certain instance extensions to function.
-	 */
-	struct {
-		size_t count;
-		const struct ce_vk_ext_str* exts;
-	} inst_exts;
-};
+typedef struct ce_graphics_vulkan_t {
+  
+  /**
+   * @brief An array of vulkan instance layers that are required by the running program.
+   * @note Querying for instance layers and assinging them to these fields is incorrect usage.
+   *   These fields are for specifying instance layers that are required for the application
+   *   to run properly. CanvasEngine by default requires certain instance layers to function.
+   */
+  const ce_vk_layer_str* inst_layers;
+  
+  /** @brief The number of elements in `inst_layers`. */
+  size_t inst_layers_len;
+  
+  /**
+   * @brief An array of vulkan instance extensions that are required by the running program.
+   * @note Querying for instance extensions and assinging them to these fields is incorrect usage.
+   *   These fields are for specifying instance extensions that are required for the application
+   *   to run properly. CanvasEngine by default requires certain instance extensions to function.
+   */
+  const ce_vk_ext_str* inst_exts;
+  
+  /** @brief The number of elements in `inst_exts`. */
+  size_t inst_exts_len;
+  
+} ce_graphics_vulkan_t;
 
 /**
  * @ingroup configuration
  * @brief add documentation here!
  */
-struct ce_graphics_t {
-	/** add documentation here! */
-	struct ce_graphics_vulkan_t vulkan;
-};
+typedef struct ce_graphics {
+  /** add documentation here! */
+  ce_graphics_vulkan_t vulkan;
+} ce_graphics;
 
 /**
  * @ingroup configuration
  * @brief add documentation here!
  */
-CE_API
-ce_err ce_graphics_options(
-	const struct ce_graphics_t* options
+CE_API ce_err ce_graphics_set(
+  const ce_graphics* ops
 );
 
 ICE_NAMESPACE_END

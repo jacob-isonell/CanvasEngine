@@ -75,11 +75,10 @@ CE_API ce_err cnd_wait(ce_cnd* cond, ce_mtx* mutex);
  * @ingroup threading_objects
  * @brief add documentation here!
  */
-CE_API
-ce_err cnd_timedwait(
-	ce_cnd* CE_RESTRICT                 cond,
-	ce_mtx* CE_RESTRICT                 mutex,
-	const struct ce_time_t* CE_RESTRICT time_point
+CE_API ce_err cnd_timedwait(
+           ce_cnd* CE_RESTRICT cond,
+           ce_mtx* CE_RESTRICT mutex,
+  const ce_time_t* CE_RESTRICT time_point
 );
 
 #endif /* !CANVAS_HAS_THREADS */

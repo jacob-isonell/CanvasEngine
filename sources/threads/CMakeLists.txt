@@ -18,7 +18,7 @@
 
 target_sources(CanvasEngine
 PRIVATE
-	"threads.c"
-	"mutex.c"
-	"condition_variable.c"
+  "threads.c"
+  "mutex.c"
+  "condition_variable.c"
 )

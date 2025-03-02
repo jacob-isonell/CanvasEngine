@@ -58,11 +58,10 @@ ICE_NAMESPACE_BEGIN
  * @ingroup threading_objects
  * @brief missing documentation.
  */
-CE_API
-ce_err ce_thrd_create(
-	ce_thrd* out,
-	int    (*func)(void*),
-	void*    arg
+CE_API ce_err ce_thrd_create(
+  ce_thrd* out,
+  int    (*func)(void*),
+  void*    arg
 );
 
 /**
@@ -87,10 +86,9 @@ CE_API unsigned long ce_thrd_id(ce_thrd thrd);
  * @ingroup threading_objects
  * @brief missing documentation.
  */
-CE_API
-ce_err ce_thrd_sleep(
-	const struct ce_time_t* duration,
-	struct ce_time_t*       opt_remaining
+CE_API ce_err ce_thrd_sleep(
+  const ce_time_t* duration,
+        ce_time_t* opt_remaining
 );
 
 /**
@@ -116,7 +114,7 @@ CE_API ce_err ce_thrd_detach(ce_thrd thrd);
  * @ingroup threading_objects
  * @brief missing documentation.
  */
-CE_API ce_err ce_thrd_join(ce_thrd thrd,	int* opt_res);
+CE_API ce_err ce_thrd_join(ce_thrd thrd,  int* opt_res);
 
 /**
  * @ingroup threading_objects

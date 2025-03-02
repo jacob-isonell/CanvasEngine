@@ -27,58 +27,58 @@ ICE_NAMESPACE_BEGIN
  * @ingroup vector_types
  * @brief add documentation here!
  */
-struct ce_vec2f32 {
-	float x, y; 
-};
+typedef struct ce_vec2f32 {
+  float x, y; 
+} ce_vec2f32;
 
 /**
  * @ingroup vector_types
  * @brief add documentation here!
  */
-struct ce_vec3f32 {
-	float x, y, z; 
-};
+typedef struct ce_vec3f32 {
+  float x, y, z; 
+} ce_vec3f32;
 
 /**
  * @ingroup vector_types
  * @brief add documentation here!
  */
-struct ce_vec4f32 {
-	float x, y, z, w; 
-};
+typedef struct ce_vec4f32 {
+  float x, y, z, w; 
+} ce_vec4f32;
 
 /**
  * @ingroup vector_types
  * @brief add documentation here!
  */
-struct ce_vec2f64 {
-	double x, y; 
-};
+typedef struct ce_vec2f64 {
+  double x, y; 
+} ce_vec2f64;
 
 /**
  * @ingroup vector_types
  * @brief add documentation here!
  */
-struct ce_vec3f64 {
-	double x, y, z; 
-};
+typedef struct ce_vec3f64 {
+  double x, y, z; 
+} ce_vec3f64;
 
 /**
  * @ingroup vector_types
  * @brief add documentation here!
  */
-struct ce_vec4f64 {
-	double x, y, z, w; 
-};
+typedef struct ce_vec4f64 {
+  double x, y, z, w; 
+} ce_vec4f64;
 
 /**
  * @ingroup vector_types
  * @brief add documentation here!
  */
 CE_INLINE
-struct ce_vec2f32 ce_add_vec2f32(
-	struct ce_vec2f32 lhs,
-	struct ce_vec2f32 rhs
+ce_vec2f32 ce_add_vec2f32(
+  ce_vec2f32 lhs,
+  ce_vec2f32 rhs
 );
 
 /**
@@ -86,9 +86,9 @@ struct ce_vec2f32 ce_add_vec2f32(
  * @brief add documentation here!
  */
 CE_INLINE
-struct ce_vec2f32 ce_sub_vec2f32(
-	struct ce_vec2f32 lhs,
-	struct ce_vec2f32 rhs
+ce_vec2f32 ce_sub_vec2f32(
+  ce_vec2f32 lhs,
+  ce_vec2f32 rhs
 );
 
 /**
@@ -96,9 +96,9 @@ struct ce_vec2f32 ce_sub_vec2f32(
  * @brief add documentation here!
  */
 CE_INLINE
-struct ce_vec2f32 ce_mul_vec2f32(
-	struct ce_vec2f32 lhs,
-	struct ce_vec2f32 rhs
+ce_vec2f32 ce_mul_vec2f32(
+  ce_vec2f32 lhs,
+  ce_vec2f32 rhs
 );
 
 /**
@@ -106,9 +106,9 @@ struct ce_vec2f32 ce_mul_vec2f32(
  * @brief add documentation here!
  */
 CE_INLINE
-struct ce_vec2f32 ce_div_vec2f32(
-	struct ce_vec2f32 lhs,
-	struct ce_vec2f32 rhs
+ce_vec2f32 ce_div_vec2f32(
+  ce_vec2f32 lhs,
+  ce_vec2f32 rhs
 );
 
 /**
@@ -117,8 +117,8 @@ struct ce_vec2f32 ce_div_vec2f32(
  */
 CE_INLINE
 float ce_dot_vec2f32(
-	struct ce_vec2f32 lhs,
-	struct ce_vec2f32 rhs
+  ce_vec2f32 lhs,
+  ce_vec2f32 rhs
 );
 
 /**
@@ -127,7 +127,7 @@ float ce_dot_vec2f32(
  */
 CE_INLINE
 float ce_sqrmag_vec2f32(
-	struct ce_vec2f32 in
+  ce_vec2f32 in
 );
 
 /**
@@ -136,7 +136,7 @@ float ce_sqrmag_vec2f32(
  */
 CE_INLINE
 float ce_mag_vec2f32(
-	struct ce_vec2f32 in
+  ce_vec2f32 in
 );
 
 /**
@@ -145,8 +145,8 @@ float ce_mag_vec2f32(
  */
 CE_INLINE
 float ce_sqrdist_vec2f32(
-	struct ce_vec2f32 lhs,
-	struct ce_vec2f32 rhs
+  ce_vec2f32 lhs,
+  ce_vec2f32 rhs
 );
 
 /**
@@ -155,8 +155,8 @@ float ce_sqrdist_vec2f32(
  */
 CE_INLINE
 float ce_dist_vec2f32(
-	struct ce_vec2f32 lhs,
-	struct ce_vec2f32 rhs
+  ce_vec2f32 lhs,
+  ce_vec2f32 rhs
 );
 
 /**
@@ -164,9 +164,9 @@ float ce_dist_vec2f32(
  * @brief add documentation here!
  */
 CE_INLINE
-struct ce_vec3f32 ce_add_vec3f32(
-	struct ce_vec3f32 lhs,
-	struct ce_vec3f32 rhs
+ce_vec3f32 ce_add_vec3f32(
+  ce_vec3f32 lhs,
+  ce_vec3f32 rhs
 );
 
 /**
@@ -174,9 +174,9 @@ struct ce_vec3f32 ce_add_vec3f32(
  * @brief add documentation here!
  */
 CE_INLINE
-struct ce_vec3f32 ce_sub_vec3f32(
-	struct ce_vec3f32 lhs,
-	struct ce_vec3f32 rhs
+ce_vec3f32 ce_sub_vec3f32(
+  ce_vec3f32 lhs,
+  ce_vec3f32 rhs
 );
 
 /**
@@ -184,9 +184,9 @@ struct ce_vec3f32 ce_sub_vec3f32(
  * @brief add documentation here!
  */
 CE_INLINE
-struct ce_vec3f32 ce_mul_vec3f32(
-	struct ce_vec3f32 lhs,
-	struct ce_vec3f32 rhs
+ce_vec3f32 ce_mul_vec3f32(
+  ce_vec3f32 lhs,
+  ce_vec3f32 rhs
 );
 
 /**
@@ -194,9 +194,9 @@ struct ce_vec3f32 ce_mul_vec3f32(
  * @brief add documentation here!
  */
 CE_INLINE
-struct ce_vec3f32 ce_div_vec3f32(
-	struct ce_vec3f32 lhs,
-	struct ce_vec3f32 rhs
+ce_vec3f32 ce_div_vec3f32(
+  ce_vec3f32 lhs,
+  ce_vec3f32 rhs
 );
 
 /**
@@ -205,8 +205,8 @@ struct ce_vec3f32 ce_div_vec3f32(
  */
 CE_INLINE
 float ce_dot_vec3f32(
-	struct ce_vec3f32 lhs,
-	struct ce_vec3f32 rhs
+  ce_vec3f32 lhs,
+  ce_vec3f32 rhs
 );
 
 /**
@@ -215,7 +215,7 @@ float ce_dot_vec3f32(
  */
 CE_INLINE
 float ce_sqrmag_vec3f32(
-	struct ce_vec3f32 in
+  ce_vec3f32 in
 );
 
 /**
@@ -224,7 +224,7 @@ float ce_sqrmag_vec3f32(
  */
 CE_INLINE
 float ce_mag_vec3f32(
-	struct ce_vec3f32 in
+  ce_vec3f32 in
 );
 
 /**
@@ -233,8 +233,8 @@ float ce_mag_vec3f32(
  */
 CE_INLINE
 float ce_sqrdist_vec3f32(
-	struct ce_vec3f32 lhs,
-	struct ce_vec3f32 rhs
+  ce_vec3f32 lhs,
+  ce_vec3f32 rhs
 );
 
 /**
@@ -243,8 +243,8 @@ float ce_sqrdist_vec3f32(
  */
 CE_INLINE
 float ce_dist_vec3f32(
-	struct ce_vec3f32 lhs,
-	struct ce_vec3f32 rhs
+  ce_vec3f32 lhs,
+  ce_vec3f32 rhs
 );
 
 /**
@@ -252,9 +252,9 @@ float ce_dist_vec3f32(
  * @brief add documentation here!
  */
 CE_INLINE
-struct ce_vec4f32 ce_add_vec4f32(
-	struct ce_vec4f32 lhs,
-	struct ce_vec4f32 rhs
+ce_vec4f32 ce_add_vec4f32(
+  ce_vec4f32 lhs,
+  ce_vec4f32 rhs
 );
 
 /**
@@ -262,9 +262,9 @@ struct ce_vec4f32 ce_add_vec4f32(
  * @brief add documentation here!
  */
 CE_INLINE
-struct ce_vec4f32 ce_sub_vec4f32(
-	struct ce_vec4f32 lhs,
-	struct ce_vec4f32 rhs
+ce_vec4f32 ce_sub_vec4f32(
+  ce_vec4f32 lhs,
+  ce_vec4f32 rhs
 );
 
 /**
@@ -272,9 +272,9 @@ struct ce_vec4f32 ce_sub_vec4f32(
  * @brief add documentation here!
  */
 CE_INLINE
-struct ce_vec4f32 ce_mul_vec4f32(
-	struct ce_vec4f32 lhs,
-	struct ce_vec4f32 rhs
+ce_vec4f32 ce_mul_vec4f32(
+  ce_vec4f32 lhs,
+  ce_vec4f32 rhs
 );
 
 /**
@@ -282,9 +282,9 @@ struct ce_vec4f32 ce_mul_vec4f32(
  * @brief add documentation here!
  */
 CE_INLINE
-struct ce_vec4f32 ce_div_vec4f32(
-	struct ce_vec4f32 lhs,
-	struct ce_vec4f32 rhs
+ce_vec4f32 ce_div_vec4f32(
+  ce_vec4f32 lhs,
+  ce_vec4f32 rhs
 );
 
 /**
@@ -293,8 +293,8 @@ struct ce_vec4f32 ce_div_vec4f32(
  */
 CE_INLINE
 float ce_dot_vec4f32(
-	struct ce_vec4f32 lhs,
-	struct ce_vec4f32 rhs
+  ce_vec4f32 lhs,
+  ce_vec4f32 rhs
 );
 
 /**
@@ -303,7 +303,7 @@ float ce_dot_vec4f32(
  */
 CE_INLINE
 float ce_sqrmag_vec4f32(
-	struct ce_vec4f32 in
+  ce_vec4f32 in
 );
 
 /**
@@ -312,7 +312,7 @@ float ce_sqrmag_vec4f32(
  */
 CE_INLINE
 float ce_mag_vec4f32(
-	struct ce_vec4f32 in
+  ce_vec4f32 in
 );
 
 /**
@@ -321,8 +321,8 @@ float ce_mag_vec4f32(
  */
 CE_INLINE
 float ce_sqrdist_vec4f32(
-	struct ce_vec4f32 lhs,
-	struct ce_vec4f32 rhs
+  ce_vec4f32 lhs,
+  ce_vec4f32 rhs
 );
 
 /**
@@ -331,8 +331,8 @@ float ce_sqrdist_vec4f32(
  */
 CE_INLINE
 float ce_dist_vec4f32(
-	struct ce_vec4f32 lhs,
-	struct ce_vec4f32 rhs
+  ce_vec4f32 lhs,
+  ce_vec4f32 rhs
 );
 
 #ifndef ICE_DOXY

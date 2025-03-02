@@ -24,10 +24,10 @@
  * @brief add documentation here!
  */
 enum ce_mtx_kind {
-	CE_MTX_PLAIN           = 0, /* add documentation here! */
-	CE_MTX_TIMED           = 1, /* add documentation here! */
-	CE_MTX_RECURSIVE       = 2, /* add documentation here! */
-	CE_MTX_TIMED_RECURSIVE = 3, /* add documentation here! */
+  CE_MTX_PLAIN           = 0, /* add documentation here! */
+  CE_MTX_TIMED           = 1, /* add documentation here! */
+  CE_MTX_RECURSIVE       = 2, /* add documentation here! */
+  CE_MTX_TIMED_RECURSIVE = 3, /* add documentation here! */
 };
 
 /**
@@ -92,10 +92,9 @@ CE_API ce_err ce_mtx_lock(ce_mtx* mtx);
  * @ingroup threading_objects
  * @brief add documentation here!
  */
-CE_API
-ce_err ce_mtx_timedlock(
-	ce_mtx* CE_RESTRICT                 mtx,
-	const struct ce_time_t* CE_RESTRICT time_point
+CE_API ce_err ce_mtx_timedlock(
+           ce_mtx* CE_RESTRICT mtx,
+  const ce_time_t* CE_RESTRICT time_point
 );
 
 /**

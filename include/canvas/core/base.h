@@ -337,6 +337,9 @@
 
 ICE_NAMESPACE_BEGIN
 
+/** @brief A typedef for char. Indicates that the stored value follows UTF-8 encoding. */
+typedef char ce_utf8;
+
 /**
  * @ingroup types
  * @brief A boolean type (`bool` in C++ or `_Bool` in C11)
@@ -359,11 +362,11 @@ typedef icebool cebool;
  * @ingroup utility
  * @brief add documentation here!
  */
-struct ce_version {
-	unsigned int patch : 14; /* add documentation here! */
-	unsigned int minor : 12; /* add documentation here! */
-	unsigned int major : 6;  /* add documentation here! */
-};
+typedef struct ce_version {
+  unsigned int patch : 14; /* add documentation here! */
+  unsigned int minor : 12; /* add documentation here! */
+  unsigned int major : 6;  /* add documentation here! */
+} ce_version;
 
 /**
  * @ingroup utility
@@ -386,6 +389,18 @@ struct ce_version {
 #ifndef ICE_DOXY
 #include <canvas/core/details/base_macros.inl>
 #endif /* !ICE_DOXY */
+
+#if defined(CANVAS_DEBUG) || defined(ICE_DOXY)
+
+/**
+ * @brief
+ *    Disable debug logs. On non-debug builds this is equivalent to a no-op.
+ */
+CE_API void ce_disable_debug_logs(void);
+
+#else
+#define ce_disable_debug_logs() ((void)0)
+#endif /* !CANVAS_DEBUG */
 
 ICE_NAMESPACE_END
 

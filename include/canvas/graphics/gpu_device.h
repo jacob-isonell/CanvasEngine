@@ -27,30 +27,16 @@ ICE_NAMESPACE_BEGIN
  * @ingroup gpu_devices
  * @brief add documentation here!
  */
-struct ce_gpu_dev;
+ICE_FXHANDLE(ce_gpu_dev);
 
 /**
  * @ingroup gpu_devices
  * @brief add documentation here!
  */
-struct ce_gpu_dev_props {
-	
-	/** add documentation here! */
-	char name[256];
-	
-	/** add documentation here! */
-	unsigned long driver_version;
-};
-
-/**
- * @ingroup gpu_devices
- * @brief add documentation here!
- */
-CE_API
-ce_err ce_gpu_dev_get(
-	struct ce_gpu_dev** buffer,
-	size_t              buffer_size,
-	size_t*             out_size
+CE_API ce_err ce_gpu_dev_get(
+  ce_gpu_dev** buffer,
+  size_t       buffer_size,
+  size_t*      out_size
 );
 
 ICE_NAMESPACE_END

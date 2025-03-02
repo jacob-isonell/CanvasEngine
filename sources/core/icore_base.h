@@ -30,17 +30,17 @@
 #include <canvas/core/base.h>
 
 #ifdef CANVAS_GRAPHICS
-#	define CANVAS_EXPOSE_VULKAN
-#	if CANVAS_PLATFORM_UNIX
-#		define CANVAS_EXPOSE_WAYLAND
-#		define CANVAS_EXPOSE_X11
-#	elif CANVAS_PLATFORM_WINDOWS
-#		define CANVAS_EXPOSE_WIN32
-#	endif
+#  define CANVAS_EXPOSE_VULKAN
+#  if CANVAS_PLATFORM_UNIX
+#    define CANVAS_EXPOSE_WAYLAND
+#    define CANVAS_EXPOSE_X11
+#  elif CANVAS_PLATFORM_WINDOWS
+#    define CANVAS_EXPOSE_WIN32
+#  endif
 #endif
 
 #if !defined(CANVAS_SKIP_COMPILER_CHECKS) && !CE_C11_STD
-#	error CanvasEngine requires C11 to compile
+#  error CanvasEngine requires C11 to compile
 #endif
 
 #if CANVAS_COMPILER_GNU
@@ -63,16 +63,16 @@
 #include <canvas/core/memory.h>
 #include <canvas/core/setup.h>
 #if CANVAS_PLATFORM_UNIX
-#	include <unistd.h>
-#	if _POSIX_VERSION < 200809L
-#		error CanvasEngine requires POSIX.1-2008 compatibility
-#	endif
+#  include <unistd.h>
+#  if _POSIX_VERSION < 200809L
+#    error CanvasEngine requires POSIX.1-2008 compatibility
+#  endif
 #elif CANVAS_PLATFORM_WINDOWS
-#	define WIN32_LEAN_AND_MEAN
-#	define NOMINMAX
-#	include <SDKDDKVer.h>
-#	include <Windows.h>
-#	include <synchapi.h>
+#  define WIN32_LEAN_AND_MEAN
+#  define NOMINMAX
+#  include <SDKDDKVer.h>
+#  include <Windows.h>
+#  include <synchapi.h>
 #endif
 
 #include <stdint.h>
@@ -98,6 +98,35 @@
  */
 
 ICE_NAMESPACE_BEGIN
+
+ICE_API ce_err icore_init(void);
+ICE_API void icore_shutdown(void);
+
+/* Bool is the CanvasEngine library has been initalized (same as checking `icore.init_count > 0`).
+ * Used for implementing `ICE_REQ_INIT` without including `icore_global.h`.
+ */
+ICE_API cebool ihas_initialized(void);
+
+/* Convert errno value to ce_err. */
+ICE_API ce_err ierrno(int in);
+
+ICE_API void* ialloc(size_t bytes, ce_err* opt_err);
+ICE_API ce_err ifree(void* addr, size_t bytes);
+
+ICE_API extern ce_core icore_ops;
+
+CE_INLINE ce_err iset_ops(void* dst, const void* src, size_t c) {
+  if (ihas_initialized()) {
+    return CE_EPERM;
+  }
+  
+  if (src == NULL) {
+    return CE_EINVAL;
+  }
+  
+  memcpy(dst, src, c);
+  return CE_EOK;
+}
 
 #define ISTRIFYX(in) #in
 #define ISTRIFY(in) ISTRIFYX(in)
@@ -172,31 +201,36 @@ ICE_NAMESPACE_BEGIN
  */
 #define IERREND \
 while (0); IERR_ERRTHROW:\
-	for (cebool ierr_cond = cetrue; ce_failure(IERRVAL) && ierr_cond; ierr_cond = cefalse)
+  for (cebool ierr_cond = cetrue; ce_failure(IERRVAL) && ierr_cond; ierr_cond = cefalse)
 
 /* Checks if `in` holds an error value. If it does then
  * a jump to `IERREND` is performed.
  */
 #define IERRDO(in) do { \
-	IERRVAL = (in); \
-	if (ce_success(IERRVAL)) break; \
-	goto IERR_ERRTHROW; \
+  IERRVAL = (in); \
+  if (ce_success(IERRVAL)) break; \
+  goto IERR_ERRTHROW; \
 } while (0)
-
 
 #ifdef CANVAS_DEBUG
 
+ICE_API extern cebool ideblog_enabled;
+
 static inline void ilog_impl(
-	FILE*       stream,
-	const char* pre_text,
-	const char* fmt, ...
+  FILE*       stream,
+  const char* pre_text,
+  const char* fmt, ...
 ) {
-	va_list args;
-	va_start(args, fmt);
-	fputs(pre_text, stream);
-	vfprintf(stream, fmt, args);
-	fputs(IASCII_RESET, stream);
-	va_end(args);
+  if (!ideblog_enabled) {
+    return;
+  }
+  
+  va_list args;
+  va_start(args, fmt);
+  fputs(pre_text, stream);
+  vfprintf(stream, fmt, args);
+  fputs(IASCII_RESET, stream);
+  va_end(args);
 }
 
 #define IDEBLOG(...)   ilog_impl(stdout, IASCII_CYAN "[CE_LOG] " __FILE__ ":" ISTRIFY(__LINE__) " ", __VA_ARGS__)
@@ -207,23 +241,6 @@ static inline void ilog_impl(
 #define IDEBWARN(...)  ((void)0)
 #define IDEBERROR(...) ((void)0)
 #endif
-
-ICE_API ce_err icore_init(void);
-ICE_API void icore_shutdown(void);
-
-/* Bool is the CanvasEngine library has been initalized (same as checking `icore.init_count > 0`).
- * Used for implementing `ICE_REQ_INIT` without including `icore_global.h`.
- */
-ICE_API cebool ihas_initialized(void);
-
-/* Convert errno value to ce_err. */
-ICE_API ce_err ierrno(int in);
-
-/* Convert errno value to ce_err and clear `errno`. */
-ICE_API ce_err ierrno_cls(int in);
-
-ICE_API ce_err icore_str2wcs(wchar_t* buffer, size_t buffer_count, const char* src, size_t opt_srclen, size_t* opt_out_len);
-ICE_API ce_err icore_wcs2str(char* buffer, size_t buffer_count, const wchar_t* src, size_t opt_srclen, size_t* opt_out_len);
 
 #define ICE_ASSERT(cond) assert(cond)
 

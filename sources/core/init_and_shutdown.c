@@ -21,60 +21,60 @@
 #include "ifx_base.h"
 #endif
 
-struct iitem_pairs {
-	ce_err (*init)(void);
-	void   (*term)(void);
-	
+typedef struct iitem_pairs {
+  ce_err (*init)(void);
+  void   (*term)(void);
+  
 #ifdef CANVAS_DEBUG
-	const char* debug_name;
+  const char* debug_name;
 #endif
-};
+} iitem_pairs;
 
-static const struct iitem_pairs s_items[] = {
-	{ &icore_init, &icore_shutdown, ICE_DEB("core") },
+static const iitem_pairs s_items[] = {
+  { &icore_init, &icore_shutdown, ICE_DEB("core") },
 #ifdef CANVAS_GRAPHICS
-	{ &ifx_init, &ifx_shutdown, ICE_DEB("graphics") }
+  { &ifx_init, &ifx_shutdown, ICE_DEB("graphics") }
 #endif
 };
 
 CE_API ce_err ce_init(void) {
-	if (icore.init_count++) {
-		IDEBLOG("CanvasEngine has already been initialized. Incrementing reference count\n");
-		return CE_EOK;
-	}
-	
-	const struct iitem_pairs* it = s_items;
-	const struct iitem_pairs* const end = s_items + CE_ARRLEN(s_items);
-	IERRBEGIN {
-		for (; it != end; ++it) {
-			IDEBLOG("Initializing CanvasEngine module \"%s\"\n", it->debug_name);
-			IERRDO(it->init());
-		}
-		IDEBLOG("CanvasEngine initialization complete\n");
-	} IERREND {
-		IDEBERROR("Failed to initialize %s module (0x%08X) \"%s\"\n", it->debug_name, IERRVAL, ce_errstr(IERRVAL));
-		do {
-			IDEBWARN("Terminating CanvasEngine module \"%s\"\n", it->debug_name);
-			it->term();
-		} while (it-- != s_items);
-	}
-	return IERRVAL;
+  if (icore.init_count++) {
+    IDEBLOG("CanvasEngine has already been initialized. Incrementing reference count\n");
+    return CE_EOK;
+  }
+  
+  const iitem_pairs* it = s_items;
+  const iitem_pairs* const end = s_items + CE_ARRLEN(s_items);
+  IERRBEGIN {
+    for (; it != end; ++it) {
+      IDEBLOG("Initializing CanvasEngine module \"%s\"\n", it->debug_name);
+      IERRDO(it->init());
+    }
+    IDEBLOG("CanvasEngine initialization complete\n");
+  } IERREND {
+    IDEBERROR("Failed to initialize %s module (0x%08X) \"%s\"\n", it->debug_name, IERRVAL, ce_errstr(IERRVAL));
+    do {
+      IDEBWARN("Terminating CanvasEngine module \"%s\"\n", it->debug_name);
+      it->term();
+    } while (it-- != s_items);
+  }
+  return IERRVAL;
 }
 
 CE_API void ce_shutdown(void) {
-	if (icore.init_count == 0) {
-		return;
-	}
-	
-	if (--icore.init_count != 0) {
-		return;
-	}
-	
-	IDEBLOG("Shuting down CanvasEngine\n");
-	const struct iitem_pairs* it = s_items;
-	const struct iitem_pairs* const end = s_items + CE_ARRLEN(s_items);
-	for (; it != end; ++it) {
-		IDEBLOG("Terminating CanvasEngine module \"%s\"\n", it->debug_name);
-		it->term();
-	}
+  if (icore.init_count == 0) {
+    return;
+  }
+  
+  if (--icore.init_count != 0) {
+    return;
+  }
+  
+  IDEBLOG("Shuting down CanvasEngine\n");
+  const iitem_pairs* it = s_items;
+  const iitem_pairs* const end = s_items + CE_ARRLEN(s_items);
+  for (; it != end; ++it) {
+    IDEBLOG("Terminating CanvasEngine module \"%s\"\n", it->debug_name);
+    it->term();
+  }
 }

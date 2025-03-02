@@ -18,26 +18,28 @@
 
 #include "ifx_base.h"
 #include "ifx_vk.h"
+#include "icore_global.h"
 
-CE_API ce_err ce_graphics_options(const struct ce_graphics_t* options) {
-	if (ihas_initialized()) {
-		return CE_EPERM;
-	}
-	
-	if (options == NULL) {
-		return CE_EINVAL;
-	}
-	
-	return CE_EOK;
+CE_API ce_err ce_graphics_set(const ce_graphics* ops) {
+  return iset_ops(&ifx_ops, ops, sizeof(*ops));
 }
 
 ICE_API ce_err ifx_init(void) {
-	IERRBEGIN {
-		IERRDO(ivk_init());
-	} IERREND { }
-	return IERRVAL;
+  IERRBEGIN {
+    IERRDO(ivk_init());
+  } IERREND { }
+  return IERRVAL;
 }
 
 ICE_API void ifx_shutdown(void) {
-	ivk_shutdown();
+  ivk_shutdown();
 }
+
+ICE_API ce_graphics ifx_ops = {
+  .vulkan = {
+    .inst_layers = NULL,
+    .inst_layers_len = 0,
+    .inst_exts = NULL,
+    .inst_exts_len = 0,
+  }
+};

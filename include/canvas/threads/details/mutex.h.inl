@@ -35,13 +35,13 @@ ICE_NAMESPACE_BEGIN
 #define CE_MTX_INIT_TIMED_RECURSIVE PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
 #endif
 #elif defined(ICE_THREADS_WIN32)
-struct ice_mtx_impl {
-	SRWLOCK     lock;
-	size_t      refcount;
-	DWORD       owner;
-	enum ce_mtx_kind flags;
-};
-#define ice_mtx struct ice_mtx_impl
+typedef struct ice_mtx_impl {
+  SRWLOCK     lock;
+  size_t      refcount;
+  DWORD       owner;
+  enum ce_mtx_kind flags;
+} ice_mtx_impl;
+#define ice_mtx ice_mtx_impl
 #define CE_MTX_INIT_PLAIN { SRWLOCK_INIT, 0, 0, CE_MTX_PLAIN }
 #define CE_MTX_INIT_TIMED { SRWLOCK_INIT, 0, 0, CE_MTX_TIMED }
 #define CE_MTX_INIT_RECURSIVE { SRWLOCK_INIT, 0, 0, CE_MTX_RECURSIVE }

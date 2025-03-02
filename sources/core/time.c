@@ -20,28 +20,28 @@
 #include <canvas/core/time.h>
 
 static int s_convert_base(int in) {
-	switch (in) {
-	case CE_TIME_UTC: return TIME_UTC;
-	default: CE_UNREACHABLE();
-	}
+  switch (in) {
+  case CE_TIME_UTC: return TIME_UTC;
+  default: CE_UNREACHABLE();
+  }
 }
 
-CE_API
-ce_err ce_time_get(
-	struct ce_time_t* out,
-	int               base
-) {
-	if (out == NULL) {
-		return CE_EINVAL;
-	}
-	
-	struct timespec now;
-	if (timespec_get(&now, s_convert_base(base)) == 0) {
-		return CE_EUNKNOWN;
-	}
-	
-	out->sec = (unsigned long long int)now.tv_sec;
-	out->nsec = (unsigned long long int)now.tv_nsec;
-	
-	return CE_EOK;
+CE_API ce_err ce_time_get(ce_time_t* out, int base) {
+  if (!ihas_initialized()) {
+    return CE_EPERM;
+  }
+  
+  if (out == NULL) {
+    return CE_EINVAL;
+  }
+  
+  struct timespec now;
+  if (timespec_get(&now, s_convert_base(base)) == 0) {
+    return CE_EUNKNOWN;
+  }
+  
+  out->sec = (unsigned long long)now.tv_sec;
+  out->nsec = (unsigned long long)now.tv_nsec;
+  
+  return CE_EOK;
 }

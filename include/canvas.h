@@ -31,7 +31,7 @@
  * @defgroup types             Types
  * @defgroup utility           Utility
  * @defgroup vector_types      Vector Types
- */	
+ */
 
 #include <canvas/core.h>
 #ifdef CANVAS_GRAPHICS

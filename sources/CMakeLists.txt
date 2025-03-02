@@ -17,18 +17,18 @@
 #########################################################################
 
 function(ICE_ADDDIR path_in)
-	target_include_directories(CanvasEngine PRIVATE ${path_in})
-	add_subdirectory(${path_in})
+  target_include_directories(CanvasEngine PRIVATE ${path_in})
+  add_subdirectory(${path_in})
 endfunction()
 
 ICE_ADDDIR("core")
 ICE_ADDDIR("threads")
 if (CANVAS_GRAPHICS)
-	ICE_ADDDIR("graphics")
+  ICE_ADDDIR("graphics")
 endif ()
 if (CANVAS_AUDIO)
-	ICE_ADDDIR("audio")
+  ICE_ADDDIR("audio")
 endif ()
 if (CANVAS_NETWORK)
-	ICE_ADDDIR("network")
+  ICE_ADDDIR("network")
 endif ()

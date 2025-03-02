@@ -17,27 +17,27 @@
 **************************************************************************/
 
 #ifndef IVK_PROTO_NO_UNDEF
-#	undef vkCreateInstance
-#	ifdef VK_VERSION_1_1
-#		undef vkEnumerateInstanceVersion
-#	endif /* !VK_VERSION_1_1 */
-#	undef vkEnumerateInstanceExtensionProperties
-#	undef vkEnumerateInstanceLayerProperties
+#  undef vkCreateInstance
+#  ifdef VK_VERSION_1_1
+#    undef vkEnumerateInstanceVersion
+#  endif /* !VK_VERSION_1_1 */
+#  undef vkEnumerateInstanceExtensionProperties
+#  undef vkEnumerateInstanceLayerProperties
 #endif /* !IVK_PROTO_NO_UNDEF */
 
 #ifdef IVK_PROTO_MACRO
-#	define vkCreateInstance IVK_PROTO_MACRO(vkCreateInstance)
-#	ifdef VK_VERSION_1_1
-#		define vkEnumerateInstanceVersion IVK_PROTO_MACRO(vkEnumerateInstanceVersion)
-#	endif /* !VK_VERSION_1_1 */
-#	define vkEnumerateInstanceExtensionProperties IVK_PROTO_MACRO(vkEnumerateInstanceExtensionProperties)
-#	define vkEnumerateInstanceLayerProperties IVK_PROTO_MACRO(vkEnumerateInstanceLayerProperties)
-#	define vkCreateInstance IVK_PROTO_MACRO(vkCreateInstance)
+#  define vkCreateInstance IVK_PROTO_MACRO(vkCreateInstance)
+#  ifdef VK_VERSION_1_1
+#    define vkEnumerateInstanceVersion IVK_PROTO_MACRO(vkEnumerateInstanceVersion)
+#  endif /* !VK_VERSION_1_1 */
+#  define vkEnumerateInstanceExtensionProperties IVK_PROTO_MACRO(vkEnumerateInstanceExtensionProperties)
+#  define vkEnumerateInstanceLayerProperties IVK_PROTO_MACRO(vkEnumerateInstanceLayerProperties)
+#  define vkCreateInstance IVK_PROTO_MACRO(vkCreateInstance)
 #elif defined(IVK_PROTO_DECL)
 IVK_PROTO_DECL(vkCreateInstance)
-#	ifdef VK_VERSION_1_1
+#  ifdef VK_VERSION_1_1
 IVK_PROTO_DECL(vkEnumerateInstanceVersion)
-#	endif /* !VK_VERSION_1_1 */
+#  endif /* !VK_VERSION_1_1 */
 IVK_PROTO_DECL(vkEnumerateInstanceExtensionProperties)
 IVK_PROTO_DECL(vkEnumerateInstanceLayerProperties)
 #endif /* !IVK_PROTO_MACRO */

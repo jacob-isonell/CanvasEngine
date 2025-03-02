@@ -25,21 +25,21 @@
 
 ICE_NAMESPACE_BEGIN
 
-struct icore_t {
-	size_t init_count;
-	
-	struct {
-		struct ce_alloc_t alloc;
-		ce_mtx lck;
-	} mem;
-	
-	struct {
-		char name[256];
-		unsigned int version;
-	} app_info, engine_info;
-};
+typedef struct icore_t {
+  size_t init_count;
+  
+  struct {
+    ce_alloc_t alloc;
+    ce_mtx lck;
+  } mem;
+  
+  struct {
+    ce_utf8* name;
+    unsigned int version;
+  } app_info, engine_info;
+} icore_t;
 
-ICE_API extern struct icore_t icore;
+ICE_API extern icore_t icore;
 
 ICE_NAMESPACE_END
 

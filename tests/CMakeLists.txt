@@ -16,14 +16,22 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
-target_sources(CanvasEngine
-PRIVATE
-  "error.c"
-  "init_and_shutdown.c"
-  "library.c"
-  "memory.c"
-  "random.c"
-  "setup.c"
-  "string.c"
-  "time.c"
-)
+macro(ICEAddTest target)
+  add_executable(${target} ${ARGN})
+  target_link_libraries(${target} PRIVATE CanvasEngine)
+  target_compile_features(${target} PRIVATE c_std_11)
+  set_target_properties(${target}
+  PROPERTIES
+    FOLDER "CanvasEngine"
+  )
+  add_test(
+    NAME ${target}
+    COMMAND "$<TARGET_FILE:${target}>"
+  )
+endmacro()
+
+ICEAddTest(CanvasTest_Error error.c)
+ICEAddTest(CanvasTest_BasicInit basic_init.c)
+ICEAddTest(CanvasTest_AdvanceInit advance_init.c)
+ICEAddTest(CanvasTest_Array array.c)
+ICEAddTest(CanvasTest_Memory memory.c)

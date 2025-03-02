@@ -29,24 +29,24 @@
  * @brief add documentation here!
  */
 enum ce_memord {
-	
-	/** add documentation here! */
-	CE_MEMORD_RELAXED = ICE_MEMORD_RELAXED,
-	
-	/** add documentation here! */
-	CE_MEMORD_CONSUME = ICE_MEMORD_CONSUME,
-	
-	/** add documentation here! */
-	CE_MEMORD_ACQUIRE = ICE_MEMORD_ACQUIRE,
-	
-	/** add documentation here! */
-	CE_MEMORD_RELEASE = ICE_MEMORD_RELEASE,
-	
-	/** add documentation here! */
-	CE_MEMORD_ACQ_REL = ICE_MEMORD_ACQ_REL,
-	
-	/** add documentation here! */
-	CE_MEMORD_SEQ_CST = ICE_MEMORD_SEQ_CST,
+  
+  /** add documentation here! */
+  CE_MEMORD_RELAXED = ICE_MEMORD_RELAXED,
+  
+  /** add documentation here! */
+  CE_MEMORD_CONSUME = ICE_MEMORD_CONSUME,
+  
+  /** add documentation here! */
+  CE_MEMORD_ACQUIRE = ICE_MEMORD_ACQUIRE,
+  
+  /** add documentation here! */
+  CE_MEMORD_RELEASE = ICE_MEMORD_RELEASE,
+  
+  /** add documentation here! */
+  CE_MEMORD_ACQ_REL = ICE_MEMORD_ACQ_REL,
+  
+  /** add documentation here! */
+  CE_MEMORD_SEQ_CST = ICE_MEMORD_SEQ_CST,
 };
 
 /**

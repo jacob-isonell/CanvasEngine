@@ -21,11 +21,11 @@
 #include <canvas/core/library.h>
 
 #ifndef VK_API_VERSION_1_0
-#	error VK_API_VERSION_1_0 is not defined. Check your install of the VulkanSDK
+#  error VK_API_VERSION_1_0 is not defined. Check your install of the VulkanSDK
 #endif
 
 ICE_API PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr = NULL;
-static struct ce_lib* ivulkan_lib = NULL;
+static ce_lib* ivulkan_lib = NULL;
 
 #undef IVK_PROTO_MACRO
 #undef IVK_PROTO_DECL
@@ -33,20 +33,20 @@ static struct ce_lib* ivulkan_lib = NULL;
 #include "ivk_proto/all.inl"
 
 #define IVK_PROTO_DECL(name) \
-	static ce_err iload_##name(VkInstance inst) { \
-		union { \
-			PFN_vkVoidFunction in; \
-			PFN_##name out; \
-		} cast; \
-		cast.in = vkGetInstanceProcAddr(inst, #name); \
-		if (cast.in == NULL) { \
-			IDEBERROR("Failed to load \"" #name "\"\n"); \
-			return CE_ENODATA; \
-		} \
-		IDEBLOG("Loaded \"" #name "\"\n"); \
-		ice_##name = cast.out; \
-		return CE_EOK; \
-	}
+  static ce_err iload_##name(VkInstance inst) { \
+    union { \
+      PFN_vkVoidFunction in; \
+      PFN_##name out; \
+    } cast; \
+    cast.in = vkGetInstanceProcAddr(inst, #name); \
+    if (cast.in == NULL) { \
+      IDEBERROR("Failed to load \"" #name "\"\n"); \
+      return CE_ENODATA; \
+    } \
+    IDEBLOG("Loaded \"" #name "\"\n"); \
+    ice_##name = cast.out; \
+    return CE_EOK; \
+  }
 
 #include "ivk_proto/all.inl"
 
@@ -78,38 +78,38 @@ static ce_err iload_1_4(VkInstance inst);
 #endif /* !VK_API_VERSION_1_4 */
 
 ICE_API ce_err ivk_load_global(void) {
-	IERRBEGIN {
-		union {
-			PFN_vkVoidFunction in;
-			PFN_vkGetInstanceProcAddr out;
-		} cast;
-		
-		IERRDO(ce_lib_open(&ivulkan_lib, IVK_DLL_FILE, CE_LIB_FLAG_NONE));
-		
-		IERRDO(ce_lib_load(ivulkan_lib, "vkGetInstanceProcAddr", &cast.in));
-		vkGetInstanceProcAddr = cast.out;
-		
-		return iload_global();
-	} IERREND { }
-	return IERRVAL;
+  IERRBEGIN {
+    union {
+      PFN_vkVoidFunction in;
+      PFN_vkGetInstanceProcAddr out;
+    } cast;
+    
+    IERRDO(ce_lib_open(&ivulkan_lib, IVK_DLL_FILE, CE_LIB_FLAG_NONE));
+    
+    IERRDO(ce_lib_load(ivulkan_lib, "vkGetInstanceProcAddr", &cast.in));
+    vkGetInstanceProcAddr = cast.out;
+    
+    return iload_global();
+  } IERREND { }
+  return IERRVAL;
 }
 
 ICE_API ce_err ivk_load(VkInstance inst) {
-	IERRBEGIN {
-		ICE_ASSERT(vkGetInstanceProcAddr != NULL);
-		
-		IDEBLOG("Loading vulkan 1.0 commands\n"); IERRDO(iload_1_0(inst));
-		IDEBLOG("Loading vulkan 1.1 commands\n"); IERRDO(iload_1_1(inst));
-		IDEBLOG("Loading vulkan 1.2 commands\n"); IERRDO(iload_1_2(inst));
-		IDEBLOG("Loading vulkan 1.3 commands\n"); IERRDO(iload_1_3(inst));
-		IDEBLOG("Loading vulkan 1.4 commands\n"); IERRDO(iload_1_4(inst));
-	} IERREND { }
-	return IERRVAL;
+  IERRBEGIN {
+    ICE_ASSERT(vkGetInstanceProcAddr != NULL);
+    
+    IDEBLOG("Loading vulkan 1.0 commands\n"); IERRDO(iload_1_0(inst));
+    IDEBLOG("Loading vulkan 1.1 commands\n"); IERRDO(iload_1_1(inst));
+    IDEBLOG("Loading vulkan 1.2 commands\n"); IERRDO(iload_1_2(inst));
+    IDEBLOG("Loading vulkan 1.3 commands\n"); IERRDO(iload_1_3(inst));
+    IDEBLOG("Loading vulkan 1.4 commands\n"); IERRDO(iload_1_4(inst));
+  } IERREND { }
+  return IERRVAL;
 }
 
 ICE_API void ivk_unload(void) {
-	ce_lib_close(ivulkan_lib);
-	ivulkan_lib = NULL;
+  ce_lib_close(ivulkan_lib);
+  ivulkan_lib = NULL;
 }
 
 #define LOAD(name) IERRDO(iload_##name(VK_NULL_HANDLE))
@@ -117,19 +117,19 @@ ICE_API void ivk_unload(void) {
 #define IVK_PROTO_DECL(name) LOAD(name);
 
 static ce_err iload_global(void) {
-	IERRBEGIN {
+  IERRBEGIN {
 #include "ivk_proto/global.inl"
-	} IERREND { }
-	return IERRVAL;
+  } IERREND { }
+  return IERRVAL;
 }
 
 #undef LOAD
 #define LOAD(name) IERRDO(iload_##name(inst))
 static ce_err iload_1_0(VkInstance inst) {
-	IERRBEGIN {
+  IERRBEGIN {
 #include "ivk_proto/1.0.inl"
-	} IERREND { }
-	return IERRVAL;
+  } IERREND { }
+  return IERRVAL;
 }
 
 /* Temporary */
@@ -139,36 +139,36 @@ ICE_WARN_DISABLE_GNU("-Wunused-parameter")
 
 #ifdef VK_API_VERSION_1_1
 static ce_err iload_1_1(VkInstance inst) {
-	IERRBEGIN {
+  IERRBEGIN {
 #include "ivk_proto/1.1.inl"
-	} IERREND { }
-	return IERRVAL;
+  } IERREND { }
+  return IERRVAL;
 }
 #endif /* !VK_API_VERSION_1_1 */
 
 #ifdef VK_API_VERSION_1_2
 static ce_err iload_1_2(VkInstance inst) {
-	IERRBEGIN {
+  IERRBEGIN {
 #include "ivk_proto/1.2.inl"
-	} IERREND { }
-	return IERRVAL;
+  } IERREND { }
+  return IERRVAL;
 }
 #endif /* !VK_API_VERSION_1_2 */
 
 #ifdef VK_API_VERSION_1_3
 static ce_err iload_1_3(VkInstance inst) {
-	IERRBEGIN {
+  IERRBEGIN {
 #include "ivk_proto/1.3.inl"
-	} IERREND { }
-	return IERRVAL;
+  } IERREND { }
+  return IERRVAL;
 }
 #endif /* !VK_API_VERSION_1_3 */
 
 #ifdef VK_API_VERSION_1_4
 static ce_err iload_1_4(VkInstance inst) {
-	IERRBEGIN {
+  IERRBEGIN {
 #include "ivk_proto/1.4.inl"
-	} IERREND { }
-	return IERRVAL;
+  } IERREND { }
+  return IERRVAL;
 }
 #endif /* !VK_API_VERSION_1_4 */

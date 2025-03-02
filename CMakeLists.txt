@@ -19,16 +19,17 @@
 cmake_minimum_required(VERSION 3.20.0)
 
 if (WIN32)
-	set(ICE_CMAKE_LANGUAGES C CXX RC)
+  set(ICE_CMAKE_LANGUAGES C CXX RC)
 else ()
-	set(ICE_CMAKE_LANGUAGES C CXX)
+  set(ICE_CMAKE_LANGUAGES C CXX)
 endif ()
 
 project(CanvasEngine
-	VERSION 0.1.0.0
-	LANGUAGES ${ICE_CMAKE_LANGUAGES}
+  VERSION 0.1.0.0
+  LANGUAGES ${ICE_CMAKE_LANGUAGES}
 )
 
+include(CTest)
 include(FindPackageHandleStandardArgs)
 include(CMakeDependentOption)
 include("cmake/configs.cmake")
@@ -38,9 +39,13 @@ add_subdirectory("cmake/dependencies")
 include("cmake/doxygen.cmake")
 add_subdirectory("sources")
 
+if (BUILD_TESTING)
+  add_subdirectory("tests")
+endif ()
+
 string(TIMESTAMP CANVAS_BUILD_DATE "%Y%m")
 # file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/include" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 configure_file(
-	"${CMAKE_CURRENT_SOURCE_DIR}/canvas_cmake_options.h.in"
-	"${CMAKE_CURRENT_BINARY_DIR}/include/canvas_cmake_options.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/canvas_cmake_options.h.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/include/canvas_cmake_options.h"
 )

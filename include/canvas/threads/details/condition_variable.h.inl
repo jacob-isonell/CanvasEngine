@@ -27,10 +27,10 @@ ICE_NAMESPACE_BEGIN
 #define ice_cnd pthread_cond_t
 #define CE_COND_INIT PTHREAD_COND_INITIALIZER
 #elif defined(ICE_THREADS_WIN32)
-struct ice_cnd_impl {
-	CONDITION_VARIABLE var;
-};
-#define ice_cnd struct ice_cnd_impl
+typedef struct ice_cnd_impl {
+  CONDITION_VARIABLE var;
+} ice_cnd_impl;
+#define ice_cnd ice_cnd_impl
 #define CE_COND_INIT {CONDITION_VARIABLE_INIT}
 #endif
 

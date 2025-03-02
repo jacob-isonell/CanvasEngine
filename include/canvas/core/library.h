@@ -27,50 +27,38 @@ ICE_NAMESPACE_BEGIN
  * @ingroup types
  * @brief add documentation here!
  */
-struct ce_lib;
+typedef struct ce_lib ce_lib;
 
 /**
  * @ingroup types
  * @brief add documentation here!
  */
-enum ce_lib_flags {
-	CE_LIB_FLAG_NONE = 0, /* add documentation here! */
-};
+typedef enum ce_lib_flags {
+  CE_LIB_FLAG_NONE = 0, /* add documentation here! */
+} ce_lib_flags;
 
 /**
  * @brief add documentation here!
  */
-CE_API
-ce_err ce_lib_open(
-	struct ce_lib**   handle,
-	const char*       filepath,
-	enum ce_lib_flags flags
+CE_API ce_err ce_lib_open(
+  ce_lib**       CE_RESTRICT handle,
+  const ce_utf8* CE_RESTRICT filepath,
+  ce_lib_flags               flags
 );
 
 /**
  * @brief add documentation here!
  */
-CE_API
-ce_err ce_lib_wopen(
-	struct ce_lib**   handle,
-	const wchar_t*    filepath,
-	enum ce_lib_flags flags
+CE_API ce_err ce_lib_load(
+  ce_lib*        CE_RESTRICT handle,
+  const ce_utf8* CE_RESTRICT name,
+  void*          CE_RESTRICT out
 );
 
 /**
  * @brief add documentation here!
  */
-CE_API
-ce_err ce_lib_load(
-	struct ce_lib* handle,
-	const char*    name,
-	void*          out
-);
-
-/**
- * @brief add documentation here!
- */
-CE_API void ce_lib_close(struct ce_lib* handle);
+CE_API void ce_lib_close(ce_lib* handle);
 
 ICE_NAMESPACE_END
 

@@ -31,22 +31,22 @@ ICE_NAMESPACE_BEGIN
 
 #ifdef CANVAS_DEBUG
 ICE_API void ivk_impl_check_pfn_value(
-	cebool       is_empty,
-	const char*  name,
-	const char*  func,
-	const char*  file,
-	unsigned int line
+  cebool       is_empty,
+  const char*  name,
+  const char*  func,
+  const char*  file,
+  unsigned int line
 );
 #else
 #define ivk_impl_check_pfn_value(...) ((void)(__VA_ARGS__))
 #endif /* !CANVAS_DEBUG */
 
 #define IVK_PROTO_DECL(name) \
-	ICE_API extern PFN_##name ice_##name; \
-	CE_INLINE PFN_##name ice_get_##name(const char* func, const char* file, unsigned int line) { \
-		ivk_impl_check_pfn_value(ice_##name == NULL, #name, func, file, line); \
-		return ice_##name; \
-	}
+  ICE_API extern PFN_##name ice_##name; \
+  CE_INLINE PFN_##name ice_get_##name(const char* func, const char* file, unsigned int line) { \
+    ivk_impl_check_pfn_value(ice_##name == NULL, #name, func, file, line); \
+    return ice_##name; \
+  }
 
 #include "ivk_proto/all.inl"
 #define IVK_PROTO_MACRO(name) ice_get_##name(__func__, __FILE__, __LINE__)

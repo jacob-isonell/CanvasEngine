@@ -17,22 +17,22 @@
 #########################################################################
 
 macro(ICEFindX11)
-	if (UNIX)
-		find_package(X11 COMPONENTS Xrandr xcb xcb_randr)
-	endif ()
+  if (UNIX)
+    find_package(X11 COMPONENTS Xrandr xcb xcb_randr)
+  endif ()
 endmacro()
 
 macro(ICELinkX11 out_target linking_kind)
-	if (UNIX)
-		ICEFindX11()
-	endif ()
-	cmake_dependent_option(CANVAS_GRAPHICS_ENABLE_X11 "Enable support for X11" ON "CANVAS_GRAPHICS;X11_FOUND" OFF)
-	if (CANVAS_GRAPHICS_ENABLE_X11)
-		target_link_libraries(${out_target} ${linking_kind}
-			X11::X11
-			X11::Xrandr
-			X11::xcb
-			X11::xcb_randr
-		)
-	endif ()
+  if (UNIX)
+    ICEFindX11()
+  endif ()
+  cmake_dependent_option(CANVAS_ENABLE_X11 "Enable support for X11" ON "CANVAS_GRAPHICS;X11_FOUND" OFF)
+  if (CANVAS_ENABLE_X11)
+    target_link_libraries(${out_target} ${linking_kind}
+      X11::X11
+      X11::Xrandr
+      X11::xcb
+      X11::xcb_randr
+    )
+  endif ()
 endmacro()

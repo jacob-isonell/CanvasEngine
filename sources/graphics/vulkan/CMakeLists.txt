@@ -18,7 +18,7 @@
 
 target_sources(CanvasEngine
 PRIVATE
-	"setup.c"
-	"ivk_load.c"
-	"ivk_proto.c"
+  "setup.c"
+  "ivk_load.c"
+  "ivk_proto.c"
 )

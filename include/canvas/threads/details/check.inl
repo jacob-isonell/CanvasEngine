@@ -32,39 +32,39 @@
 #undef ICE_NO_ATOMICS
 
 #if CANVAS_PLATFORM_UNIX && ICE_HAS_INCLUDE(<pthread.h>)
-#	define ICE_THREADS_POSIX
-#	include <unistd.h>
-#	include <pthread.h>
+#  define ICE_THREADS_POSIX
+#  include <unistd.h>
+#  include <pthread.h>
 #elif CANVAS_PLATFORM_WINDOWS
-#	define ICE_THREADS_WIN32
-#	if !defined(WIN32_LEAN_AND_MEAN)
-#		define WIN32_LEAN_AND_MEAN
-#		define ICE_UNDEF_WIN32_LAM
-#	endif
-#	include <windows.h>
-#	include <synchapi.h>
-#	include <process.h>
-#	if defined(ICE_UNDEF_WIN32_LAM)
-#		undef WIN32_LEAN_AND_MEAN
-#	endif
+#  define ICE_THREADS_WIN32
+#  if !defined(WIN32_LEAN_AND_MEAN)
+#    define WIN32_LEAN_AND_MEAN
+#    define ICE_UNDEF_WIN32_LAM
+#  endif
+#  include <windows.h>
+#  include <synchapi.h>
+#  include <process.h>
+#  if defined(ICE_UNDEF_WIN32_LAM)
+#    undef WIN32_LEAN_AND_MEAN
+#  endif
 #else
-#	define ICE_THREADS_NONE
+#  define ICE_THREADS_NONE
 #endif
 
 #if CE_CXX11_STD
-#	define ICE_ATOMICS_CXX11
+#  define ICE_ATOMICS_CXX11
 #elif CE_C11_STD && !defined(__STDC_NO_ATOMICS__)
-#	define ICE_ATOMICS_C11
+#  define ICE_ATOMICS_C11
 #elif CANVAS_COMPILER_CLANG && CE_C11_STD
-#	define ICE_ATOMICS_CLANG
+#  define ICE_ATOMICS_CLANG
 #elif CANVAS_COMPILER_GNU && CE_C11_STD
-#	define ICE_ATOMICS_GNU
+#  define ICE_ATOMICS_GNU
 #elif CANVAS_PLATFORM_WINDOWS
-#	define ICE_ATOMICS_WIN32
+#  define ICE_ATOMICS_WIN32
 #elif !defined(CANVAS_NO_MUTEX_ATOMICS) && defined(UINTPTR_T) && UINTPTR_MAX <= UINTMAX_MAX
-#	define ICE_ATOMICS_MTXIMPL
+#  define ICE_ATOMICS_MTXIMPL
 #else
-#	define ICE_NO_ATOMICS
+#  define ICE_NO_ATOMICS
 #endif
 
 #if !defined(ICE_THREADS_NONE) || defined(ICE_DOXY)

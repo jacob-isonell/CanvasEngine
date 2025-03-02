@@ -16,17 +16,33 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_CORE_H
-#define CANVAS_CORE_H
+#ifndef CANVAS_CORE_SIGNAL_H
+#define CANVAS_CORE_SIGNAL_H
 
-#include <canvas/core/base.h>
-#include <canvas/core/error.h>
-#include <canvas/core/library.h>
 #include <canvas/core/memory.h>
-#include <canvas/core/setup.h>
-#include <canvas/core/signal.h>
-#include <canvas/core/string.h>
-#include <canvas/core/time.h>
-#include <canvas/core/uuid.h>
 
-#endif /* !CANVAS_CORE_H */
+ICE_NAMESPACE_BEGIN
+
+typedef int ce_sigtype;
+typedef int ce_sigstatus;
+
+#define CE_SIGOK 0
+#define CE_SIGERROR 1
+
+#define CE_SIGTERM 0
+typedef struct ce_sig_term_t {
+  int unused;
+} ce_sig_term_t;
+
+typedef struct ce_sigarg {
+  ce_sigtype type;
+  union {
+    ce_sig_term_t term;
+  } data;
+} ce_sigarg;
+
+
+
+ICE_NAMESPACE_END
+
+#endif /* !CANVAS_CORE_SIGNAL_H */

@@ -26,23 +26,23 @@
 #ifdef CANVAS_DEBUG
 
 ICE_API void ivk_impl_check_pfn_value(
-	cebool       is_empty,
-	const char*  name,
-	const char*  func,
-	const char*  file,
-	unsigned int line
+  cebool       is_empty,
+  const char*  name,
+  const char*  func,
+  const char*  file,
+  unsigned int line
 ) {
-	if (!is_empty) {
-		return;
-	}
-	
-	fprintf(stderr, "Vulkan function pointer \"%s\" was null at %s %s:%u\n", name, func, file, line);
-	abort();
+  if (!is_empty) {
+    return;
+  }
+  
+  fprintf(stderr, "Vulkan function pointer \"%s\" was null at %s %s:%u\n", name, func, file, line);
+  abort();
 }
 
 #endif /* !CANVAS_DEBUG */
 
 #define IVK_PROTO_DECL(name) \
-	ICE_API PFN_##name ice_##name = NULL;
+  ICE_API PFN_##name ice_##name = NULL;
 
 #include "ivk_proto/all.inl"
