@@ -148,70 +148,70 @@
 #define CE_PRAGMA(x)  CE_PRAGMAX(x)
 
 #if CANVAS_COMPILER_GNU
-#  define ICE_WARN_PUSH_GNU       CE_PRAGMA(GCC diagnostic push)
-#  define ICE_WARN_POP_GNU        CE_PRAGMA(GCC diagnostic pop)
-#  define ICE_WARN_DISABLE_GNU(x) CE_PRAGMA(GCC diagnostic ignored x)
-#  define ICE_WARN_RESTORE_GNU(x) CE_PRAGMA(GCC diagnostic warning x)
-#  define ICE_WARN_ERROR_GNU(x)   CE_PRAGMA(GCC diagnostic error x)
+#  define CE_WARN_PUSH_GNU       CE_PRAGMA(GCC diagnostic push)
+#  define CE_WARN_POP_GNU        CE_PRAGMA(GCC diagnostic pop)
+#  define CE_WARN_DISABLE_GNU(x) CE_PRAGMA(GCC diagnostic ignored x)
+#  define CE_WARN_RESTORE_GNU(x) CE_PRAGMA(GCC diagnostic warning x)
+#  define CE_WARN_ERROR_GNU(x)   CE_PRAGMA(GCC diagnostic error x)
 #else
-#  define ICE_WARN_PUSH_GNU
-#  define ICE_WARN_POP_GNU
-#  define ICE_WARN_DISABLE_GNU(x)
-#  define ICE_WARN_RESTORE_GNU(x)
-#  define ICE_WARN_ERROR_GNU(x)
+#  define CE_WARN_PUSH_GNU
+#  define CE_WARN_POP_GNU
+#  define CE_WARN_DISABLE_GNU(x)
+#  define CE_WARN_RESTORE_GNU(x)
+#  define CE_WARN_ERROR_GNU(x)
 #endif
 
 #if CANVAS_COMPILER_GCC
-#  define ICE_WARN_PUSH_GCC       ICE_WARN_PUSH_GNU
-#  define ICE_WARN_POP_GCC        ICE_WARN_POP_GNU
-#  define ICE_WARN_DISABLE_GCC(x) ICE_WARN_DISABLE_GNU(x)
-#  define ICE_WARN_RESTORE_GCC(x) ICE_WARN_RESTORE_GNU(x)
-#  define ICE_WARN_ERROR_GCC(x)   ICE_WARN_ERROR_GNU(x)
+#  define CE_WARN_PUSH_GCC       CE_WARN_PUSH_GNU
+#  define CE_WARN_POP_GCC        CE_WARN_POP_GNU
+#  define CE_WARN_DISABLE_GCC(x) CE_WARN_DISABLE_GNU(x)
+#  define CE_WARN_RESTORE_GCC(x) CE_WARN_RESTORE_GNU(x)
+#  define CE_WARN_ERROR_GCC(x)   CE_WARN_ERROR_GNU(x)
 #else
-#  define ICE_WARN_PUSH_GCC
-#  define ICE_WARN_POP_GCC
-#  define ICE_WARN_DISABLE_GCC(x)
-#  define ICE_WARN_RESTORE_GCC(x)
-#  define ICE_WARN_ERROR_GCC(x)
+#  define CE_WARN_PUSH_GCC
+#  define CE_WARN_POP_GCC
+#  define CE_WARN_DISABLE_GCC(x)
+#  define CE_WARN_RESTORE_GCC(x)
+#  define CE_WARN_ERROR_GCC(x)
 #endif
 
 #if CANVAS_COMPILER_CLANG
-#  define ICE_WARN_PUSH_CLANG       ICE_WARN_PUSH_GNU
-#  define ICE_WARN_POP_CLANG        ICE_WARN_POP_GNU
-#  define ICE_WARN_DISABLE_CLANG(x) ICE_WARN_DISABLE_GNU(x)
-#  define ICE_WARN_RESTORE_CLANG(x) ICE_WARN_RESTORE_GNU(x)
-#  define ICE_WARN_ERROR_CLANG(x)   ICE_WARN_ERROR_GNU(x)
+#  define CE_WARN_PUSH_CLANG       CE_WARN_PUSH_GNU
+#  define CE_WARN_POP_CLANG        CE_WARN_POP_GNU
+#  define CE_WARN_DISABLE_CLANG(x) CE_WARN_DISABLE_GNU(x)
+#  define CE_WARN_RESTORE_CLANG(x) CE_WARN_RESTORE_GNU(x)
+#  define CE_WARN_ERROR_CLANG(x)   CE_WARN_ERROR_GNU(x)
 #else
-#  define ICE_WARN_PUSH_CLANG
-#  define ICE_WARN_POP_CLANG
-#  define ICE_WARN_DISABLE_CLANG(x)
-#  define ICE_WARN_RESTORE_CLANG(x)
-#  define ICE_WARN_ERROR_CLANG(x)
+#  define CE_WARN_PUSH_CLANG
+#  define CE_WARN_POP_CLANG
+#  define CE_WARN_DISABLE_CLANG(x)
+#  define CE_WARN_RESTORE_CLANG(x)
+#  define CE_WARN_ERROR_CLANG(x)
 #endif
 
 #if CANVAS_COMPILER_MSVC
-#  define ICE_WARN_PUSH_MSVC       CE_PRAGMA(warning(push))
-#  define ICE_WARN_POP_MSVC        CE_PRAGMA(warning(pop))
-#  define ICE_WARN_DISABLE_MSVC(x) CE_PRAGMA(warning(disable : x))
-#  define ICE_WARN_RESTORE_MSVC(x) CE_PRAGMA(warning(default : x))
-#  define ICE_WARN_ERROR_MSVC(x)   CE_PRAGMA(warning(error : x))
+#  define CE_WARN_PUSH_MSVC       CE_PRAGMA(warning(push))
+#  define CE_WARN_POP_MSVC        CE_PRAGMA(warning(pop))
+#  define CE_WARN_DISABLE_MSVC(x) CE_PRAGMA(warning(disable : x))
+#  define CE_WARN_RESTORE_MSVC(x) CE_PRAGMA(warning(default : x))
+#  define CE_WARN_ERROR_MSVC(x)   CE_PRAGMA(warning(error : x))
 #else
-#  define ICE_WARN_PUSH_MSVC
-#  define ICE_WARN_POP_MSVC
-#  define ICE_WARN_DISABLE_MSVC(x)
-#  define ICE_WARN_RESTORE_MSVC(x)
-#  define ICE_WARN_ERROR_MSVC(x)
+#  define CE_WARN_PUSH_MSVC
+#  define CE_WARN_POP_MSVC
+#  define CE_WARN_DISABLE_MSVC(x)
+#  define CE_WARN_RESTORE_MSVC(x)
+#  define CE_WARN_ERROR_MSVC(x)
 #endif
 
 #if CANVAS_COMPILER_GNU
-#  define ICE_WARN_PUSH ICE_WARN_PUSH_GNU
-#  define ICE_WARN_POP  ICE_WARN_POP_GNU
+#  define CE_WARN_PUSH CE_WARN_PUSH_GNU
+#  define CE_WARN_POP  CE_WARN_POP_GNU
 #elif CANVAS_COMPILER_MSVC
-#  define ICE_WARN_PUSH ICE_WARN_PUSH_MSVC
-#  define ICE_WARN_POP  ICE_WARN_POP_MSVC
+#  define CE_WARN_PUSH CE_WARN_PUSH_MSVC
+#  define CE_WARN_POP  CE_WARN_POP_MSVC
 #else
-#  define ICE_WARN_PUSH
-#  define ICE_WARN_POP
+#  define CE_WARN_PUSH
+#  define CE_WARN_POP
 #endif
 
 #if defined(__cplusplus)
@@ -278,27 +278,45 @@
 #define CE_CXX23_STD ICE_CXX_CHECK_STANDARD(202302L)
 
 #if CE_CXX
-#define icebool bool
-#  define CE_RESTRICT __restrict
-#  define CE_INLINE inline
+# define icebool bool
+# define icetrue true
+# define icefalse false
+# define CE_RESTRICT __restrict
+# define CE_INLINE inline
 #elif CE_C99_STD
-#define icebool _Bool
-#  define CE_RESTRICT restrict
-#  define CE_INLINE static inline
+# if CE_C23_STD || (defined(__bool_true_false_are_defined) && __bool_true_false_are_defined)
+#   define icebool bool
+#   define icetrue true
+#   define icefalse false
+# else
+#   define icebool _Bool
+#   define icetrue ((cebool)1)
+#   define icefalse ((cebool)0)
+# endif
+# define CE_RESTRICT restrict
+# define CE_INLINE static inline
 #else
-#define icebool unsigned char
-#  define CE_RESTRICT
-#  if CANVAS_COMPILER_GNU
-#    define CE_INLINE static __inline
-#  else
-#    define CE_INLINE static
-#  endif
+# define icebool unsigned char
+# define icetrue ((cebool)1)
+# define icefalse ((cebool)0)
+# define CE_RESTRICT
+# if CANVAS_COMPILER_GNU
+#   define CE_INLINE static __inline
+# else
+#   define CE_INLINE static
+# endif
 #endif
 
 #if CANVAS_COMPILER_GNU && defined(__has_attribute)
 #  define ICE_HAS_GNU_ATTRIB(x) __has_attribute(x)
 #else
 #  define ICE_HAS_GNU_ATTRIB(x) 0
+#endif
+
+#if CANVAS_COMPILER_GNU && defined(__has_builtin)
+#  define ICE_HAS_GNU_BUILTIN(x) __has_builtin(x)
+#else
+#  define ICE_HAS_GNU_BUILTIN(x) 0
 #endif
 
 #if defined(__has_include)
@@ -328,7 +346,7 @@
 #else
 #define CE_UNREACHABLE() (abort())
 #endif
-#elif ICANVAS_HAS_GNU_BUILTIN(__builtin_unreachable)
+#elif ICE_HAS_GNU_BUILTIN(__builtin_unreachable)
 #define CE_UNREACHABLE() __builtin_unreachable()
 #elif CANVAS_COMPILER_MSVC
 #define CE_UNREACHABLE() __assume(0)
@@ -417,10 +435,10 @@
 
 #define ICE_NAMESPACE_BEGIN \
   CE_EXTERNC_BEGIN \
-  ICE_WARN_PUSH \
-  ICE_WARN_DISABLE_GNU("-Wunused-function") \
-  ICE_WARN_DISABLE_MSVC(4820)
+  CE_WARN_PUSH \
+  CE_WARN_DISABLE_GNU("-Wunused-function") \
+  CE_WARN_DISABLE_MSVC(4820)
 
 #define ICE_NAMESPACE_END \
-  ICE_WARN_POP \
+  CE_WARN_POP \
   CE_EXTERNC_END

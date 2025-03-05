@@ -27,7 +27,7 @@ CE_API ce_err cnd_init(ce_cnd* cond) {
   }
   
 #if defined(ICE_THREADS_POSIX)
-  return ierrno(pthread_cond_init(cond, NULL));
+  return ifrom_errno(pthread_cond_init(cond, NULL));
 #elif defined(ICE_THREADS_WIN32)
   ICE_NOIMPL();
 #endif
@@ -39,7 +39,7 @@ CE_API ce_err cnd_signal(ce_cnd* cond) {
   }
   
 #if defined(ICE_THREADS_POSIX)
-  return ierrno(pthread_cond_signal(cond));
+  return ifrom_errno(pthread_cond_signal(cond));
 #elif defined(ICE_THREADS_WIN32)
   ICE_NOIMPL();
 #endif
@@ -51,7 +51,7 @@ CE_API ce_err cnd_broadcast(ce_cnd* cond) {
   }
   
 #if defined(ICE_THREADS_POSIX)
-  return ierrno(pthread_cond_broadcast(cond));
+  return ifrom_errno(pthread_cond_broadcast(cond));
 #elif defined(ICE_THREADS_WIN32)
   ICE_NOIMPL();
 #endif
@@ -63,7 +63,7 @@ CE_API ce_err cnd_wait(ce_cnd* cond, ce_mtx* mtx) {
   }
   
 #if defined(ICE_THREADS_POSIX)
-  return ierrno(pthread_cond_wait(cond, mtx));
+  return ifrom_errno(pthread_cond_wait(cond, mtx));
 #elif defined(ICE_THREADS_WIN32)
   ICE_NOIMPL();
 #endif
@@ -78,7 +78,7 @@ CE_API ce_err cnd_timedwait(ce_cnd* CE_RESTRICT cond, ce_mtx* CE_RESTRICT mtx, c
   struct timespec t;
   t.tv_sec = (time_t)time_point->sec;
   t.tv_nsec = (long)time_point->nsec;
-  return ierrno(pthread_cond_timedwait(cond, mtx, &t));
+  return ifrom_errno(pthread_cond_timedwait(cond, mtx, &t));
 #elif defined(ICE_THREADS_WIN32)
   ICE_NOIMPL();
 #endif

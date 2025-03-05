@@ -23,12 +23,12 @@
  * @ingroup threading_objects
  * @brief add documentation here!
  */
-enum ce_mtx_kind {
+typedef enum ce_mtx_kind {
   CE_MTX_PLAIN           = 0, /* add documentation here! */
   CE_MTX_TIMED           = 1, /* add documentation here! */
   CE_MTX_RECURSIVE       = 2, /* add documentation here! */
   CE_MTX_TIMED_RECURSIVE = 3, /* add documentation here! */
-};
+} ce_mtx_kind;
 
 /**
  * @ingroup threading_objects
@@ -74,7 +74,7 @@ ICE_NAMESPACE_BEGIN
  * @ingroup threading_objects
  * @brief add documentation here!
  */
-CE_API ce_err ce_mtx_init(ce_mtx* mtx, enum ce_mtx_kind type);
+CE_API ce_err ce_mtx_init(ce_mtx* mtx, ce_mtx_kind type);
 
 /**
  * @ingroup threading_objects

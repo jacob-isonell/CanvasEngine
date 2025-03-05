@@ -27,12 +27,6 @@ ICE_NAMESPACE_BEGIN
 
 /**
  * @ingroup time
- * @brief add documentation here!
- */
-#define CE_TIME_UTC 1
-
-/**
- * @ingroup time
  * @brief Describes a span of time or the time span since the unix epoch time (january 1st 1970 00:00:00).
  */
 typedef struct ce_time_t {
@@ -44,11 +38,23 @@ typedef struct ce_time_t {
   unsigned long long nsec;
 } ce_time_t;
 
+typedef enum ce_clock {
+  CE_CLOCK_UTC,     /* System UTC. */
+  CE_CLOCK_MONOTIC, /* Absolute time (usually the time since boot, may not be aware of the tiem the system is suspended). */
+  CE_CLOCK_PERF,    /* Fastest clock available. Otherwise same as `CE_CLOCK_MONOTIC`. */
+} ce_clock;
+
+/**
+ * @ingroup time
+ * @brief Gets the clock resolution.
+ */
+CE_API ce_err ce_time_res(ce_clock clock, ce_time_t* out);
+
 /**
  * @ingroup time
  * @brief Gets the current time.
  */
-CE_API ce_err ce_time_get(ce_time_t* out, int base);
+CE_API ce_err ce_time_get(ce_clock clock, ce_time_t* out);
 
 /**
  * @ingroup time

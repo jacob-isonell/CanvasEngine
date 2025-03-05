@@ -16,14 +16,42 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
+ICE_ADDHEADERS(
+  "canvas/core.h"
+  
+  "canvas/core/base.h"
+  "canvas/core/error.h"
+  "canvas/core/library.h"
+  "canvas/core/memory.h"
+  "canvas/core/random.h"
+  "canvas/core/setup.h"
+  "canvas/core/signal.h"
+  "canvas/core/string.h"
+  "canvas/core/time.h"
+  "canvas/core/uuid.h"
+  
+  "canvas/core/details/base_def.inl"
+  "canvas/core/details/base_macros.inl"
+  "canvas/core/details/memory.h.inl"
+  "canvas/core/details/time.h.inl"
+)
+
 target_sources(CanvasEngine
 PRIVATE
-  "error.c"
+  "setup.c"
   "init_and_shutdown.c"
+  "icore_base.h"
+  "icore_global.h"
+  "icore_unix.h"
+    "icore_unix.c"
+  "icore_win32.h"
+    "icore_win32.c"
+  
+PRIVATE
+  "error.c"
   "library.c"
   "memory.c"
   "random.c"
-  "setup.c"
   "string.c"
   "time.c"
 )

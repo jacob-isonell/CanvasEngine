@@ -32,6 +32,12 @@ typedef struct iitem_pairs {
 
 static const iitem_pairs s_items[] = {
   { &icore_init, &icore_shutdown, ICE_DEB("core") },
+#if CANVAS_PLATFORM_UNIX
+  { &icore_unix_init, &icore_unix_shutdown, ICE_DEB("core_unix") },
+#elif CANVAS_PLATFORM_WINDOWS
+  { &icore_win32_init, &icore_win32_shutdown, ICE_DEB("core_win32") },
+#endif
+  
 #ifdef CANVAS_GRAPHICS
   { &ifx_init, &ifx_shutdown, ICE_DEB("graphics") }
 #endif

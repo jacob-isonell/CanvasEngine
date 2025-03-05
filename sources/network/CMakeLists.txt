@@ -16,6 +16,12 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
+ICE_ADDHEADERS(
+  "canvas/network.h"
+  
+  "canvas/network/network.h"
+)
+
 target_sources(CanvasEngine
 PRIVATE
 )

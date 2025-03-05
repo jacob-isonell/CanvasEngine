@@ -16,46 +16,15 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
-cmake_minimum_required(VERSION 3.20.0)
-
-if (WIN32)
-  set(ICE_CMAKE_LANGUAGES C CXX RC)
-else ()
-  set(ICE_CMAKE_LANGUAGES C CXX)
-endif ()
-
-project(CanvasEngine
-  VERSION 0.1.0.0
-  LANGUAGES ${ICE_CMAKE_LANGUAGES}
+ICE_ADDHEADERS(
+  "canvas/math.h"
+  
+  "canvas/math/math.h"
+  "canvas/math/vec.h"
+  
+  "canvas/math/details/vec.h.inl"
 )
 
-include(CTest)
-include(FindPackageHandleStandardArgs)
-include(CMakeDependentOption)
-include("cmake/configs.cmake")
-add_library(CanvasEngine ${CANVAS_LIBRARY_KIND})
-include("cmake/options.cmake")
-add_subdirectory("cmake/dependencies")
-include("cmake/doxygen.cmake")
-
-set(ICE_HEADER_PATH "${CMAKE_CURRENT_SOURCE_DIR}/include" CACHE STRING "internal" FORCE)
-
-macro(ICE_ADDHEADERS)
-  message(STATUS "dir : ${ARGV}")
-  foreach (item ${ARGV})
-    target_sources(CanvasEngine PRIVATE "${ICE_HEADER_PATH}/${item}")
-  endforeach ()
-endmacro()
-
-add_subdirectory("sources")
-
-if (BUILD_TESTING)
-  add_subdirectory("tests")
-endif ()
-
-string(TIMESTAMP CANVAS_BUILD_DATE "%Y%m")
-# file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/include" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-configure_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/canvas_cmake_options.h.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/include/canvas_cmake_options.h"
+target_sources(CanvasEngine
+PRIVATE
 )

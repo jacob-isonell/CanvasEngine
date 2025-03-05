@@ -9,7 +9,7 @@ int main(void) {
   
   void* p = ce_alloc_s(20, &e);
   CHECK(p != NULL && ce_success(e));
-  CHECK_SUCCESS(ce_free(p));
+  ce_free(p);
   
   ce_shutdown();
   return 0;

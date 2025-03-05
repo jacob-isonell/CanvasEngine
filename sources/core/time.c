@@ -18,15 +18,36 @@
 
 #include "icore_base.h"
 #include <canvas/core/time.h>
+#include <winternl.h>
 
-static int s_convert_base(int in) {
-  switch (in) {
-  case CE_TIME_UTC: return TIME_UTC;
-  default: CE_UNREACHABLE();
-  }
+#if CANVAS_PLATFORM_WINDOWS
+
+static unsigned long long s_perf_count_int(void) {
+  LARGE_INTEGER i;
+  QueryPerformanceCounter(&i);
+  return i.QuadPart;
 }
 
-CE_API ce_err ce_time_get(ce_time_t* out, int base) {
+static ce_time_t s_perf_freq(void) {
+  const ce_time_t out = {
+    .sec = (unsigned long long)ihiperf_clock_factor,
+    .nsec = (unsigned long long)(ihiperf_clock_factor * 1000000000.0) % 1000000000,
+  };
+  return out;
+}
+
+static ce_time_t s_perf_count(void) {
+  const double dur = s_perf_count_int() * ihiperf_clock_factor;
+  const ce_time_t out = {
+    .sec = (unsigned long long)dur,
+    .nsec = (unsigned long long)(dur * 1000000000.0) % 1000000000,
+  };
+  return out;
+}
+  
+#endif
+
+CE_API ce_err ce_time_res(ce_clock clock, ce_time_t* out) {
   if (!ihas_initialized()) {
     return CE_EPERM;
   }
@@ -35,13 +56,104 @@ CE_API ce_err ce_time_get(ce_time_t* out, int base) {
     return CE_EINVAL;
   }
   
+#if CANVAS_PLATFORM_UNIX
+  
   struct timespec now;
-  if (timespec_get(&now, s_convert_base(base)) == 0) {
-    return CE_EUNKNOWN;
+  int posix_clock;
+  switch (clock) {
+  default: return CE_EINVAL;
+  case CE_CLOCK_PERF:
+  case CE_CLOCK_UTC:     posix_clock = CLOCK_REALTIME;  break;
+  case CE_CLOCK_MONOTIC: posix_clock = CLOCK_MONOTONIC; break;
+  }
+  
+  if (clock_getres(CLOCK_REALTIME, &now) != 0) {
+    return ierrno;
   }
   
   out->sec = (unsigned long long)now.tv_sec;
   out->nsec = (unsigned long long)now.tv_nsec;
   
   return CE_EOK;
+  
+#elif CANVAS_PLATFORM_WINDOWS
+  
+  switch (clock) {
+  default: return CE_EINVAL;
+  case CE_CLOCK_UTC: {
+    out->sec = 0;
+    out->nsec = 100;
+    return CE_EOK;
+  } break;
+  case CE_CLOCK_MONOTIC: {
+    return CE_ENOSYS;
+  } break;
+  case CE_CLOCK_PERF: {
+    *out = s_perf_freq();
+    return CE_EOK;
+  } break;
+  }
+  
+#endif
+  
+}
+
+CE_API ce_err ce_time_get(ce_clock clock, ce_time_t* out) {
+  if (!ihas_initialized()) {
+    return CE_EPERM;
+  }
+  
+  if (out == NULL) {
+    return CE_EINVAL;
+  }
+  
+#if CANVAS_PLATFORM_UNIX
+  
+  struct timespec now;
+  int posix_clock;
+  switch (clock) {
+  default: return CE_EINVAL;
+  case CE_CLOCK_PERF:
+  case CE_CLOCK_UTC:     posix_clock = CLOCK_REALTIME;  break;
+  case CE_CLOCK_MONOTIC: posix_clock = CLOCK_MONOTONIC; break;
+  }
+  
+  if (clock_gettime(CLOCK_REALTIME, &now) != 0) {
+    return ierrno;
+  }
+  
+  out->sec = (unsigned long long)now.tv_sec;
+  out->nsec = (unsigned long long)now.tv_nsec;
+  
+  return CE_EOK;
+  
+#elif CANVAS_PLATFORM_WINDOWS
+  
+  switch (clock) {
+  default: return CE_EINVAL;
+  case CE_CLOCK_UTC: {
+    LARGE_INTEGER i;
+    NtQuerySystemTime(&i);
+    
+    /* (for some reason) NtQuerySystemTime returns the number of 100 nanoseconds since 1st of January 1601.
+     * This function converts it to 1st of January 1970 like unix.
+     * 1970 - 1601 = 369 years = 11644754400 seconds.
+     */
+    #define SUB_369_YEARS 11644754400ULL
+    
+    out->nsec = (i.QuadPart * 100) % ICE_NANO2SEC_V;
+    out->sec = (i.QuadPart / (ICE_NANO2SEC_V / 100)) - SUB_369_YEARS;
+    return CE_EOK;
+  } break;
+  case CE_CLOCK_MONOTIC: {
+    // NtQuerySystemTime()
+    return CE_ENOSYS;
+  } break;
+  case CE_CLOCK_PERF: {
+    *out = s_perf_count();
+    return CE_EOK;
+  } break;
+  }
+  
+#endif
 }

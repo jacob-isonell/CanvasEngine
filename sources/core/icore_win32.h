@@ -16,18 +16,24 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_CORE_H
-#define CANVAS_CORE_H
+#ifndef ICORE_WIN32_H
+#define ICORE_WIN32_H
 
-#include <canvas/core/base.h>
-#include <canvas/core/error.h>
-#include <canvas/core/library.h>
-#include <canvas/core/memory.h>
-#include <canvas/core/random.h>
-#include <canvas/core/setup.h>
-#include <canvas/core/signal.h>
-#include <canvas/core/string.h>
-#include <canvas/core/time.h>
-#include <canvas/core/uuid.h>
+#include "icore_base.h"
+#include <Ntddk.h>
 
-#endif /* !CANVAS_CORE_H */
+#if !CANVAS_PLATFORM_WINDOWS
+#error icore_win32.h can only be included on Windows
+#endif
+
+ICE_NAMESPACE_BEGIN
+
+/* The high performance frequency. */
+ICE_API extern double ihiperf_clock_factor;
+
+ICE_API ce_err icore_win32_init(void);
+ICE_API void icore_win32_shutdown(void);
+
+ICE_NAMESPACE_END
+
+#endif /* !ICORE_WIN32_H */

@@ -54,7 +54,9 @@
 #define ICE_NDEB(x)
 #define ICE_DEBCON(x, y) x
 #else
+#ifndef NDEBUG
 #define NDEBUG
+#endif
 #define ICE_DEB(x)
 #define ICE_NDEB(x) x
 #define ICE_DEBCON(x, y) y
@@ -108,10 +110,12 @@ ICE_API void icore_shutdown(void);
 ICE_API cebool ihas_initialized(void);
 
 /* Convert errno value to ce_err. */
-ICE_API ce_err ierrno(int in);
+ICE_API ce_err ifrom_errno(int in);
+
+#define ierrno ifrom_errno(errno)
 
 ICE_API void* ialloc(size_t bytes, ce_err* opt_err);
-ICE_API ce_err ifree(void* addr, size_t bytes);
+ICE_API void ifree(void* addr, size_t bytes);
 
 ICE_API extern ce_core icore_ops;
 
@@ -243,6 +247,12 @@ static inline void ilog_impl(
 #endif
 
 #define ICE_ASSERT(cond) assert(cond)
+
+#if CANVAS_PLATFORM_UNIX
+#include "icore_unix.h"
+#elif CANVAS_PLATFORM_WINDOWS
+#include "icore_win32.h"
+#endif
 
 ICE_NAMESPACE_END
 

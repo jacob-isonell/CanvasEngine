@@ -173,7 +173,7 @@ CE_API const ce_utf8* ce_errstr(ce_err error) {
   }
 }
 
-ICE_API ce_err ierrno(int in) {
+ICE_API ce_err ifrom_errno(int in) {
   switch (in) {
   case 0: return CE_EOK;
   default: return CE_EUNKNOWN;

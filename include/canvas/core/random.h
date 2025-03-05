@@ -23,9 +23,10 @@
 
 ICE_NAMESPACE_BEGIN
 
-typedef int ce_seed;
-
-CE_API ce_err ce_rand(ce_seed seed, int* out);
+CE_API ce_err ce_rand(
+  unsigned int* CE_RESTRICT seed,
+  unsigned int* CE_RESTRICT out
+);
 
 ICE_NAMESPACE_END
 

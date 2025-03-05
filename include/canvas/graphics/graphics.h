@@ -35,7 +35,10 @@ typedef struct ce_vk_ext_str {
   ce_utf8 name[256];
 } ce_vk_ext_str;
 
-#define ICE_FXHANDLE(name) typedef struct name name
+typedef enum ce_render_api {
+  CE_VULKAN,
+  CE_DIRECTX12,
+} ce_render_api;
 
 #ifdef ICE_DOXY
 typedef void* ice_win32_hwnd;
@@ -53,40 +56,9 @@ typedef union ce_wnd_handle {
   ice_wl_surface wl;
   ice_x11_window x11;
 } ce_wnd_handle;
-#else
-
-#ifdef CANVAS_EXPOSE_WIN32
-typedef HWND ice_win32_hwnd;
-#else
-typedef void* ice_win32_hwnd;
 #endif
 
-#ifdef CANVAS_EXPOSE_WAYLAND
-typedef struct wl_surface* ice_wl_surface;
-#else
-typedef void* ice_wl_surface;
-#endif
-
-#ifdef CANVAS_EXPOSE_X11
-typedef Window ice_x11_window;
-#else
-typedef long ice_x11_window;
-#endif
-
-typedef union ce_wnd_handle {
-#if CANVAS_PLATFORM_WINDOWS
-  ice_win32_hwnd win32;
-#else
-#if CANVAS_ENABLE_WAYLAND
-  ice_wl_surface wl;
-#endif
-#if CANVAS_ENABLE_X11
-  ice_x11_window x11;
-#endif
-#endif
-} ce_wnd_handle;
-
-#endif
+#include <canvas/graphics/details/graphics.inl>
 
 ICE_NAMESPACE_END
 

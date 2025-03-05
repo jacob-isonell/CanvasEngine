@@ -58,8 +58,13 @@ typedef struct ce_graphics_vulkan_t {
  * @brief add documentation here!
  */
 typedef struct ce_graphics {
+  
+  /** add documentation here! */
+  ce_render_api render_api;
+  
   /** add documentation here! */
   ce_graphics_vulkan_t vulkan;
+  
 } ce_graphics;
 
 /**

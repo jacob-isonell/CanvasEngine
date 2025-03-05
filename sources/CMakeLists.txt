@@ -23,6 +23,7 @@ endfunction()
 
 ICE_ADDDIR("core")
 ICE_ADDDIR("threads")
+ICE_ADDDIR("math")
 if (CANVAS_GRAPHICS)
   ICE_ADDDIR("graphics")
 endif ()

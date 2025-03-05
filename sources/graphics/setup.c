@@ -36,6 +36,7 @@ ICE_API void ifx_shutdown(void) {
 }
 
 ICE_API ce_graphics ifx_ops = {
+  .render_api = CE_VULKAN,
   .vulkan = {
     .inst_layers = NULL,
     .inst_layers_len = 0,

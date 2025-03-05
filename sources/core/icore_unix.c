@@ -16,18 +16,15 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_CORE_H
-#define CANVAS_CORE_H
+#include "icore_base.h"
+#if CANVAS_PLATFORM_UNIX
 
-#include <canvas/core/base.h>
-#include <canvas/core/error.h>
-#include <canvas/core/library.h>
-#include <canvas/core/memory.h>
-#include <canvas/core/random.h>
-#include <canvas/core/setup.h>
-#include <canvas/core/signal.h>
-#include <canvas/core/string.h>
-#include <canvas/core/time.h>
-#include <canvas/core/uuid.h>
+ICE_API ce_err icore_unix_init(void) {
+  return CE_EOK;
+}
 
-#endif /* !CANVAS_CORE_H */
+ICE_API void icore_unix_shutdown(void) {
+  
+}
+
+#endif /* !CANVAS_PLATFORM_UNIX */

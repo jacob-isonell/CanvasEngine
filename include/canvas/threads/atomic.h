@@ -28,7 +28,7 @@
  * @ingroup atomic_types
  * @brief add documentation here!
  */
-enum ce_memord {
+typedef enum ce_memord {
   
   /** add documentation here! */
   CE_MEMORD_RELAXED = ICE_MEMORD_RELAXED,
@@ -47,7 +47,7 @@ enum ce_memord {
   
   /** add documentation here! */
   CE_MEMORD_SEQ_CST = ICE_MEMORD_SEQ_CST,
-};
+} ce_memord;
 
 /**
  * @ingroup atomic_types

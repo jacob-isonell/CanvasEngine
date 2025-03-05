@@ -48,7 +48,7 @@ static void s_deffree(void* addr, size_t bytes, void* arg) {
 ICE_API ce_err icore_init(void) {
   if (icore_ops.app_name) {
     ce_err e;
-    icore.app_info.name = ce_alloc_s(strlen(icore_ops.app_name), &e);
+    icore.app_info.name = ialloc(strlen(icore_ops.app_name) + 1, &e);
     strcpy(icore.app_info.name, icore_ops.app_name);
     if (ce_failure(e)) {
       return e;
@@ -57,7 +57,7 @@ ICE_API ce_err icore_init(void) {
   
   if (icore_ops.engine_name) {
     ce_err e;
-    icore.engine_info.name = ce_alloc_s(strlen(icore_ops.engine_name), &e);
+    icore.engine_info.name = ialloc(strlen(icore_ops.engine_name) + 1, &e);
     strcpy(icore.engine_info.name, icore_ops.engine_name);
     if (ce_failure(e)) {
       return e;
@@ -71,12 +71,12 @@ ICE_API ce_err icore_init(void) {
 
 ICE_API void icore_shutdown(void) {
   if (icore.app_info.name) {
-    ce_free(icore.app_info.name);
+    ifree(icore.app_info.name, strlen(icore.app_info.name) + 1);
     icore.app_info.name = NULL;
   }
   
   if (icore.engine_info.name) {
-    ce_free(icore.engine_info.name);
+    ifree(icore.engine_info.name, strlen(icore.engine_info.name) + 1);
     icore.engine_info.name = NULL;
   }
 }

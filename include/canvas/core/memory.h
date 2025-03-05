@@ -73,7 +73,7 @@ CE_API void* ce_alloc(size_t bytes);
  * @ingroup memory
  * @brief add documentation here!
  */
-CE_API ce_err ce_free(void* addr);
+CE_API void ce_free(void* addr);
 
 /**
  * @ingroup memory

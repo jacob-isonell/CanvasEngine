@@ -87,8 +87,8 @@ CE_API unsigned long ce_thrd_id(ce_thrd thrd);
  * @brief missing documentation.
  */
 CE_API ce_err ce_thrd_sleep(
-  const ce_time_t* duration,
-        ce_time_t* opt_remaining
+  const ce_time_t* CE_RESTRICT duration,
+        ce_time_t* CE_RESTRICT opt_remaining
 );
 
 /**
@@ -120,13 +120,19 @@ CE_API ce_err ce_thrd_join(ce_thrd thrd,  int* opt_res);
  * @ingroup threading_objects
  * @brief missing documentation.
  */
-CE_API ce_err ce_thrd_run(int (*func)(void*), void* arg);
+CE_API ce_err ce_thrd_run(
+  int (*func)(void*),
+  void* arg
+);
 
 /**
  * @ingroup threading_objects
  * @brief missing documentation.
  */
-CE_API ce_err ce_call_once(ce_once_flag* flag, void (*func)(void));
+CE_API ce_err ce_call_once(
+  ce_once_flag* flag,
+  void        (*func)(void)
+);
 
 #endif /* !CANVAS_HAS_THREADS */
 

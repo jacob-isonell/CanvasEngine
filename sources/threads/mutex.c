@@ -21,7 +21,7 @@
 
 #ifdef CANVAS_HAS_THREADS
 
-static cebool s_check_mtx_type(enum ce_mtx_kind type) {
+static cebool s_check_mtx_type(ce_mtx_kind type) {
   switch (type) {
   case CE_MTX_PLAIN:
   case CE_MTX_TIMED:
@@ -32,9 +32,9 @@ static cebool s_check_mtx_type(enum ce_mtx_kind type) {
   }
 }
 
-ICE_WARN_PUSH
-ICE_WARN_DISABLE_GNU("-Wunused-function")
-static cebool s_is_recursive(enum ce_mtx_kind type) {
+CE_WARN_PUSH
+CE_WARN_DISABLE_GNU("-Wunused-function")
+static cebool s_is_recursive(ce_mtx_kind type) {
   switch (type) {
     default: CE_UNREACHABLE();
     case CE_MTX_PLAIN:
@@ -45,10 +45,10 @@ static cebool s_is_recursive(enum ce_mtx_kind type) {
       return cetrue;
   }
 }
-ICE_WARN_POP
+CE_WARN_POP
 
 #ifdef ICE_THREADS_POSIX
-static int s_to_pthread(enum ce_mtx_kind type) {
+static int s_to_pthread(ce_mtx_kind type) {
   switch (type) {
   case CE_MTX_PLAIN: return PTHREAD_MUTEX_DEFAULT;
   case CE_MTX_TIMED: return PTHREAD_MUTEX_DEFAULT;
@@ -59,7 +59,7 @@ static int s_to_pthread(enum ce_mtx_kind type) {
 }
 #endif
 
-CE_API ce_err ce_mtx_init(ce_mtx* mtx, enum ce_mtx_kind type) {
+CE_API ce_err ce_mtx_init(ce_mtx* mtx, ce_mtx_kind type) {
   if (mtx == NULL || !s_check_mtx_type(type)) {
     return CE_EINVAL;
   }
@@ -94,7 +94,7 @@ CE_API ce_err ce_mtx_lock(ce_mtx* mtx) {
   
 #if defined(ICE_THREADS_POSIX)
   
-  return ierrno(pthread_mutex_lock(mtx));
+  return ifrom_errno(pthread_mutex_lock(mtx));
   
 #elif defined(ICE_THREADS_WIN32)
   
@@ -128,7 +128,7 @@ CE_API ce_err ce_mtx_timedlock(
   struct timespec t;
   t.tv_sec = (time_t)time_point->sec;
   t.tv_nsec = (long)time_point->nsec;
-  return ierrno(pthread_mutex_timedlock(mtx, &t));
+  return ifrom_errno(pthread_mutex_timedlock(mtx, &t));
   
 #elif defined(ICE_THREADS_WIN32)
   
@@ -158,7 +158,7 @@ CE_API ce_err ce_mtx_trylock(ce_mtx* mtx) {
   
 #if defined(ICE_THREADS_POSIX)
   
-  return ierrno(pthread_mutex_trylock(mtx));
+  return ifrom_errno(pthread_mutex_trylock(mtx));
   
 #elif defined(ICE_THREADS_WIN32)
   
@@ -192,7 +192,7 @@ CE_API ce_err ce_mtx_unlock(ce_mtx* mtx) {
   }
   
 #if defined(ICE_THREADS_POSIX)
-  return ierrno(pthread_mutex_unlock(mtx));
+  return ifrom_errno(pthread_mutex_unlock(mtx));
 #elif defined(ICE_THREADS_WIN32)
   if (mtx->owner != GetCurrentThreadId()) {
     return CE_EPERM;

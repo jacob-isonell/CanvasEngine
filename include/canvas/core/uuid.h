@@ -24,7 +24,7 @@
 ICE_NAMESPACE_BEGIN
 
 typedef struct ce_uuid {
-  unsigned char buffer[16];
+  ce_byte buffer[16];
 } ce_uuid;
 
 CE_API ce_err ce_uuid_gen(ce_uuid* out);

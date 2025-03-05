@@ -23,7 +23,7 @@
 #include <dlfcn.h>
 #endif
 
-CE_API ce_err ce_libo_pen(
+CE_API ce_err ce_lib_open(
   ce_lib**       CE_RESTRICT handle,
   const ce_utf8* CE_RESTRICT filepath,
   ce_lib_flags               flags

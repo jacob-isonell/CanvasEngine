@@ -16,18 +16,65 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_CORE_H
-#define CANVAS_CORE_H
+#undef ICE_FX_HANDLE
 
-#include <canvas/core/base.h>
-#include <canvas/core/error.h>
-#include <canvas/core/library.h>
-#include <canvas/core/memory.h>
-#include <canvas/core/random.h>
-#include <canvas/core/setup.h>
-#include <canvas/core/signal.h>
-#include <canvas/core/string.h>
-#include <canvas/core/time.h>
-#include <canvas/core/uuid.h>
+typedef enum ice_fx_type {
+  ICEFX_VULKAN,
+  ICEFX_DIRECTX12,
+} ice_fx_type;
 
-#endif /* !CANVAS_CORE_H */
+#define ICE_FX_DECL_HANDLE_VK(name) i##name##vk
+#define ICE_FX_DECL_HANDLE_DX12(name) i##name##dx12
+
+#define ICE_FX_HANDLE(name) \
+typedef struct ICE_FX_DECL_HANDLE_VK(name) ICE_FX_DECL_HANDLE_VK(name); \
+typedef struct ICE_FX_DECL_HANDLE_DX12(name) ICE_FX_DECL_HANDLE_DX12(name); \
+typedef union name { \
+  struct { \
+    ice_fx_type type; \
+    void* handle; \
+  } common; \
+  struct { \
+    ice_fx_type type; \
+    ICE_FX_DECL_HANDLE_VK(name)* handle; \
+  } vk; \
+  struct { \
+    ice_fx_type type; \
+    ICE_FX_DECL_HANDLE_DX12(name)* handle; \
+  } dx12; \
+} name
+
+#ifndef ICE_DOXY
+
+#ifdef CANVAS_EXPOSE_WIN32
+typedef HWND ice_win32_hwnd;
+#else
+typedef void* ice_win32_hwnd;
+#endif
+
+#ifdef CANVAS_EXPOSE_WAYLAND
+typedef struct wl_surface* ice_wl_surface;
+#else
+typedef void* ice_wl_surface;
+#endif
+
+#ifdef CANVAS_EXPOSE_X11
+typedef Window ice_x11_window;
+#else
+typedef long ice_x11_window;
+#endif
+
+typedef union ce_wnd_handle {
+#if CANVAS_PLATFORM_WINDOWS
+  ice_win32_hwnd win32;
+#else
+#if CANVAS_ENABLE_WAYLAND
+  ice_wl_surface wl;
+#endif
+#if CANVAS_ENABLE_X11
+  ice_x11_window x11;
+#endif
+#endif
+} ce_wnd_handle;
+
+#endif

@@ -19,8 +19,21 @@
 #include "icore_base.h"
 #include <canvas/core/random.h>
 
-CE_API ce_err ce_rand(ce_seed seed, int* out) {
+CE_API ce_err ce_rand(unsigned int* seed, unsigned int* out) {
   if (out == NULL) {
     return CE_EINVAL;
   }
+  
+  unsigned int s = seed ? *seed : (unsigned int)time(NULL);
+  if (s == 0) {
+    s = 1;
+  }
+  
+  s = (0x5E61A729 * s) % 0x7FFFFFFF;
+  
+  *out = s;
+  if (seed) {
+    *seed = s;
+  }
+  return CE_EOK;
 }

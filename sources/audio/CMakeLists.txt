@@ -16,6 +16,12 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
+ICE_ADDHEADERS(
+  "canvas/audio.h"
+  
+  "canvas/audio/audio.h"
+)
+
 target_sources(CanvasEngine
 PRIVATE
 )

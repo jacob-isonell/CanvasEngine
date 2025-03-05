@@ -31,171 +31,231 @@ typedef struct i_thread_start_data_t {
 } i_thread_start_data_t;
 
 #if defined(ICE_THREADS_POSIX)
+
 static void* i_thread_start(void* in) {
   i_thread_start_data_t data = *(i_thread_start_data_t*)in;
+  
   ce_free(in);
   const intptr_t out = data.func(data.arg);
+  
   return (void*)out;
 }
+
 #elif defined(ICE_THREADS_WIN32)
+
 static unsigned int CE_STDCALL i_thread_start(void* in) {
   i_thread_start_data_t data = *(i_thread_start_data_t*)in;
+  
   ce_free(in);
   return (unsigned int)data.func(data.arg);
 }
+
 #endif
 
-CE_API ce_err ce_thrd_create(ce_thrd* out, int(*func)(void*), void* arg) {
+CE_API ce_err ce_thrd_create(ce_thrd* out, int (*func)(void*), void* arg) {
+  ce_err err;
+  i_thread_start_data_t* data;
+  
   if (func == NULL || out == NULL) {
     return CE_EINVAL;
   }
   
-  ce_err err;
-  i_thread_start_data_t* data;
   data = ce_alloc_s(sizeof(*data), &err);
   if (ce_failure(err)) {
     return err;
   }
+  
   data->func = func;
   data->arg = arg;
+  
 #if defined(ICE_THREADS_POSIX)
-  err = ierrno(pthread_create(out, NULL, &i_thread_start, data));
-#elif defined(ICE_THREADS_WIN32)
-  uintptr_t thrd_handle = _beginthreadex(NULL, 0, &i_thread_start, data, 0, NULL);
-  if (thrd_handle == -1) {
-    err = errno;
-  } else {
-    memcpy(&out->handle, &thrd_handle, sizeof(thrd_handle));
-  }
-#endif
+  
+  err = ifrom_errno(pthread_create(out, NULL, &i_thread_start, data));
   if (ce_failure(err)) {
     ce_free(data);
   }
   return err;
+  
+#elif defined(ICE_THREADS_WIN32)
+  
+  uintptr_t thrd_handle = _beginthreadex(NULL, 0, &i_thread_start, data, 0, NULL);
+  if (thrd_handle == -1) {
+    ce_free(data);
+    return ierrno;
+  }
+  
+  memcpy(&out, &thrd_handle, sizeof(thrd_handle));
+  return CE_EOK;
+  
+#endif
 }
 
 CE_API cebool ce_thrd_equal(ce_thrd lhs, ce_thrd rhs) {
 #if defined(ICE_THREADS_POSIX)
+  
   return pthread_equal(lhs, rhs);
+  
 #elif defined(ICE_THREADS_WIN32)
-  return GetThreadId(lhs.handle) == GetThreadId(rhs.handle);
+  
+  return GetThreadId(lhs) == GetThreadId(rhs);
+  
 #endif
 }
 
 CE_API ce_thrd ce_thrd_current(void) {
 #if defined(ICE_THREADS_POSIX)
+  
   return pthread_self();
+  
 #elif defined(ICE_THREADS_WIN32)
+  
   ce_thrd out;
-  out.handle = GetCurrentThread();
+  out = GetCurrentThread();
   return out;
+  
 #endif
 }
 
 CE_API unsigned long ce_thrd_id(ce_thrd thrd) {
 #if defined(ICE_THREADS_POSIX)
+  
   return thrd;
+  
 #elif defined(ICE_THREADS_WIN32)
-  return GetThreadId(thrd.handle);
+  
+  return GetThreadId(thrd);
+  
 #endif
 }
 
-CE_API ce_err ce_thrd_sleep(const ce_time_t* duration, ce_time_t* opt_remaining) {
+CE_API ce_err ce_thrd_sleep(
+  const ce_time_t* CE_RESTRICT duration,
+        ce_time_t* CE_RESTRICT opt_remaining
+) {
   if (duration == NULL) {
     return CE_EINVAL;
   }
   
 #if defined(ICE_THREADS_POSIX)
+  
   struct timespec dur, rem;
   dur.tv_sec = (time_t)duration->sec;
   dur.tv_nsec = (long)duration->nsec;
-  if (nanosleep(&dur, &rem) != 0) {
-    if (opt_remaining) {
-      opt_remaining->sec = (unsigned long long)rem.tv_sec;
-      opt_remaining->nsec = (unsigned long long)rem.tv_nsec;
-    }
-    return ierrno(errno);
+  
+  if (nanosleep(&dur, &rem) == 0) {
+    return CE_EOK;
   }
-  return CE_EOK;
+  
+  if (opt_remaining) {
+    opt_remaining->sec = (unsigned long long)rem.tv_sec;
+    opt_remaining->nsec = (unsigned long long)rem.tv_nsec;
+  }
+  
+  return ierrno;
+  
 #elif defined(ICE_THREADS_WIN32)
-  ce_time_t begin, end;
+  
+  ce_time_t begin = {0};
+  ce_time_t end;
   DWORD sleep_status;
-  IERRBEGIN {
-    IERRDO(ce_time_get(&begin, CE_TIME_UTC));
-    sleep_status = SleepEx((DWORD)ce_time_to_imilli(*duration), TRUE);
-    IERRDO(ce_time_get(&end, CE_TIME_UTC));
-    if (opt_remaining) {
-      *opt_remaining = ce_time_sub(end, begin);
+  ce_err err;
+  if (opt_remaining) {
+    err = ce_time_get(CE_CLOCK_PERF, &begin);
+    if (ce_failure(err)) {
+      return err;
     }
-    switch (sleep_status) {
-    case 0:                  return CE_EOK;
-    case WAIT_IO_COMPLETION: return CE_EINTR;
-    default:                 return CE_EUNKNOWN;
+  }
+  
+  sleep_status = SleepEx((DWORD)ce_time_to_imilli(*duration), TRUE);
+  
+  if (opt_remaining) {
+    err = ce_time_get(CE_CLOCK_PERF, &end);
+    if (ce_failure(err)) {
+      return err;
     }
-  } IERREND { }
-  return IERRVAL;
+    
+    *opt_remaining = ce_time_sub(end, begin);
+  }
+  
+  switch (sleep_status) {
+  case 0:                  return CE_EOK;
+  case WAIT_IO_COMPLETION: return CE_EINTR;
+  default:                 return CE_EUNKNOWN;
+  }
+  
 #endif
 }
 
 CE_API ce_err ce_thrd_yield(void) {
 #if defined(ICE_THREADS_POSIX)
-  if (sched_yield() == 0) {
-    return CE_EOK;
-  }
-  return ierrno(errno);
+  
+  return sched_yield() == 0
+    ? CE_EOK
+    : ierrno;
+  
 #elif defined(ICE_THREADS_WIN32)
-  switch (SwitchToThread()) {
-  case FALSE: return CE_EUNKNOWN;
-  default:    return CE_EOK;
-  }
+  
+  return SwitchToThread() == FALSE
+    ? CE_EPERM
+    : CE_EOK;
+  
 #endif
 }
 
 CE_ATTR_NORET CE_API void ce_thrd_exit(int res) {
 #if defined(ICE_THREADS_POSIX)
+  
   const intptr_t p = res;
   pthread_exit((void*)p);
+  
 #elif defined(ICE_THREADS_WIN32)
+  
   ExitThread((DWORD)res);
+  
 #endif
 }
 
 CE_API ce_err ce_thrd_detach(ce_thrd thrd) {
 #if defined(ICE_THREADS_POSIX)
-  return ierrno(pthread_detach(thrd));
+  
+  return ifrom_errno(pthread_detach(thrd));
+  
 #elif defined(ICE_THREADS_WIN32)
-  if (thrd.handle == NULL || GetCurrentThreadId() != GetThreadId(thrd.handle)) {
+  
+  if (thrd == NULL || GetCurrentThreadId() != GetThreadId(thrd)) {
     return CE_EINVAL;
   }
-  switch (CloseHandle(thrd.handle)) {
+  
+  switch (CloseHandle(thrd)) {
   case FALSE: return CE_EOK;
   default:    return CE_EUNKNOWN;
   }
+  
 #endif
 }
 
 CE_API ce_err ce_thrd_join(ce_thrd thrd, int* opt_res) {
 #if defined(ICE_THREADS_POSIX)
   intptr_t res;
-  const ce_err err = ierrno(pthread_join(thrd, (void**)&res));
+  const ce_err err = ifrom_errno(pthread_join(thrd, (void**)&res));
   if (ce_success(err) && opt_res) {
     *opt_res = (int)res;
   }
   return err;
 #elif defined(ICE_THREADS_WIN32)
-  if (thrd.handle == NULL || GetCurrentThreadId() != GetThreadId(thrd.handle)) {
+  if (thrd == NULL || GetCurrentThreadId() != GetThreadId(thrd)) {
     return CE_EINVAL;
   }
   
-  switch (WaitForSingleObjectEx(thrd.handle, INFINITE, FALSE)) {
+  switch (WaitForSingleObjectEx(thrd, INFINITE, FALSE)) {
   case WAIT_FAILED:
     return CE_EUNKNOWN;
   }
   
   if (opt_res) {
-    GetExitCodeThread(thrd.handle, (DWORD*)opt_res);
+    GetExitCodeThread(thrd, (DWORD*)opt_res);
   }
-  CloseHandle(thrd.handle);
+  CloseHandle(thrd);
   return CE_EOK;
 #endif
 }

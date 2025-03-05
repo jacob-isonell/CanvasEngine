@@ -48,9 +48,24 @@ PRIVATE
 
 target_link_libraries(CanvasEngine
 PRIVATE
-  "$<$<C_COMPILER_ID:GNU,Clang>:-luuid>"
+  "$<$<PLATFORM_ID:Windows>:kernel32>"
+  "$<$<PLATFORM_ID:Windows>:user32>"
+  "$<$<PLATFORM_ID:Windows>:gdi32>"
+  "$<$<PLATFORM_ID:Windows>:winspool>"
+  "$<$<PLATFORM_ID:Windows>:comdlg32>"
+  "$<$<PLATFORM_ID:Windows>:advapi32>"
+  "$<$<PLATFORM_ID:Windows>:shell32>"
+  "$<$<PLATFORM_ID:Windows>:ole32>"
+  "$<$<PLATFORM_ID:Windows>:oleaut32>"
+  "$<$<PLATFORM_ID:Windows>:uuid>"
+  "$<$<PLATFORM_ID:Windows>:odbc32>"
+  "$<$<PLATFORM_ID:Windows>:odbccp32>"
   "$<$<PLATFORM_ID:Windows>:shlwapi>"
   "$<$<PLATFORM_ID:Windows>:rpcrt4>"
+  "$<$<PLATFORM_ID:Windows>:ntdll>"
+  
+  "$<$<C_COMPILER_ID:GNU,Clang>:-luuid>"
+  
   CanvasEngineDependencies
 )
 

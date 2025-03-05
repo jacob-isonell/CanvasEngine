@@ -27,7 +27,7 @@ ICE_NAMESPACE_BEGIN
  * @ingroup gpu_devices
  * @brief add documentation here!
  */
-ICE_FXHANDLE(ce_gpu_dev);
+ICE_FX_HANDLE(ce_gpu_dev);
 
 /**
  * @ingroup gpu_devices

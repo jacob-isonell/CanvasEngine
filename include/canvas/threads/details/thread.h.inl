@@ -25,21 +25,16 @@
 ICE_NAMESPACE_BEGIN
 
 #if defined(ICE_THREADS_POSIX)
-#define ice_thrd pthread_t
-#define ice_once_flag pthread_once_t
+typedef pthread_t ice_thrd;
+typedef pthread_once_t ice_once_flag;
 #define CE_ONCE_FLAG_INIT PTHREAD_ONCE_INIT
 #elif defined(ICE_THREADS_WIN32)
-typedef struct ice_thread_impl {
-  HANDLE handle;
-} ice_thread_impl;
+typedef HANDLE ice_thrd;
 
 typedef struct ice_once_flag {
   CRITICAL_SECTION mtx;
   cebool called;
 } ice_once_flag;
-
-#define ice_thrd ice_thread_impl
-#define ice_once_flag ice_once_flag
 #define CE_ONCE_FLAG_INIT {0}
 #endif
 

@@ -16,7 +16,22 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
+ICE_ADDHEADERS(
+  "canvas/graphics.h"
+  
+  "canvas/graphics/device.h"
+  "canvas/graphics/gpu_device.h"
+  "canvas/graphics/graphics.h"
+  "canvas/graphics/setup.h"
+  
+  "canvas/graphics/details/graphics.inl"
+)
+
 target_sources(CanvasEngine
+PRIVATE
+  "ifx_base.h"
+  "ifx_vk.h"
+  
 PRIVATE
   "setup.c"
 )

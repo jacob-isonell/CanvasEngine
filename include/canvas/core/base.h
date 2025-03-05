@@ -340,6 +340,12 @@ ICE_NAMESPACE_BEGIN
 /** @brief A typedef for char. Indicates that the stored value follows UTF-8 encoding. */
 typedef char ce_utf8;
 
+/** @brief A typedef of `unsigned char`. Represents an unsigned byte value. */
+typedef unsigned char ce_byte;
+
+/** @brief A typedef of `signed char`. Represents a signed byte value. */
+typedef signed char ce_sbyte;
+
 /**
  * @ingroup types
  * @brief A boolean type (`bool` in C++ or `_Bool` in C11)
@@ -350,13 +356,13 @@ typedef icebool cebool;
  * @ingroup types
  * @brief [`cebool`](@ref cebool) value representing a `true` value.
  */
-#define cetrue ((cebool)1)
+#define cetrue icetrue
 
 /**
  * @ingroup types
  * @brief [`cebool`](@ref cebool) value representing a `false` value.
  */
-#define cefalse ((cebool)0)
+#define cefalse icefalse
 
 /**
  * @ingroup utility

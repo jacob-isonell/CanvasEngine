@@ -16,18 +16,20 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_CORE_H
-#define CANVAS_CORE_H
+#ifndef ICORE_UNIX_H
+#define ICORE_UNIX_H
 
-#include <canvas/core/base.h>
-#include <canvas/core/error.h>
-#include <canvas/core/library.h>
-#include <canvas/core/memory.h>
-#include <canvas/core/random.h>
-#include <canvas/core/setup.h>
-#include <canvas/core/signal.h>
-#include <canvas/core/string.h>
-#include <canvas/core/time.h>
-#include <canvas/core/uuid.h>
+#include "icore_base.h"
 
-#endif /* !CANVAS_CORE_H */
+#if !CANVAS_PLATFORM_UNIX
+#error icore_unix.h can only be included on Unix based platforms
+#endif
+
+ICE_NAMESPACE_BEGIN
+
+ICE_API ce_err icore_unix_init(void);
+ICE_API void icore_unix_shutdown(void);
+
+ICE_NAMESPACE_END
+
+#endif /* !ICORE_UNIX_H */

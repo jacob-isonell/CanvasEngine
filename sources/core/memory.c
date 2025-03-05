@@ -104,6 +104,7 @@ CE_API ce_err ce_set_alloc(ce_alloc_t in) {
 }
 
 ICE_API void* ialloc(size_t bytes, ce_err* opt_err) {
+  void* out = NULL;
   IERRBEGIN {
     if (!ihas_initialized()) {
       IERRDO(CE_EPERM);
@@ -119,39 +120,28 @@ ICE_API void* ialloc(size_t bytes, ce_err* opt_err) {
     }
     
     IERRDO(ce_mtx_lock(&icore.mem.lck));
-    void* const out = s_doalloc(bytes);
+    out = s_doalloc(bytes);
     ce_mtx_unlock(&icore.mem.lck);
     
     if (out == NULL) {
-      IERRDO(CE_ENOMEM);
+      IERRVAL = CE_ENOMEM;
     }
-    
-    return out;
-    
-  } IERREND {
-    if (opt_err) {
-      *opt_err = IERRVAL;
-    }
+  } IERREND { }
+  if (opt_err) {
+    *opt_err = IERRVAL;
   }
-  return NULL;
+  return out;
 }
 
-ICE_API ce_err ifree(void* addr, size_t bytes) {
-  if (addr == NULL) {
-    return CE_EOK;
+ICE_API void ifree(void* addr, size_t bytes) {
+  if (addr == NULL || !ihas_initialized()) {
+    return;
   }
   
-  if (!ihas_initialized()) {
-    return CE_EPERM;
-  }
-  
-  ce_err err = ce_mtx_lock(&icore.mem.lck);
-  if (ce_success(err)) {
+  if (ce_success(ce_mtx_lock(&icore.mem.lck))) {
     s_dofree(addr, bytes);
     ce_mtx_unlock(&icore.mem.lck);
   }
-  
-  return err;
 }
 
 CE_API void* ce_alloc_s(size_t bytes, ce_err* opt_err) {
@@ -183,13 +173,13 @@ CE_API void* ce_alloc(size_t bytes) {
   return NULL;
 }
 
-CE_API ce_err ce_free(void* addr) {
+CE_API void ce_free(void* addr) {
   if (addr == NULL) {
-    return CE_EOK;
+    return;
   }
   
   imem_t* const data = s_get_mem(addr);
-  return ifree(data, data->length + offsetof(imem_t, buffer));
+  ifree(data, data->length + offsetof(imem_t, buffer));
 }
 
 CE_API ce_err ice_realloc(void* inout, size_t new_size) {

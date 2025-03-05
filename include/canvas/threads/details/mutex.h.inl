@@ -39,7 +39,7 @@ typedef struct ice_mtx_impl {
   SRWLOCK     lock;
   size_t      refcount;
   DWORD       owner;
-  enum ce_mtx_kind flags;
+  ce_mtx_kind flags;
 } ice_mtx_impl;
 #define ice_mtx ice_mtx_impl
 #define CE_MTX_INIT_PLAIN { SRWLOCK_INIT, 0, 0, CE_MTX_PLAIN }

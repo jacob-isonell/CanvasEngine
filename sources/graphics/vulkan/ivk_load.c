@@ -133,9 +133,9 @@ static ce_err iload_1_0(VkInstance inst) {
 }
 
 /* Temporary */
-ICE_WARN_DISABLE_MSVC(4102)
-ICE_WARN_DISABLE_GNU("-Wunused-label")
-ICE_WARN_DISABLE_GNU("-Wunused-parameter")
+CE_WARN_DISABLE_MSVC(4102)
+CE_WARN_DISABLE_GNU("-Wunused-label")
+CE_WARN_DISABLE_GNU("-Wunused-parameter")
 
 #ifdef VK_API_VERSION_1_1
 static ce_err iload_1_1(VkInstance inst) {
