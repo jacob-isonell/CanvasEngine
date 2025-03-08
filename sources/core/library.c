@@ -24,9 +24,9 @@
 #endif
 
 CE_API ce_err ce_lib_open(
-  ce_lib**       CE_RESTRICT handle,
-  const ce_utf8* CE_RESTRICT filepath,
-  ce_lib_flags               flags
+  CE_OUT ce_lib**       CE_RESTRICT handle,
+  CE_IN  const ce_utf8* CE_RESTRICT filepath,
+         ce_lib_flags               flags
 ) {
   if (!ihas_initialized()) {
     return CE_EPERM;
@@ -61,9 +61,9 @@ CE_API ce_err ce_lib_open(
 }
 
 CE_API ce_err ce_lib_load(
-  ce_lib*        CE_RESTRICT handle,
-  const ce_utf8* CE_RESTRICT name,
-  void*          CE_RESTRICT out
+  CE_IN  ce_lib*        CE_RESTRICT handle,
+  CE_IN  const ce_utf8* CE_RESTRICT name,
+  CE_OUT void*          CE_RESTRICT out
 ) {
   if (!ihas_initialized()) {
     return CE_EPERM;
@@ -84,7 +84,7 @@ CE_API ce_err ce_lib_load(
   
 #elif CANVAS_PLATFORM_UNIX
   
-  (void)dlerror(); // Clear previous error;
+  (void)dlerror(); /* Clear previous error; */
   
   void* const p = dlsym((void*)handle, name);
   const char* const errstr = dlerror();
@@ -100,7 +100,9 @@ CE_API ce_err ce_lib_load(
 #endif
 }
 
-CE_API void ce_lib_close(ce_lib* handle) {
+CE_API void ce_lib_close(
+  CE_IN ce_lib* handle
+) {
   if (handle == NULL) {
     return;
   }

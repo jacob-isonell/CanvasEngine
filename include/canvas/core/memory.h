@@ -21,7 +21,7 @@
 
 #include <canvas/core/error.h>
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 /**
  * @ingroup memory
@@ -123,10 +123,10 @@ CE_API void ce_free(void* addr);
  */
 #define ce_arr_reserve(inout_array, new_capacity) /* implementation-defined */
 
-#ifndef ICE_DOXY
+#ifndef ICE_DOCS
 #include <canvas/core/details/memory.h.inl>
-#endif /* !ICE_DOXY */
+#endif /* !ICE_DOCS */
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !CANVAS_CORE_MEMORY_H */

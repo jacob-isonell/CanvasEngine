@@ -21,10 +21,10 @@
 
 #include <canvas/core/memory.h>
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !CANVAS_CORE_STRING_H */

@@ -133,20 +133,22 @@ CE_API ce_err ce_mtx_timedlock(
 #elif defined(ICE_THREADS_WIN32)
   
   ICE_NOIMPL();
-  /*if (mtx->owner == GetCurrentThreadId()) {
+#if 0
+  if (mtx->owner == GetCurrentThreadId()) {
     if (s_is_recursive(mtx->flags)) {
       ++mtx->refcount;
       return CE_EOK;
     } else return CE_EDEADLK;
   }
   
-  // Add locking scheme here
+  /* Add locking scheme here */
   
   mtx->owner = GetCurrentThreadId();
   if (s_is_recursive(mtx->flags)) {
     ++mtx->refcount;
   }
-  return CE_EOK; */
+  return CE_EOK;
+#endif
   
 #endif
 }

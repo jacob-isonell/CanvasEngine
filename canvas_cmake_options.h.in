@@ -29,9 +29,15 @@
 #define CANVAS_BUILD @CANVAS_BUILD_DATE@L
 #cmakedefine CANVAS_SHARED
 #cmakedefine CANVAS_ENABLE_LOGS
+
 #cmakedefine CANVAS_GRAPHICS
+#cmakedefine CANVAS_ENABLE_XLIB
+#cmakedefine CANVAS_ENABLE_WAYLAND
+#cmakedefine CANVAS_ENABLE_VULKAN
+#cmakedefine CANVAS_ENABLE_DIRECTX12
+
 #cmakedefine CANVAS_AUDIO
+
 #cmakedefine CANVAS_NETWORK
-#cmakedefine CANVAS_TIME64
 
 #endif /* !CANVAS_CMAKE_OPTIONS_H */

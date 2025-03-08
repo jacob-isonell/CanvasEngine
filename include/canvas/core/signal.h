@@ -21,7 +21,7 @@
 
 #include <canvas/core/memory.h>
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 typedef int ce_sigtype;
 typedef int ce_sigstatus;
@@ -43,6 +43,6 @@ typedef struct ce_sigarg {
 
 
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !CANVAS_CORE_SIGNAL_H */

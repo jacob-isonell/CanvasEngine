@@ -14,7 +14,7 @@ Exposes native access to VulkanAPI objects used by CanvasEngine. This requires m
 #### CANVAS_EXPOSE_WAYLAND ([`canvas/graphics/graphics.h`](@ref canvas/graphics/graphics.h))
 Exposes native access to Wayland objects used by CanvasEngine. This requires manually including the Wayland headers before including the CanvasEngine headers.
 
-#### CANVAS_EXPOSE_X11 ([`canvas/graphics/graphics.h`](@ref canvas/graphics/graphics.h))
+#### CANVAS_EXPOSE_XLIB ([`canvas/graphics/graphics.h`](@ref canvas/graphics/graphics.h))
 Exposes native access to Xlib objects used by CanvasEngine. This requires manually including the Xlib headers before including the CanvasEngine headers.
 
 #### CANVAS_NO_MUTEX_ATOMICS ([`canvas/threads/atomic.h`](@ref canvas/threads/atomic.h))

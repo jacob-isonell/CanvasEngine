@@ -19,10 +19,57 @@
 #include "ivk_load.h"
 #include "icore_global.h"
 #include "ivk_proto.h"
+#include "ivk_dev.h"
 #include <canvas/core/library.h>
 #include <inttypes.h>
 
 ICE_API VkInstance ivk_inst = VK_NULL_HANDLE;
+
+#ifndef VK_KHR_display
+#error CanvasEngine requires instance layer VK_KHR_display present
+#endif /* !VK_KHR_display */
+#ifndef VK_KHR_surface
+#error CanvasEngine requires instance layer VK_KHR_surface present
+#endif /* !VK_KHR_surface */
+#ifdef CANVAS_ENABLE_WAYLAND
+#ifndef VK_KHR_wayland_surface
+#error CanvasEngine requires instance layer VK_KHR_wayland_surface present
+#endif /* !VK_KHR_wayland_surface */
+#endif
+#ifdef CANVAS_ENABLE_XLIB
+#ifndef VK_KHR_xlib_surface
+#error CanvasEngine requires instance layer VK_KHR_xlib_surface present
+#endif /* !VK_KHR_xlib_surface */
+#ifndef VK_KHR_xcb_surface
+#error CanvasEngine requires instance layer VK_KHR_xcb_surface present
+#endif /* !VK_KHR_xcb_surface */
+#endif
+#if CANVAS_PLATFORM_WINDOWS
+#ifndef VK_KHR_win32_surface
+#error CanvasEngine requires instance layer VK_KHR_win32_surface present
+#endif /* !VK_KHR_win32_surface */
+#endif
+
+static const char* s_req_inst_exts[] = {
+  VK_KHR_DISPLAY_EXTENSION_NAME,
+  VK_KHR_SURFACE_EXTENSION_NAME,
+#ifdef CANVAS_ENABLE_WAYLAND
+  VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME,
+#endif
+#ifdef CANVAS_ENABLE_XLIB
+  VK_KHR_XLIB_SURFACE_EXTENSION_NAME,
+  VK_KHR_XCB_SURFACE_EXTENSION_NAME,
+#endif
+#if CANVAS_PLATFORM_WINDOWS
+  VK_KHR_WIN32_SURFACE_EXTENSION_NAME
+#endif
+};
+
+static const ice_render_driver_vfp s_vfp = {
+  .release = NULL,
+  .fetch_gpu_devs = NULL,
+  .get_gpu_dev = NULL
+};
 
 static ce_err s_create_instance(void);
 
@@ -63,14 +110,52 @@ ICE_API void ivk_shutdown(void) {
 }
 
 static ce_err s_create_instance(void) {
+  const size_t inst_exts_len = CE_ARRLEN(s_req_inst_exts) + ifx_ops.vulkan.inst_exts_len;
+  
+  /* A pointer to an array to chars.
+   * Extension names can't be over 256 chars
+   * So we're using that fact to save some memory allocations.
+   */
+  char (*inst_exts)[VK_MAX_EXTENSION_NAME_SIZE] = NULL;
+  
+  /* A pointer to c string pointers.
+   * `VkInstanceCreateInfo::ppEnabledExtensionNames` requires a `const char* const*` type
+   * which `char (*)[256]` cannot be converted to.
+   */
+  char** inst_ptrs = NULL;
+  
+  /* The benifit of doing this way is that it requires only
+   * two dynamic memory allocation calls instead of one per extension used.
+   * Downside is that it could allocate more memory than is needed.
+   */
+  
   IERRBEGIN {
+    
+    inst_exts = (char(*)[256])ialloc(sizeof(*inst_exts) * inst_exts_len, &IERRVAL);
+    IERRDO(IERRVAL);
+    
+    inst_ptrs = (char**)ialloc(sizeof(*inst_ptrs) * inst_exts_len, &IERRVAL);
+    IERRDO(IERRVAL);
+    
+    size_t ext_index = 0;
+    for (; ext_index < CE_ARRLEN(s_req_inst_exts); ++ext_index) {
+      strncpy(inst_exts[ext_index], s_req_inst_exts[ext_index], VK_MAX_EXTENSION_NAME_SIZE);
+      inst_ptrs[ext_index] = inst_exts[ext_index];
+    }
+    
+    for (size_t i = 0; i < ifx_ops.vulkan.inst_exts_len; ++i) {
+      strncpy(inst_exts[ext_index], ifx_ops.vulkan.inst_exts[i], VK_MAX_EXTENSION_NAME_SIZE);
+      inst_ptrs[ext_index] = inst_exts[ext_index];
+      ++ext_index;
+    }
+    
     VkApplicationInfo app_info;
     app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     app_info.pNext = NULL;
-    app_info.pApplicationName = icore.app_info.name;
-    app_info.applicationVersion = icore.app_info.version;
-    app_info.pEngineName = icore.engine_info.name;
-    app_info.engineVersion = icore.engine_info.version;
+    app_info.pApplicationName = icore_ops.app_name;
+    app_info.applicationVersion = icore_ops.app_version;
+    app_info.pEngineName = icore_ops.engine_name;
+    app_info.engineVersion = icore_ops.engine_version;
     app_info.apiVersion = VK_API_VERSION_1_0;
     
     VkInstanceCreateInfo inst_info;
@@ -78,14 +163,15 @@ static ce_err s_create_instance(void) {
     inst_info.pNext = NULL;
     inst_info.flags = 0;
     inst_info.pApplicationInfo = &app_info;
-    inst_info.enabledLayerCount = 0;
-    inst_info.ppEnabledLayerNames = NULL;
-    inst_info.enabledExtensionCount = 0;
-    inst_info.ppEnabledExtensionNames = NULL;
+    inst_info.enabledLayerCount = (uint32_t)ifx_ops.vulkan.inst_layers_len;
+    inst_info.ppEnabledLayerNames = ifx_ops.vulkan.inst_layers;
+    inst_info.enabledExtensionCount = (uint32_t)inst_exts_len;
+    inst_info.ppEnabledExtensionNames = (const char* const*)inst_ptrs;
     
     IERRDO(ifrom_vk(vkCreateInstance(&inst_info, IVK_ALLOC, &ivk_inst)));
     
   } IERREND {
+    
   #ifdef CANVAS_DEBUG
     if (ivk_inst && !ivk_has(vkDestroyInstance)) {
       IDEBWARN("VkInstance was created but cannot be destroyed with vkDestroyInstance\n");
@@ -97,8 +183,61 @@ static ce_err s_create_instance(void) {
       ivk_inst = NULL;
     }
   }
+  
+  ifree(inst_exts, sizeof(*inst_ptrs) * inst_exts_len);
+  ifree(inst_ptrs, sizeof(*inst_exts) * inst_exts_len);
   return IERRVAL;
 }
+
+/*ICE_API void ivk_funcs(
+  CE_OUT ifx_funcs_t* out
+) {
+  out->ce_gpu_dev_get = &ivk_gpu_dev_get;
+  out->ce_gpu_dev_release = &ivk_gpu_dev_release;
+  out->ce_dev_create = &ivk_dev_create;
+  out->ce_dev_delete = &ivk_dev_delete;
+}
+
+ICE_API ce_err ivk_inst_layers(
+  CE_OUT ce_arr(VkLayerProperties)* out_layers
+) {
+  uint32_t count = 0;
+  ce_arr(VkLayerProperties) layers = CE_ARRINIT;
+  IERRBEGIN {
+    IERRDO(ifrom_vk(vkEnumerateInstanceLayerProperties(&count, NULL)));
+    IERRDO(ce_arr_resize(&layers, count));
+    IERRDO(ifrom_vk(vkEnumerateInstanceLayerProperties(&count, layers)));
+  } IERREND {
+    if (layers != NULL) {
+      ce_arr_free(layers);
+    }
+    layers = NULL;
+  }
+  
+  *out_layers = layers;
+  return IERRVAL;
+}
+
+ICE_API ce_err ivk_inst_exts(
+  CE_IN  const ce_utf8* name,
+  CE_OUT ce_arr(VkExtensionProperties)* out_exts
+) {
+  uint32_t count = 0;
+  ce_arr(VkExtensionProperties) exts = CE_ARRINIT;
+  IERRBEGIN {
+    IERRDO(ifrom_vk(vkEnumerateInstanceExtensionProperties(name, &count, NULL)));
+    IERRDO(ce_arr_resize(&exts, count));
+    IERRDO(ifrom_vk(vkEnumerateInstanceExtensionProperties(name, &count, exts)));
+  } IERREND {
+    if (exts != NULL) {
+      ce_arr_free(exts);
+    }
+    exts = NULL;
+  }
+  
+  *out_exts = exts;
+  return IERRVAL;
+}*/
 
 ICE_API ce_err ifrom_vk(VkResult res) {
   switch (res) {

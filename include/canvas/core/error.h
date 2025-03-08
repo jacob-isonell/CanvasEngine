@@ -21,7 +21,7 @@
 
 #include <canvas/core/base.h>
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 /**
  * @ingroup error_handling
@@ -47,7 +47,9 @@ typedef int ce_err;
  * @return A pointer to a c-style string stored in static memory.
  *         This pointer should not be free-ed or written to.
  */
-CE_API const ce_utf8* ce_errstr(const ce_err error);
+CE_API const ce_utf8* ce_errstr(
+  const ce_err error
+);
 
 #define CE_EOK             0x0000
 #define CE_EUNKNOWN        0xFFFF
@@ -197,6 +199,6 @@ CE_API const ce_utf8* ce_errstr(const ce_err error);
 
 #define CE_EDEADLK CE_EDEADLOCK
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !CANVAS_CORE_ERROR_H */

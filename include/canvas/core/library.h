@@ -21,7 +21,7 @@
 
 #include <canvas/core/error.h>
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 /**
  * @ingroup types
@@ -37,29 +37,29 @@ typedef enum ce_lib_flags {
   CE_LIB_FLAG_NONE = 0, /* add documentation here! */
 } ce_lib_flags;
 
-/**
- * @brief add documentation here!
+/** @brief Opens a handle to the library file.
  */
 CE_API ce_err ce_lib_open(
-  ce_lib**       CE_RESTRICT handle,
-  const ce_utf8* CE_RESTRICT filepath,
-  ce_lib_flags               flags
+  CE_OUT ce_lib**       CE_RESTRICT handle,
+  CE_IN  const ce_utf8* CE_RESTRICT filepath,
+         ce_lib_flags               flags
 );
 
-/**
- * @brief add documentation here!
+/** @brief Loads a symbol `name` from the library and writes the address to
+ *   the symbol to the location pointed to by `out`.
  */
 CE_API ce_err ce_lib_load(
-  ce_lib*        CE_RESTRICT handle,
-  const ce_utf8* CE_RESTRICT name,
-  void*          CE_RESTRICT out
+  CE_INOUT ce_lib*        CE_RESTRICT handle,
+  CE_IN    const ce_utf8* CE_RESTRICT name,
+  CE_OUT   void*          CE_RESTRICT out
 );
 
-/**
- * @brief add documentation here!
+/** @brief add documentation here!
  */
-CE_API void ce_lib_close(ce_lib* handle);
+CE_API void ce_lib_close(
+  CE_IN ce_lib* handle
+);
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !CANVAS_CORE_LIBRARY_H */

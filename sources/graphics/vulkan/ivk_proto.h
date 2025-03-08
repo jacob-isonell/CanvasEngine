@@ -16,12 +16,12 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef IGRAPHICS_VULKAN_PROTO_H
-#define IGRAPHICS_VULKAN_PROTO_H
+#ifndef IVK_PROTO_H
+#define IVK_PROTO_H
 
 #include "ifx_vk.h"
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 #undef IVK_PROTO_MACRO
 #undef IVK_PROTO_DECL
@@ -56,6 +56,6 @@ ICE_API void ivk_impl_check_pfn_value(
 
 #define ivk_has(val) (ice_##val != NULL)
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
-#endif /* !IGRAPHICS_VULKAN_PROTO_H */
+#endif /* !IVK_PROTO_H */

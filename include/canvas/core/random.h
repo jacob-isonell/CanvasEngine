@@ -21,13 +21,13 @@
 
 #include <canvas/core/error.h>
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 CE_API ce_err ce_rand(
   unsigned int* CE_RESTRICT seed,
   unsigned int* CE_RESTRICT out
 );
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !CANVAS_CORE_RANDOM_H */

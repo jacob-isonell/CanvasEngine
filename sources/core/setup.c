@@ -20,7 +20,7 @@
 #include <canvas/core/setup.h>
 
 CE_API ce_err ce_core_set(const ce_core* ops) {
-  return iset_ops(&icore_ops, ops, sizeof(*ops));
+  return ISET_OPS(&icore_ops, ops);
 }
 
 #ifdef CANVAS_DEBUG
@@ -46,45 +46,18 @@ static void s_deffree(void* addr, size_t bytes, void* arg) {
 }
 
 ICE_API ce_err icore_init(void) {
-  if (icore_ops.app_name) {
-    ce_err e;
-    icore.app_info.name = ialloc(strlen(icore_ops.app_name) + 1, &e);
-    strcpy(icore.app_info.name, icore_ops.app_name);
-    if (ce_failure(e)) {
-      return e;
-    }
-  }
-  
-  if (icore_ops.engine_name) {
-    ce_err e;
-    icore.engine_info.name = ialloc(strlen(icore_ops.engine_name) + 1, &e);
-    strcpy(icore.engine_info.name, icore_ops.engine_name);
-    if (ce_failure(e)) {
-      return e;
-    }
-  }
-  
-  icore.app_info.version = icore_ops.app_version;
-  icore.engine_info.version = icore_ops.engine_version;
+  /* Nothing to do here for now. */
   return CE_EOK;
 }
 
 ICE_API void icore_shutdown(void) {
-  if (icore.app_info.name) {
-    ifree(icore.app_info.name, strlen(icore.app_info.name) + 1);
-    icore.app_info.name = NULL;
-  }
-  
-  if (icore.engine_info.name) {
-    ifree(icore.engine_info.name, strlen(icore.engine_info.name) + 1);
-    icore.engine_info.name = NULL;
-  }
+  /* Nothing to do here for now. */
 }
 
 ICE_API ce_core icore_ops = {
-  .app_name = NULL,
+  .app_name = {0},
   .app_version = 0,
-  .engine_name = NULL,
+  .engine_name = {0},
   .engine_version = 0,
 };
 

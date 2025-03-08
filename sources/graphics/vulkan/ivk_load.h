@@ -16,12 +16,12 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef IGRAPHICS_VULKAN_LOAD_H
-#define IGRAPHICS_VULKAN_LOAD_H
+#ifndef IVK_LOAD_H
+#define IVK_LOAD_H
 
 #include "ifx_vk.h"
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 #if CANVAS_PLATFORM_WINDOWS
 #define IVK_DLL_FILE "vulkan-1.dll"
@@ -35,6 +35,6 @@ ICE_API void ivk_unload(void);
 
 ICE_API extern PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
-#endif /* !IGRAPHICS_VULKAN_LOAD_H */
+#endif /* !IVK_LOAD_H */

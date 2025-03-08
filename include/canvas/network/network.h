@@ -25,10 +25,10 @@
 #error the network module for CanvasEngine has been disabled
 #endif
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !CANVAS_NETWORK_NETWORK_H */

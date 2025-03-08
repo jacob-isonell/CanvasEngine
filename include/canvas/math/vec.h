@@ -21,7 +21,7 @@
 
 #include <canvas/math/math.h>
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 /**
  * @ingroup vector_types
@@ -335,10 +335,10 @@ float ce_dist_vec4f32(
   ce_vec4f32 rhs
 );
 
-#ifndef ICE_DOXY
+#ifndef ICE_DOCS
 #include <canvas/math/details/vec.h.inl>
-#endif /* !ICE_DOXY */
+#endif /* !ICE_DOCS */
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !CANVAS_MATH_VEC_H */

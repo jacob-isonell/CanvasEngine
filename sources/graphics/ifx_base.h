@@ -16,19 +16,38 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef IGRAPHICS_BASE_H
-#define IGRAPHICS_BASE_H
+#ifndef IFX_BASE_H
+#define IFX_BASE_H
 
 #include "icore_base.h"
-#include <canvas/graphics/graphics.h>
-#include <canvas/graphics/setup.h>
 
-ICE_NAMESPACE_BEGIN
+#ifdef CANVAS_ENABLE_XLIB
+#define VK_USE_PLATFORM_XLIB_KHR 1
+#define VK_USE_PLATFORM_XCB_KHR 1
+#define VK_USE_PLATFORM_XLIB_XRANDR_EXT 1
+#include <X11/Xlib.h>
+#endif
+
+#ifdef CANVAS_ENABLE_WAYLAND
+#define VK_USE_PLATFORM_WAYLAND_KHR 1
+#include <wayland-client.h>
+#endif
+
+#if CANVAS_PLATFORM_WINDOWS
+#define VK_USE_PLATFORM_WIN32_KHR 1
+#endif
+
+#include <canvas/graphics.h>
+
+CE_NAMESPACE_BEGIN
 
 ICE_API extern ce_graphics ifx_ops;
 ICE_API ce_err ifx_init(void);
 ICE_API void ifx_shutdown(void);
 
-ICE_NAMESPACE_END
+#define IFX_GET_VK_HANDLE(hndl) (ICE_ASSERT(hndl.type == ICEFX_VULKAN), hndl.handle.vk)
+#define IFX_GET_DX12_HANDLE(hndl) (ICE_ASSERT(hndl.type == ICEFX_DIRECTX12), hndl.handle.dx12)
 
-#endif /* !IGRAPHICS_BASE_H */
+CE_NAMESPACE_END
+
+#endif /* !IFX_BASE_H */

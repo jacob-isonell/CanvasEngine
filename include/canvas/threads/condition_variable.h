@@ -27,9 +27,9 @@
  */
 #define CE_COND_INIT /* implementation-defined */
 
-#ifndef ICE_DOXY
+#ifndef ICE_DOCS
 #include <canvas/threads/details/condition_variable.h.inl>
-#endif /* !ICE_DOXY */
+#endif /* !ICE_DOCS */
 
 /**
  * @ingroup threading_objects
@@ -37,7 +37,7 @@
  */
 typedef ice_cnd ce_cnd;
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 #ifdef CANVAS_HAS_THREADS
 
@@ -83,6 +83,6 @@ CE_API ce_err cnd_timedwait(
 
 #endif /* !CANVAS_HAS_THREADS */
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !CANVAS_THREADS_CONDITION_VARIABLE_H */

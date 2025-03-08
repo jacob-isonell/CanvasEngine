@@ -25,11 +25,11 @@
 #error icore_unix.h can only be included on Unix based platforms
 #endif
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 ICE_API ce_err icore_unix_init(void);
 ICE_API void icore_unix_shutdown(void);
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !ICORE_UNIX_H */

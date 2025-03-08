@@ -16,22 +16,41 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_GRAPHICS_DEVICE_H
-#define CANVAS_GRAPHICS_DEVICE_H
+#include "ivk_load.h"
+#include "icore_global.h"
+#include "ivk_proto.h"
+#include "ivk_dev.h"
 
-#include <canvas/graphics/gpu_device.h>
+struct ice_vulkan_driver_data {
+  int unused;
+};
 
-ICE_NAMESPACE_BEGIN
+static const ice_render_driver_vfp s_vfp = {
+  .release = NULL,
+  .fetch_gpu_devs = NULL,
+  .get_gpu_dev = NULL
+};
 
-ICE_FX_HANDLE(ce_dev);
-
-typedef struct ce_dev_create_info {
-  ce_gpu_dev* gpu_dev;
-} ce_dev_create_info;
-
-CE_API ce_err ce_dev_create(ce_dev** dev_out, const ce_dev_create_info* info);
-CE_API void ce_dev_delete(ce_dev* dev);
-
-ICE_NAMESPACE_END
-
-#endif /* !CANVAS_GRAPHICS_DEVICE_H */
+CE_API ce_err ce_vulkan_driver(
+  CE_OUT ce_render_driver* driver,
+  CE_IN  const ce_vulkan_driver_create_info* info
+) {
+  if (!ihas_initialized()) {
+    return CE_EPERM;
+  }
+  
+  if (driver == NULL || info == NULL) {
+    return CE_EINVAL;
+  }
+  
+  (void)info;
+  
+  ce_err e;
+  driver->data.vk = (ice_vulkan_driver_data*)ialloc(sizeof(ice_vulkan_driver_data), &e);
+  if (ce_failure(e)) {
+    return e;
+  }
+  
+  driver->data.vk->unused = 0;
+  return CE_EOK;
+}

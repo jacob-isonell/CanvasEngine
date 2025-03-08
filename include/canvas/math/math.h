@@ -22,10 +22,10 @@
 #include <canvas/core/base.h>
 #include <math.h>
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !CANVAS_MATH_MATH_H */

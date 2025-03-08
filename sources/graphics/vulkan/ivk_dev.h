@@ -16,29 +16,30 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_GRAPHICS_GPU_DEVICE_H
-#define CANVAS_GRAPHICS_GPU_DEVICE_H
+#ifndef IVK_DEV_H
+#define IVK_DEV_H
 
-#include <canvas/graphics/graphics.h>
+#include "ivk_proto.h"
 
-ICE_NAMESPACE_BEGIN
-
-/**
- * @ingroup gpu_devices
- * @brief add documentation here!
- */
-ICE_FX_HANDLE(ce_gpu_dev);
-
-/**
- * @ingroup gpu_devices
- * @brief add documentation here!
- */
-CE_API ce_err ce_gpu_dev_get(
-  ce_gpu_dev** buffer,
-  size_t       buffer_size,
-  size_t*      out_size
+#if 0
+ICE_API ce_err ivk_gpu_dev_get(
+  CE_OUT ce_gpu_dev* CE_RESTRICT buffer,
+  CE_IN  size_t                  buffer_size,
+  CE_OUT size_t*     CE_RESTRICT opt_out_size
 );
 
-ICE_NAMESPACE_END
+ICE_API void ivk_gpu_dev_release(
+  CE_IN ce_gpu_dev gpu_dev
+);
 
-#endif /* !CANVAS_GRAPHICS_GPU_DEVICE_H */
+ICE_API ce_err ivk_dev_create(
+  CE_OUT ce_dev* dev_out,
+  CE_IN  const ce_dev_create_info* info
+);
+
+ICE_API void ivk_dev_delete(
+  CE_IN ce_dev dev
+);
+#endif
+
+#endif /* !IVK_DEV_H */

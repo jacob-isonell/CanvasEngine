@@ -25,25 +25,20 @@
 #error the graphics module for CanvasEngine has been disabled
 #endif
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
-typedef struct ce_vk_layer_str {
-  ce_utf8 name[256];
-} ce_vk_layer_str;
-
-typedef struct ce_vk_ext_str {
-  ce_utf8 name[256];
-} ce_vk_ext_str;
+#define ICE_FX_HANDLE(name)
+#define CE_NULL_HANDLE {0}
 
 typedef enum ce_render_api {
   CE_VULKAN,
   CE_DIRECTX12,
 } ce_render_api;
 
-#ifdef ICE_DOXY
+#ifdef ICE_DOCS
 typedef void* ice_win32_hwnd;
 typedef void* ice_wl_surface;
-typedef long ice_x11_window;
+typedef long ice_xlib_window;
 
 /**
  * @brief
@@ -54,12 +49,12 @@ typedef long ice_x11_window;
 typedef union ce_wnd_handle {
   ice_win32_hwnd win32;
   ice_wl_surface wl;
-  ice_x11_window x11;
+  ice_xlib_window xlib;
 } ce_wnd_handle;
 #endif
 
 #include <canvas/graphics/details/graphics.inl>
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !CANVAS_GRAPHICS_GRAPHICS_H */

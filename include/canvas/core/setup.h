@@ -21,7 +21,7 @@
 
 #include <canvas/core/error.h>
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 /**
  * @ingroup configuration
@@ -30,13 +30,13 @@ ICE_NAMESPACE_BEGIN
 typedef struct ce_core {
   
   /** add documentation here! */
-  const ce_utf8* app_name;
+  ce_utf8 app_name[256];
   
   /** add documentation here! */
   unsigned int app_version;
   
   /** add documentation here! */
-  const ce_utf8* engine_name;
+  ce_utf8 engine_name[256];
   
   /** add documentation here! */
   unsigned int engine_version;
@@ -60,6 +60,6 @@ CE_API ce_err ce_init(void);
  */
 CE_API void ce_shutdown(void);
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !CANVAS_CORE_SETUP_H */

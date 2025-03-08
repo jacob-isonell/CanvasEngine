@@ -33,7 +33,7 @@
 #  define CANVAS_EXPOSE_VULKAN
 #  if CANVAS_PLATFORM_UNIX
 #    define CANVAS_EXPOSE_WAYLAND
-#    define CANVAS_EXPOSE_X11
+#    define CANVAS_EXPOSE_XLIB
 #  elif CANVAS_PLATFORM_WINDOWS
 #    define CANVAS_EXPOSE_WIN32
 #  endif
@@ -99,7 +99,7 @@
  *    inet_* (network module)
  */
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 ICE_API ce_err icore_init(void);
 ICE_API void icore_shutdown(void);
@@ -109,13 +109,12 @@ ICE_API void icore_shutdown(void);
  */
 ICE_API cebool ihas_initialized(void);
 
-/* Convert errno value to ce_err. */
-ICE_API ce_err ifrom_errno(int in);
-
-#define ierrno ifrom_errno(errno)
-
 ICE_API void* ialloc(size_t bytes, ce_err* opt_err);
 ICE_API void ifree(void* addr, size_t bytes);
+
+/* Convert errno value to ce_err. */
+ICE_API ce_err ifrom_errno(int in);
+#define ierrno ifrom_errno(errno)
 
 ICE_API extern ce_core icore_ops;
 
@@ -131,6 +130,7 @@ CE_INLINE ce_err iset_ops(void* dst, const void* src, size_t c) {
   memcpy(dst, src, c);
   return CE_EOK;
 }
+#define ISET_OPS(dest, src) iset_ops((dest), (src), (ICE_ASSERT(sizeof(*(dest)) == sizeof(*(src))), sizeof(*(dest))))
 
 #define ISTRIFYX(in) #in
 #define ISTRIFY(in) ISTRIFYX(in)
@@ -254,6 +254,6 @@ static inline void ilog_impl(
 #include "icore_win32.h"
 #endif
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !ICORE_BASE_H */

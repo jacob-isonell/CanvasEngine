@@ -19,8 +19,7 @@
 ICE_ADDHEADERS(
   "canvas/graphics.h"
   
-  "canvas/graphics/device.h"
-  "canvas/graphics/gpu_device.h"
+  "canvas/graphics/driver.h"
   "canvas/graphics/graphics.h"
   "canvas/graphics/setup.h"
   

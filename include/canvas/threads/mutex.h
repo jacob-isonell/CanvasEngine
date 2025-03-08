@@ -56,9 +56,9 @@ typedef enum ce_mtx_kind {
 
 #include <canvas/threads/thread.h>
 
-#ifndef ICE_DOXY
+#ifndef ICE_DOCS
 #include <canvas/threads/details/mutex.h.inl>
-#endif /* !ICE_DOXY */
+#endif /* !ICE_DOCS */
 
 /**
  * @ingroup threading_objects
@@ -66,7 +66,7 @@ typedef enum ce_mtx_kind {
  */
 typedef ice_mtx ce_mtx;
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 #ifdef CANVAS_HAS_THREADS
 
@@ -111,6 +111,6 @@ CE_API ce_err ce_mtx_unlock(ce_mtx* mtx);
 
 #endif /* !CANVAS_HAS_THREADS */
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !CANVAS_THREADS_MUTEX_H */

@@ -35,7 +35,7 @@ typedef struct i_thread_start_data_t {
 static void* i_thread_start(void* in) {
   i_thread_start_data_t data = *(i_thread_start_data_t*)in;
   
-  ce_free(in);
+  ifree(in, sizeof(data));
   const intptr_t out = data.func(data.arg);
   
   return (void*)out;
@@ -46,7 +46,7 @@ static void* i_thread_start(void* in) {
 static unsigned int CE_STDCALL i_thread_start(void* in) {
   i_thread_start_data_t data = *(i_thread_start_data_t*)in;
   
-  ce_free(in);
+  ifree(in, sizeof(data));
   return (unsigned int)data.func(data.arg);
 }
 
@@ -60,7 +60,7 @@ CE_API ce_err ce_thrd_create(ce_thrd* out, int (*func)(void*), void* arg) {
     return CE_EINVAL;
   }
   
-  data = ce_alloc_s(sizeof(*data), &err);
+  data = (i_thread_start_data_t*)ialloc(sizeof(*data), &err);
   if (ce_failure(err)) {
     return err;
   }
@@ -72,7 +72,7 @@ CE_API ce_err ce_thrd_create(ce_thrd* out, int (*func)(void*), void* arg) {
   
   err = ifrom_errno(pthread_create(out, NULL, &i_thread_start, data));
   if (ce_failure(err)) {
-    ce_free(data);
+    ifree(data, sizeof(*data));
   }
   return err;
   
@@ -80,7 +80,7 @@ CE_API ce_err ce_thrd_create(ce_thrd* out, int (*func)(void*), void* arg) {
   
   uintptr_t thrd_handle = _beginthreadex(NULL, 0, &i_thread_start, data, 0, NULL);
   if (thrd_handle == -1) {
-    ce_free(data);
+    ifree(data, sizeof(*data));
     return ierrno;
   }
   

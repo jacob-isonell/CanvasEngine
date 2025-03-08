@@ -21,7 +21,6 @@
 
 #include <canvas/graphics/graphics.h>
 #include <canvas/graphics/setup.h>
-#include <canvas/graphics/device.h>
-#include <canvas/graphics/gpu_device.h>
+#include <canvas/graphics/driver.h>
 
 #endif /* !CANVAS_GRAPHICS_H */

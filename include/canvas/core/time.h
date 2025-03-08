@@ -23,7 +23,7 @@
 #include <time.h>
 #include <math.h>
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 /**
  * @ingroup time
@@ -39,9 +39,8 @@ typedef struct ce_time_t {
 } ce_time_t;
 
 typedef enum ce_clock {
-  CE_CLOCK_UTC,     /* System UTC. */
-  CE_CLOCK_MONOTIC, /* Absolute time (usually the time since boot, may not be aware of the tiem the system is suspended). */
-  CE_CLOCK_PERF,    /* Fastest clock available. Otherwise same as `CE_CLOCK_MONOTIC`. */
+  CE_CLOCK_UTC,  /* System UTC since 01/01/1970. */
+  CE_CLOCK_PERF, /* Fastest clock available. */
 } ce_clock;
 
 /**
@@ -266,10 +265,10 @@ CE_INLINE ce_time_t ce_time_lmilli(long double in);
  */
 CE_INLINE ce_time_t ce_time_lseconds(long double in);
 
-#ifndef ICE_DOXY
+#ifndef ICE_DOCS
 #include <canvas/core/details/time.h.inl>
-#endif /* !ICE_DOXY */
+#endif /* !ICE_DOCS */
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !CANVAS_CORE_TIME_H */

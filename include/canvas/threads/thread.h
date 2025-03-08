@@ -33,10 +33,18 @@
 
 #include <canvas/core/time.h>
 
-#ifndef ICE_DOXY
+#ifndef ICE_DOCS
 #include <canvas/threads/details/check.inl>
 #include <canvas/threads/details/thread.h.inl>
-#endif /* !ICE_DOXY */
+#else
+
+/** @internal */
+typedef struct ice_thrd { int unused; } ice_thrd;
+
+/** @internal */
+typedef struct ice_once_flag { int unused; } ice_once_flag;
+
+#endif /* !ICE_DOCS */
 
 /**
  * @ingroup threading_objects
@@ -50,7 +58,7 @@ typedef ice_thrd ce_thrd;
  */
 typedef ice_once_flag ce_once_flag;
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 #ifdef CANVAS_HAS_THREADS
 
@@ -136,6 +144,6 @@ CE_API ce_err ce_call_once(
 
 #endif /* !CANVAS_HAS_THREADS */
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !CANVAS_THREADS_THREAD_H */

@@ -68,19 +68,20 @@ CE_API ce_err ce_init(void) {
 }
 
 CE_API void ce_shutdown(void) {
-  if (icore.init_count == 0) {
-    return;
-  }
-  
-  if (--icore.init_count != 0) {
+  if (1 < icore.init_count) {
+    if (icore.init_count != 0) {
+      --icore.init_count;
+    }
     return;
   }
   
   IDEBLOG("Shuting down CanvasEngine\n");
-  const iitem_pairs* it = s_items;
-  const iitem_pairs* const end = s_items + CE_ARRLEN(s_items);
-  for (; it != end; ++it) {
+  const iitem_pairs* const end = s_items;
+  const iitem_pairs* it = s_items + CE_ARRLEN(s_items);
+  while (it-- != end) {
     IDEBLOG("Terminating CanvasEngine module \"%s\"\n", it->debug_name);
     it->term();
   }
+  
+  --icore.init_count;
 }

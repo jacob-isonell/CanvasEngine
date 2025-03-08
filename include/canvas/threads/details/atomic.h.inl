@@ -75,7 +75,7 @@
 
 #ifdef CANVAS_HAS_ATOMICS
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 /* Temporary */
 #undef ICE_ATOMICS_MTXIMPL
@@ -463,6 +463,6 @@ ice_impl_atomic_signal_fence((memory_order)(order))
 #define ce_atomic_ulonglong ICE_ATOMIC_DECL(unsigned long long)
 #define ce_atomic_pointer(type) ICE_ATOMIC_DECL(type*)
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !CANVAS_HAS_ATOMICS */

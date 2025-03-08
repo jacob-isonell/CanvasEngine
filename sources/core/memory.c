@@ -85,7 +85,7 @@ static void s_dofree(void* addr, size_t bytes) {
 }
 
 CE_API ce_err ce_set_alloc(ce_alloc_t in) {
-  if (!ihas_initialized()) {
+  if (ihas_initialized()) {
     return CE_EPERM;
   }
   
@@ -114,11 +114,6 @@ ICE_API void* ialloc(size_t bytes, ce_err* opt_err) {
       IERRDO(CE_EINVAL);
     }
     
-    const size_t alloc_size = bytes + offsetof(imem_t, buffer);
-    if (alloc_size <= bytes) { /* Check for overflow. */
-      IERRDO(CE_ERANGE);
-    }
-    
     IERRDO(ce_mtx_lock(&icore.mem.lck));
     out = s_doalloc(bytes);
     ce_mtx_unlock(&icore.mem.lck);
@@ -134,7 +129,9 @@ ICE_API void* ialloc(size_t bytes, ce_err* opt_err) {
 }
 
 ICE_API void ifree(void* addr, size_t bytes) {
-  if (addr == NULL || !ihas_initialized()) {
+  ICE_ASSERT(ihas_initialized());
+  
+  if (addr == NULL) {
     return;
   }
   
@@ -174,7 +171,7 @@ CE_API void* ce_alloc(size_t bytes) {
 }
 
 CE_API void ce_free(void* addr) {
-  if (addr == NULL) {
+  if (addr == NULL || !ihas_initialized()) {
     return;
   }
   

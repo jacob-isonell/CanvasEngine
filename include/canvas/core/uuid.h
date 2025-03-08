@@ -21,7 +21,7 @@
 
 #include <canvas/core/error.h>
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 typedef struct ce_uuid {
   ce_byte buffer[16];
@@ -29,6 +29,6 @@ typedef struct ce_uuid {
 
 CE_API ce_err ce_uuid_gen(ce_uuid* out);
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !CANVAS_CORE_UUID_H */

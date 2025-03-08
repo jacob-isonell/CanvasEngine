@@ -19,6 +19,7 @@
 target_sources(CanvasEngine
 PRIVATE
   "setup.c"
+  "driver.c"
   "ivk_load.h"
     "ivk_load.c"
   "ivk_proto.h"
@@ -31,4 +32,6 @@ PRIVATE
     "ivk_proto/all.inl"
     "ivk_proto/ext.inl"
     "ivk_proto/global.inl"
+  "ivk_dev.h"
+    "ivk_dev.c"
 )

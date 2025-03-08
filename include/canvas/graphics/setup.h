@@ -21,7 +21,7 @@
 
 #include <canvas/graphics/graphics.h>
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 /**
  * @ingroup configuration
@@ -35,7 +35,7 @@ typedef struct ce_graphics_vulkan_t {
    *   These fields are for specifying instance layers that are required for the application
    *   to run properly. CanvasEngine by default requires certain instance layers to function.
    */
-  const ce_vk_layer_str* inst_layers;
+  const char* const* inst_layers;
   
   /** @brief The number of elements in `inst_layers`. */
   size_t inst_layers_len;
@@ -46,7 +46,7 @@ typedef struct ce_graphics_vulkan_t {
    *   These fields are for specifying instance extensions that are required for the application
    *   to run properly. CanvasEngine by default requires certain instance extensions to function.
    */
-  const ce_vk_ext_str* inst_exts;
+  const char* const* inst_exts;
   
   /** @brief The number of elements in `inst_exts`. */
   size_t inst_exts_len;
@@ -75,6 +75,6 @@ CE_API ce_err ce_graphics_set(
   const ce_graphics* ops
 );
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !CANVAS_GRAPHICS_SETUP_H */

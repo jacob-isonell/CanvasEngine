@@ -26,7 +26,7 @@
 #error icore_win32.h can only be included on Windows
 #endif
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 /* The high performance frequency. */
 ICE_API extern double ihiperf_clock_factor;
@@ -34,6 +34,6 @@ ICE_API extern double ihiperf_clock_factor;
 ICE_API ce_err icore_win32_init(void);
 ICE_API void icore_win32_shutdown(void);
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !ICORE_WIN32_H */

@@ -16,8 +16,8 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef IGRAPHICS_VULKAN_H
-#define IGRAPHICS_VULKAN_H
+#ifndef IFX_VK_H
+#define IFX_VK_H
 
 #include "ifx_base.h"
 #include <canvas/graphics.h>
@@ -26,7 +26,7 @@
 
 #include <vulkan/vulkan.h>
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 #define IVK_CURRVER VK_HEADER_VERSION_COMPLETE
 #define IVK_MINVER VK_MAKE_API_VERSION(0, 1, 3, 0)
@@ -42,10 +42,21 @@ ICE_API extern VkInstance ivk_inst;
 ICE_API ce_err ivk_init(void);
 ICE_API void ivk_shutdown(void);
 
-ICE_API ce_err ifrom_vk(VkResult res);
+ICE_API ce_err ifrom_vk(
+  VkResult res
+);
 
-ICE_NAMESPACE_END
+ICE_API ce_err ivk_inst_layers(
+  CE_OUT ce_arr(VkLayerProperties)* out_layers
+);
+
+ICE_API ce_err ivk_inst_exts(
+  CE_IN  const ce_utf8* name,
+  CE_OUT ce_arr(VkExtensionProperties)* out_exts
+);
+
+CE_NAMESPACE_END
 
 #endif /* !ICE_VULKAN */
 
-#endif /* !IGRAPHICS_VULKAN_H */
+#endif /* !IFX_VK_H */

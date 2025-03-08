@@ -19,7 +19,11 @@
 #ifndef CANVAS_CORE_BASE_H
 #define CANVAS_CORE_BASE_H
 
-#ifdef ICE_DOXY
+#if defined(ICE_DOXY) /* || defined(__INTELLISENSE__) */
+#define ICE_DOCS
+#endif
+
+#ifdef ICE_DOCS
 
 /**
  * @ingroup utility
@@ -321,10 +325,59 @@
  */
 #define CE_ATTR_NORET
 
+/**
+ * @ingroup utility
+ * @brief Indicates that on success, the function will write to the address pointed
+ *        to by the argument.
+ */
+#define CE_OUT
+
+/**
+ * @ingroup utility
+ * @brief Same as `CE_OUT` except the argument is optinally `NULL`.
+ */
+#define CE_OUT_OPT
+
+/**
+ * @ingroup utility
+ * @brief Indicates that the input argument is read from an never written to.
+ */
+#define CE_IN
+
+/**
+ * @ingroup utility
+ * @brief same as `CE_IN` but the argument is optionally `NULL`.
+ */
+#define CE_IN_OPT
+
+/**
+ * @ingroup utility
+ * @brief Indicates that the function reads and writes to the argument.
+ */
+#define CE_INOUT
+
+/**
+ * @ingroup utility
+ * @brief same as `CE_INOUT` but the argument is optionally `NULL`.
+ */
+#define CE_INOUT_OPT
+
+/** @internal */
+#define CE_NAMESPACE_BEGIN
+
+/** @internal */
+#define CE_NAMESPACE_END
+
+/** @internal */
+#define CE_API
+
+/** @internal */
+typedef unsigned char icebool;
+
 #else
 #include <canvas_cmake_options.h>
 #include <canvas/core/details/base_def.inl>
-#endif /* !ICE_DOXY */
+#endif /* !ICE_DOCS */
 
 #include <stddef.h>
 #include <stdint.h>
@@ -335,7 +388,7 @@
 #include <string.h>
 #include <wchar.h>
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 /** @brief A typedef for char. Indicates that the stored value follows UTF-8 encoding. */
 typedef char ce_utf8;
@@ -392,11 +445,11 @@ typedef struct ce_version {
  */
 #define CE_ARRLEN(arr) (sizeof(arr) / sizeof(*(arr)))
 
-#ifndef ICE_DOXY
+#ifndef ICE_DOCS
 #include <canvas/core/details/base_macros.inl>
-#endif /* !ICE_DOXY */
+#endif /* !ICE_DOCS */
 
-#if defined(CANVAS_DEBUG) || defined(ICE_DOXY)
+#if defined(CANVAS_DEBUG) || defined(ICE_DOCS)
 
 /**
  * @brief
@@ -408,6 +461,6 @@ CE_API void ce_disable_debug_logs(void);
 #define ce_disable_debug_logs() ((void)0)
 #endif /* !CANVAS_DEBUG */
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !CANVAS_CORE_BASE_H */

@@ -23,7 +23,7 @@
 #include <canvas/core/memory.h>
 #include <canvas/threads/mutex.h>
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 typedef struct icore_t {
   size_t init_count;
@@ -32,15 +32,10 @@ typedef struct icore_t {
     ce_alloc_t alloc;
     ce_mtx lck;
   } mem;
-  
-  struct {
-    ce_utf8* name;
-    unsigned int version;
-  } app_info, engine_info;
 } icore_t;
 
 ICE_API extern icore_t icore;
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !ICORE_GLOBAL_H */

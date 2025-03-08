@@ -22,7 +22,7 @@
 
 #ifdef CANVAS_HAS_THREADS
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 #if defined(ICE_THREADS_POSIX)
 typedef pthread_t ice_thrd;
@@ -38,6 +38,6 @@ typedef struct ice_once_flag {
 #define CE_ONCE_FLAG_INIT {0}
 #endif
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !CANVAS_HAS_THREADS */

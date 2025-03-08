@@ -18,9 +18,9 @@
 
 #include "icore_base.h"
 #include <canvas/core/time.h>
-#include <winternl.h>
 
 #if CANVAS_PLATFORM_WINDOWS
+#include <winternl.h>
 
 static unsigned long long s_perf_count_int(void) {
   LARGE_INTEGER i;
@@ -62,12 +62,11 @@ CE_API ce_err ce_time_res(ce_clock clock, ce_time_t* out) {
   int posix_clock;
   switch (clock) {
   default: return CE_EINVAL;
-  case CE_CLOCK_PERF:
-  case CE_CLOCK_UTC:     posix_clock = CLOCK_REALTIME;  break;
-  case CE_CLOCK_MONOTIC: posix_clock = CLOCK_MONOTONIC; break;
+  case CE_CLOCK_UTC:  posix_clock = CLOCK_REALTIME;  break;
+  case CE_CLOCK_PERF: posix_clock = CLOCK_MONOTONIC; break;
   }
   
-  if (clock_getres(CLOCK_REALTIME, &now) != 0) {
+  if (clock_getres(posix_clock, &now) != 0) {
     return ierrno;
   }
   
@@ -84,9 +83,6 @@ CE_API ce_err ce_time_res(ce_clock clock, ce_time_t* out) {
     out->sec = 0;
     out->nsec = 100;
     return CE_EOK;
-  } break;
-  case CE_CLOCK_MONOTIC: {
-    return CE_ENOSYS;
   } break;
   case CE_CLOCK_PERF: {
     *out = s_perf_freq();
@@ -113,12 +109,11 @@ CE_API ce_err ce_time_get(ce_clock clock, ce_time_t* out) {
   int posix_clock;
   switch (clock) {
   default: return CE_EINVAL;
-  case CE_CLOCK_PERF:
-  case CE_CLOCK_UTC:     posix_clock = CLOCK_REALTIME;  break;
-  case CE_CLOCK_MONOTIC: posix_clock = CLOCK_MONOTONIC; break;
+  case CE_CLOCK_UTC:  posix_clock = CLOCK_REALTIME;  break;
+  case CE_CLOCK_PERF: posix_clock = CLOCK_MONOTONIC; break;
   }
   
-  if (clock_gettime(CLOCK_REALTIME, &now) != 0) {
+  if (clock_gettime(posix_clock, &now) != 0) {
     return ierrno;
   }
   
@@ -135,7 +130,7 @@ CE_API ce_err ce_time_get(ce_clock clock, ce_time_t* out) {
     LARGE_INTEGER i;
     NtQuerySystemTime(&i);
     
-    /* (for some reason) NtQuerySystemTime returns the number of 100 nanoseconds since 1st of January 1601.
+    /* NtQuerySystemTime returns the number of 100 nanoseconds since 1st of January 1601.
      * This function converts it to 1st of January 1970 like unix.
      * 1970 - 1601 = 369 years = 11644754400 seconds.
      */
@@ -144,10 +139,6 @@ CE_API ce_err ce_time_get(ce_clock clock, ce_time_t* out) {
     out->nsec = (i.QuadPart * 100) % ICE_NANO2SEC_V;
     out->sec = (i.QuadPart / (ICE_NANO2SEC_V / 100)) - SUB_369_YEARS;
     return CE_EOK;
-  } break;
-  case CE_CLOCK_MONOTIC: {
-    // NtQuerySystemTime()
-    return CE_ENOSYS;
   } break;
   case CE_CLOCK_PERF: {
     *out = s_perf_count();

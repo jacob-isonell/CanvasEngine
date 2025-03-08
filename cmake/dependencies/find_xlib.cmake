@@ -16,18 +16,18 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
-macro(ICEFindX11)
+macro(ICEFindXLib)
   if (UNIX)
     find_package(X11 COMPONENTS Xrandr xcb xcb_randr)
   endif ()
 endmacro()
 
-macro(ICELinkX11 out_target linking_kind)
+macro(ICELinkXLib out_target linking_kind)
   if (UNIX)
-    ICEFindX11()
+    ICEFindXLib()
   endif ()
-  cmake_dependent_option(CANVAS_ENABLE_X11 "Enable support for X11" ON "CANVAS_GRAPHICS;X11_FOUND" OFF)
-  if (CANVAS_ENABLE_X11)
+  cmake_dependent_option(CANVAS_ENABLE_XLIB "Enable support for XLIB" ON "CANVAS_GRAPHICS;X11_FOUND" OFF)
+  if (CANVAS_ENABLE_XLIB)
     target_link_libraries(${out_target} ${linking_kind}
       X11::X11
       X11::Xrandr

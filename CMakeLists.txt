@@ -41,7 +41,7 @@ include("cmake/doxygen.cmake")
 set(ICE_HEADER_PATH "${CMAKE_CURRENT_SOURCE_DIR}/include" CACHE STRING "internal" FORCE)
 
 macro(ICE_ADDHEADERS)
-  message(STATUS "dir : ${ARGV}")
+  # message(STATUS "dir : ${ARGV}")
   foreach (item ${ARGV})
     target_sources(CanvasEngine PRIVATE "${ICE_HEADER_PATH}/${item}")
   endforeach ()

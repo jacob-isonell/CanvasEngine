@@ -433,12 +433,19 @@
 #  define CE_API
 #endif
 
-#define ICE_NAMESPACE_BEGIN \
+#define CE_NAMESPACE_BEGIN \
   CE_EXTERNC_BEGIN \
   CE_WARN_PUSH \
   CE_WARN_DISABLE_GNU("-Wunused-function") \
   CE_WARN_DISABLE_MSVC(4820)
 
-#define ICE_NAMESPACE_END \
+#define CE_NAMESPACE_END \
   CE_WARN_POP \
   CE_EXTERNC_END
+
+#define CE_OUT
+#define CE_OUT_OPT
+#define CE_IN
+#define CE_IN_OPT
+#define CE_INOUT
+#define CE_INOUT_OPT

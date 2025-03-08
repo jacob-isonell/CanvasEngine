@@ -24,7 +24,7 @@
 
 #ifdef CANVAS_HAS_THREADS
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 #if defined(ICE_THREADS_POSIX)
 #define ice_mtx pthread_mutex_t
@@ -48,6 +48,6 @@ typedef struct ice_mtx_impl {
 #define CE_MTX_INIT_TIMED_RECURSIVE { SRWLOCK_INIT, 0, 0, CE_MTX_TIMED_RECURSIVE }
 #endif
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
 
 #endif /* !CANVAS_HAS_THREADS */

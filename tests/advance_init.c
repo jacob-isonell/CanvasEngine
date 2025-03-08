@@ -3,9 +3,9 @@
 int main(void) {
   {
     ce_core op;
-    op.app_name = "CanvasTest Advance Init";
+    strcpy(op.app_name, "CanvasTest Advance Init");
     op.app_version = CE_CURRVER;
-    op.engine_name = "CanvasEngine";
+    strcpy(op.engine_name, "CanvasEngine");
     op.engine_version = CE_CURRVER;
     CHECK_SUCCESS(ce_core_set(&op));
   }

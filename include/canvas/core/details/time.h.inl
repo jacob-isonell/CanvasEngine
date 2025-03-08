@@ -43,7 +43,7 @@
 #define ICE_MICRO2MILLI(in) ((in) * ICE_MICRO2MILLI_V)
 #define ICE_MICRO2NANO(in)  ((in) * ICE_MICRO2NANO_V)
 
-ICE_NAMESPACE_BEGIN
+CE_NAMESPACE_BEGIN
 
 CE_INLINE
 ce_time_t ce_time_add(ce_time_t a, ce_time_t b) {
@@ -292,4 +292,4 @@ ce_time_t ce_time_lseconds(long double in) {
   return out;
 }
 
-ICE_NAMESPACE_END
+CE_NAMESPACE_END
