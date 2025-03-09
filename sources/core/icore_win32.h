@@ -20,7 +20,6 @@
 #define ICORE_WIN32_H
 
 #include "icore_base.h"
-#include <Ntddk.h>
 
 #if !CANVAS_PLATFORM_WINDOWS
 #error icore_win32.h can only be included on Windows
@@ -28,11 +27,9 @@
 
 CE_NAMESPACE_BEGIN
 
-/* The high performance frequency. */
-ICE_API extern double ihiperf_clock_factor;
-
-ICE_API ce_err icore_win32_init(void);
-ICE_API void icore_win32_shutdown(void);
+ICE_API const char* ice_win32err(DWORD errcode, DWORD langid);
+ICE_API const wchar_t* ice_wwin32err(DWORD errcode, DWORD langid);
+ICE_API ce_err ifrom_hres(HRESULT in);
 
 CE_NAMESPACE_END
 

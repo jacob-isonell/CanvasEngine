@@ -20,6 +20,7 @@
 #define CANVAS_GRAPHICS_DRIVER_H
 
 #include <canvas/core/error.h>
+#include <stdint.h>
 
 CE_NAMESPACE_BEGIN
 
@@ -65,7 +66,14 @@ struct ce_render_driver {
 
 #ifdef CANVAS_ENABLE_VULKAN
 typedef struct ce_vulkan_driver_create_info {
-  int unused;
+  const ce_utf8*     app_name;
+  uint32_t           app_version;
+  const ce_utf8*     engine_name;
+  uint32_t           engine_version;
+  const char* const* instance_layer_names;
+  uint32_t           instance_layer_count;
+  const char* const* instance_extension_names;
+  uint32_t           instance_extension_count;
 } ce_vulkan_driver_create_info;
 
 CE_API ce_err ce_vulkan_driver(

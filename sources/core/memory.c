@@ -16,8 +16,18 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#include "icore_global.h"
-#include <canvas/core/memory.h>
+#include "icore_base.h"
+#include <canvas/threads/mutex.h>
+
+static void* s_defalloc(size_t bytes, void* arg);
+static void s_deffree(void* addr, size_t bytes, void* arg);
+
+static ce_mtx s_lock = CE_MTX_INIT_PLAIN;
+static ce_alloc_t s_alloc = {
+  .alloc = &s_defalloc,
+  .free = &s_deffree,
+  .user = NULL
+};
 
 /* Memory layout of `ce_alloc` and `ce_alloc_s`. */
 typedef struct imem_t {
@@ -76,28 +86,49 @@ static const iarr_t* s_get_carr(const void* in) {
   return p.out;
 }
 
+static iarr_t* s_get_to_arr(void* in) {
+  union {
+    void* in;
+    void** out;
+  } p;
+  
+  if (in == NULL) {
+    return NULL;
+  }
+  
+  p.in = in;
+  return s_get_arr(*p.out);
+}
+
+static void* s_defalloc(size_t bytes, void* arg) {
+  (void)arg;
+  return malloc(bytes);
+}
+
+static void s_deffree(void* addr, size_t bytes, void* arg) {
+  (void)bytes;
+  (void)arg;
+  free(addr);
+}
+
 static void* s_doalloc(size_t bytes) {
-  return icore.mem.alloc.alloc(bytes, icore.mem.alloc.user);
+  return s_alloc.alloc(bytes, s_alloc.user);
 }
 
 static void s_dofree(void* addr, size_t bytes) {
-  icore.mem.alloc.free(addr, bytes, icore.mem.alloc.user);
+  s_alloc.free(addr, bytes, s_alloc.user);
 }
 
 CE_API ce_err ce_set_alloc(ce_alloc_t in) {
-  if (ihas_initialized()) {
-    return CE_EPERM;
-  }
-  
   if (in.alloc == NULL || in.free == NULL) {
     return CE_EINVAL;
   }
   
-  ce_err err = ce_mtx_lock(&icore.mem.lck);
+  ce_err err = ce_mtx_lock(&s_lock);
   
   if (ce_success(err)) {
-    icore.mem.alloc = in;
-    ce_mtx_unlock(&icore.mem.lck);
+    s_alloc = in;
+    ce_mtx_unlock(&s_lock);
   }
   
   return err;
@@ -106,17 +137,13 @@ CE_API ce_err ce_set_alloc(ce_alloc_t in) {
 ICE_API void* ialloc(size_t bytes, ce_err* opt_err) {
   void* out = NULL;
   IERRBEGIN {
-    if (!ihas_initialized()) {
-      IERRDO(CE_EPERM);
-    }
-    
     if (bytes == 0) {
       IERRDO(CE_EINVAL);
     }
     
-    IERRDO(ce_mtx_lock(&icore.mem.lck));
+    IERRDO(ce_mtx_lock(&s_lock));
     out = s_doalloc(bytes);
-    ce_mtx_unlock(&icore.mem.lck);
+    ce_mtx_unlock(&s_lock);
     
     if (out == NULL) {
       IERRVAL = CE_ENOMEM;
@@ -129,15 +156,13 @@ ICE_API void* ialloc(size_t bytes, ce_err* opt_err) {
 }
 
 ICE_API void ifree(void* addr, size_t bytes) {
-  ICE_ASSERT(ihas_initialized());
-  
   if (addr == NULL) {
     return;
   }
   
-  if (ce_success(ce_mtx_lock(&icore.mem.lck))) {
+  if (ce_success(ce_mtx_lock(&s_lock))) {
     s_dofree(addr, bytes);
-    ce_mtx_unlock(&icore.mem.lck);
+    ce_mtx_unlock(&s_lock);
   }
 }
 
@@ -150,16 +175,14 @@ CE_API void* ce_alloc_s(size_t bytes, ce_err* opt_err) {
 }
 
 CE_API void* ce_alloc(size_t bytes) {
-  ICE_REQ_INIT();
-  
   const size_t alloc_size = bytes + offsetof(imem_t, buffer);
   if (bytes == 0 || alloc_size <= bytes) { /* Check for overflow. */
     return NULL;
   }
   
-  if (ce_success(ce_mtx_lock(&icore.mem.lck))) {
+  if (ce_success(ce_mtx_lock(&s_lock))) {
     imem_t* const data = (imem_t*)s_doalloc(alloc_size);
-    ce_mtx_unlock(&icore.mem.lck);
+    ce_mtx_unlock(&s_lock);
     
     if (data) {
       data->length = bytes;
@@ -171,7 +194,7 @@ CE_API void* ce_alloc(size_t bytes) {
 }
 
 CE_API void ce_free(void* addr) {
-  if (addr == NULL || !ihas_initialized()) {
+  if (addr == NULL) {
     return;
   }
   
@@ -179,12 +202,11 @@ CE_API void ce_free(void* addr) {
   ifree(data, data->length + offsetof(imem_t, buffer));
 }
 
-CE_API ce_err ice_realloc(void* inout, size_t new_size) {
-  if (!ihas_initialized()) {
-    return CE_EPERM;
-  }
-  
-  void** const inout_ptr = (void**)inout;
+CE_API ce_err ce_realloc(
+  CE_INOUT void*  addr,
+           size_t new_size
+) {
+  void** const inout_ptr = (void**)addr;
   imem_t* const data = s_get_mem(*inout_ptr);
   
   if (new_size == 0) {
@@ -200,14 +222,14 @@ CE_API ce_err ice_realloc(void* inout, size_t new_size) {
     return CE_EOK;
   }
   
-  const ce_err err = ce_mtx_lock(&icore.mem.lck);
+  const ce_err err = ce_mtx_lock(&s_lock);
   if (ce_failure(err)) {
     return err;
   }
   
   imem_t* const new_data = s_doalloc(alloc_size);
   if (new_data == NULL) {
-    ce_mtx_unlock(&icore.mem.lck);
+    ce_mtx_unlock(&s_lock);
     return CE_ENOMEM;
   }
   
@@ -216,54 +238,42 @@ CE_API ce_err ice_realloc(void* inout, size_t new_size) {
   *inout_ptr = new_data->buffer;
   
   s_dofree(data, data->length + offsetof(imem_t, buffer));
-  ce_mtx_unlock(&icore.mem.lck);
+  ce_mtx_unlock(&s_lock);
   
   return CE_EOK;
 }
 
-CE_API ce_err ice_arr_free(void* array) {
-  if (!ihas_initialized()) {
-    return CE_EPERM;
-  }
-  
+CE_API void ce_arr_free(void* array) {
   if (array == NULL) {
-    return CE_EOK;
+    return;
   }
   
   iarr_t* const data = s_get_arr(array);
   const size_t bytes = (data->cap * data->stride) + offsetof(iarr_t, buffer);
   
-  const ce_err err = ce_mtx_lock(&icore.mem.lck);
+  const ce_err err = ce_mtx_lock(&s_lock);
   if (ce_failure(err)) {
     IDEBERROR("Failed to deallocate memory %p (%zu bytes)\n", (void*)data, bytes);
-    return err;
+    return;
   }
   
   s_dofree(data, bytes);
-  return ce_mtx_unlock(&icore.mem.lck);
+  ce_mtx_unlock(&s_lock);
 }
 
-CE_API ce_err ice_arr_resize(void** inout_arr, size_t stride, size_t new_size) {
-  if (!ihas_initialized()) {
-    return CE_EPERM;
-  }
-  
-  const ce_err err = ice_arr_reserve(inout_arr, stride, new_size);
+CE_API ce_err ce_arr_resize(void* inout_arr, size_t stride, size_t new_size) {
+  const ce_err err = ce_arr_reserve(inout_arr, stride, new_size);
   if (ce_failure(err)) {
     return err;
   }
   
-  iarr_t* const data = s_get_arr(*inout_arr);
+  iarr_t* const data = s_get_to_arr(inout_arr);
   data->len = new_size;
   return CE_EOK;
 }
 
-CE_API ce_err ice_arr_reserve(void** inout_arr, size_t stride, size_t new_capacity) {
-  if (!ihas_initialized()) {
-    return CE_EPERM;
-  }
-  
-  iarr_t* const data = s_get_arr(*inout_arr);
+CE_API ce_err ce_arr_reserve(void* inout_arr, size_t stride, size_t new_capacity) {
+  iarr_t* const data = s_get_to_arr(inout_arr);
   if (data) {
     /* Enough storage, reserve doesn't shrink storage. */
     if (new_capacity <= data->cap) {
@@ -283,14 +293,14 @@ CE_API ce_err ice_arr_reserve(void** inout_arr, size_t stride, size_t new_capaci
     return CE_ERANGE;
   }
     
-  const ce_err err = ce_mtx_lock(&icore.mem.lck);
+  const ce_err err = ce_mtx_lock(&s_lock);
   if (ce_failure(err)) {
     return err;
   }
   
   iarr_t* const new_buffer = (iarr_t*)s_doalloc(alloc_size);
   if (new_buffer == NULL) {
-    ce_mtx_unlock(&icore.mem.lck);
+    ce_mtx_unlock(&s_lock);
     return CE_ENOMEM;
   }
 
@@ -306,16 +316,16 @@ CE_API ce_err ice_arr_reserve(void** inout_arr, size_t stride, size_t new_capaci
   if (data) {
     s_dofree(data, (data->cap * stride) + offsetof(iarr_t, buffer));
   }
-  *inout_arr = new_buffer->buffer;
-  return ce_mtx_unlock(&icore.mem.lck);
+  memcpy(inout_arr, new_buffer->buffer, sizeof(void*));
+  return ce_mtx_unlock(&s_lock);
 }
 
-CE_API size_t ice_arr_len(void* array) {
+CE_API size_t ce_arr_size(const void* array) {
   ICE_ASSERT(array != NULL);
   return s_get_carr(array)->len;
 }
 
-CE_API size_t ice_arr_cap(void* array) {
+CE_API size_t ce_arr_cap(const void* array) {
   ICE_ASSERT(array != NULL);
   return s_get_carr(array)->cap;
 }

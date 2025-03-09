@@ -22,14 +22,11 @@
 #include "ifx_base.h"
 #include <canvas/graphics.h>
 
-#ifdef ICE_VULKAN
+#ifdef CANVAS_ENABLE_VULKAN
 
 #include <vulkan/vulkan.h>
 
 CE_NAMESPACE_BEGIN
-
-#define IVK_CURRVER VK_HEADER_VERSION_COMPLETE
-#define IVK_MINVER VK_MAKE_API_VERSION(0, 1, 3, 0)
 
 #ifndef VK_VERSION_1_3
 #  error CanvasEngine graphics requires VulkanAPI 1.3 or later
@@ -37,14 +34,6 @@ CE_NAMESPACE_BEGIN
 
 /* Used to fill in a `VkAllocationCallbacks*` function argument. Currently just `NULL` */
 #define IVK_ALLOC NULL
-ICE_API extern VkInstance ivk_inst;
-
-ICE_API ce_err ivk_init(void);
-ICE_API void ivk_shutdown(void);
-
-ICE_API ce_err ifrom_vk(
-  VkResult res
-);
 
 ICE_API ce_err ivk_inst_layers(
   CE_OUT ce_arr(VkLayerProperties)* out_layers
@@ -55,8 +44,10 @@ ICE_API ce_err ivk_inst_exts(
   CE_OUT ce_arr(VkExtensionProperties)* out_exts
 );
 
+ICE_API ce_err ifrom_vk(VkResult res);
+
 CE_NAMESPACE_END
 
-#endif /* !ICE_VULKAN */
+#endif /* !CANVAS_ENABLE_VULKAN */
 
 #endif /* !IFX_VK_H */

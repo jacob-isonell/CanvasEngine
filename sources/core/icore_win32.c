@@ -19,18 +19,57 @@
 #include "icore_base.h"
 #if CANVAS_PLATFORM_WINDOWS
 
-ICE_API double ihiperf_clock_factor;
-
-ICE_API ce_err icore_win32_init(void) {
-  LARGE_INTEGER highres_freq;
-  QueryPerformanceFrequency(&highres_freq);
-  ihiperf_clock_factor = 1.0 / (double)highres_freq.QuadPart;
+ICE_API const char* ice_win32err(DWORD errcode, DWORD langid) {
+  char* buffer = NULL;
+  char* out = NULL;
+  FormatMessageA(
+    FORMAT_MESSAGE_ALLOCATE_BUFFER
+    | FORMAT_MESSAGE_FROM_SYSTEM
+    | FORMAT_MESSAGE_IGNORE_INSERTS,
+    NULL, errcode, langid,
+    (char*)&buffer, 0,
+    NULL
+  );
   
-  return CE_EOK;
+  if (buffer != NULL) {
+    const size_t len = strlen(buffer);
+    out = ialloc(len + 1, NULL);
+    if (out) {
+      strcpy(out, buffer);
+    }
+    LocalFree((HLOCAL)buffer);
+  }
+  return out;
 }
 
-ICE_API void icore_win32_shutdown(void) {
+ICE_API const wchar_t* ice_wwin32err(DWORD errcode, DWORD langid) {
+  wchar_t* buffer = NULL;
+  wchar_t* out = NULL;
+  FormatMessageW(
+    FORMAT_MESSAGE_ALLOCATE_BUFFER
+    | FORMAT_MESSAGE_FROM_SYSTEM
+    | FORMAT_MESSAGE_IGNORE_INSERTS,
+    NULL, errcode, langid,
+    (wchar_t*)&buffer, 0,
+    NULL
+  );
   
+  if (buffer != NULL) {
+    const size_t len = wcslen(buffer);
+    out = ialloc(len + 1, NULL);
+    if (out) {
+      wcscpy(out, buffer);
+    }
+    LocalFree((HLOCAL)buffer);
+  }
+  return out;
+}
+
+ICE_API ce_err ifrom_hres(HRESULT in) {
+  switch (in) {
+  default: return CE_EUNKNOWN;
+  case S_OK: return CE_EOK;
+  }
 }
 
 #endif /* !CANVAS_PLATFORM_WINDOWS */

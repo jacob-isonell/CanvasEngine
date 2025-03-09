@@ -16,32 +16,7 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
-add_library(CanvasEngineDependencies INTERFACE)
-include(FindPackageHandleStandardArgs)
-
-### Core module dependencies
-
-
-### Graphics module dependencies
-
-include("find_xlib.cmake")
-include("find_wayland.cmake")
-include("find_vulkan.cmake")
-
-cmake_dependent_option(CANVAS_ENABLE_DIRECTX12 "Enable support for DirectX12 API" ON "CANVAS_GRAPHICS;WIN32" OFF)
-if (CANVAS_GRAPHICS)
-  if (UNIX)
-    ICELinkXLIB(CanvasEngineDependencies INTERFACE)
-    ICELinkWaylandClient(CanvasEngineDependencies INTERFACE)
-    if (NOT CANVAS_ENABLE_WAYLAND AND NOT CANVAS_ENABLE_XLIB)
-      message(FATAL_ERROR "CanvasEngine requires support for either xLib or Wayland on Linux but neither could be found or both were disabled")
-    endif ()
-  endif ()
-  ICELinkVulkan(CanvasEngineDependencies INTERFACE)
-  
-  # if (ICE_DEVMODE)
-  #   message(STATUS "Vulkan_FOUND : ${Vulkan_FOUND}")
-  #   message(STATUS "CANVAS_ENABLE_VULKAN : ${CANVAS_ENABLE_VULKAN}")
-  #   message(STATUS "ICE_VULKAN : ${ICE_VULKAN}")
-  # endif ()
-endif (CANVAS_GRAPHICS)
+target_sources(CanvasEngine
+PRIVATE
+  "driver.c"
+)

@@ -16,50 +16,11 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_CORE_SETUP_H
-#define CANVAS_CORE_SETUP_H
+#include "icore_base.h"
 
-#include <canvas/core/error.h>
-
-CE_NAMESPACE_BEGIN
-
-/**
- * @ingroup configuration
- * @brief add documentation here!
- */
-typedef struct ce_core {
-  
-  /** add documentation here! */
-  ce_utf8 app_name[256];
-  
-  /** add documentation here! */
-  unsigned int app_version;
-  
-  /** add documentation here! */
-  ce_utf8 engine_name[256];
-  
-  /** add documentation here! */
-  unsigned int engine_version;
-} ce_core;
-
-/**
- * @ingroup configuration
- * @brief add documentation here!
- */
-CE_API ce_err ce_core_set(const ce_core* ops);
-
-/**
- * @ingroup configuration
- * @brief add documentation here!
- */
-CE_API ce_err ce_init(void);
-
-/**
- * @ingroup configuration
- * @brief add documentation here!
- */
-CE_API void ce_shutdown(void);
-
-CE_NAMESPACE_END
-
-#endif /* !CANVAS_CORE_SETUP_H */
+#ifdef CANVAS_DEBUG
+ICE_API cebool ideblog_enabled = cetrue;
+CE_API void ce_disable_debug_logs(void) {
+  ideblog_enabled = cefalse;
+}
+#endif /* !CANVAS_DEBUG */

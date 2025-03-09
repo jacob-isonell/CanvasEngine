@@ -16,17 +16,39 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#include "ivk_load.h"
-#include "icore_global.h"
-#include "ivk_proto.h"
-#include "ivk_dev.h"
+#include "ifx_vk.h"
+#include "ivk_protos.h"
 
-struct ice_vulkan_driver_data {
-  int unused;
+static const char* s_req_inst_exts[] = {
+  VK_KHR_DISPLAY_EXTENSION_NAME,
+  VK_KHR_SURFACE_EXTENSION_NAME,
+#ifdef CANVAS_ENABLE_WAYLAND
+  VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME,
+#endif
+#ifdef CANVAS_ENABLE_XLIB
+  VK_KHR_XLIB_SURFACE_EXTENSION_NAME,
+  VK_KHR_XCB_SURFACE_EXTENSION_NAME,
+#endif
+#if CANVAS_PLATFORM_WINDOWS
+  VK_KHR_WIN32_SURFACE_EXTENSION_NAME
+#endif
 };
 
+struct ice_vulkan_driver_data {
+  ivk_protos pfn;
+};
+
+static void irelease_driver(
+  CE_INOUT ce_render_driver* self
+) {
+  ivk_protos* const p = &(self->data.vk->pfn);
+  ivk_unload_protos(p);
+  ifree(self->data.vk, sizeof(*(self->data.vk)));
+  *self = (ce_render_driver) {0};
+}
+
 static const ice_render_driver_vfp s_vfp = {
-  .release = NULL,
+  .release = &irelease_driver,
   .fetch_gpu_devs = NULL,
   .get_gpu_dev = NULL
 };
@@ -35,22 +57,57 @@ CE_API ce_err ce_vulkan_driver(
   CE_OUT ce_render_driver* driver,
   CE_IN  const ce_vulkan_driver_create_info* info
 ) {
-  if (!ihas_initialized()) {
-    return CE_EPERM;
-  }
-  
   if (driver == NULL || info == NULL) {
     return CE_EINVAL;
   }
   
-  (void)info;
+  const size_t req_exts_count = CE_ARRLEN(s_req_inst_exts) + info->instance_extension_count;
+  const ce_utf8** req_exts = NULL;
   
-  ce_err e;
-  driver->data.vk = (ice_vulkan_driver_data*)ialloc(sizeof(ice_vulkan_driver_data), &e);
-  if (ce_failure(e)) {
-    return e;
+  ice_vulkan_driver_data* vkp = NULL;
+  IERRBEGIN {
+    
+    req_exts = ialloc(sizeof(*req_exts) * req_exts_count, &IERRVAL);
+    IERRDO(IERRVAL);
+    
+    vkp = ialloc(sizeof(ice_vulkan_driver_data), &IERRVAL);
+    driver->data.vk = vkp;
+    IERRDO(IERRVAL);
+    
+    memcpy(req_exts, s_req_inst_exts, CE_ARRLEN(s_req_inst_exts) * sizeof(char*));
+    memcpy(req_exts + CE_ARRLEN(s_req_inst_exts), info->instance_extension_names, info->instance_extension_count * sizeof(char*));
+    ivk_protos* pfn = &vkp->pfn;
+    
+    VkApplicationInfo app_info;
+    app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+    app_info.pNext = NULL;
+    app_info.pApplicationName = info->app_name;
+    app_info.applicationVersion = info->app_version;
+    app_info.pEngineName = info->engine_name;
+    app_info.engineVersion = info->engine_version;
+    app_info.apiVersion = VK_API_VERSION_1_3;
+    
+    VkInstanceCreateInfo inst_info;
+    inst_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+    inst_info.pNext = NULL;
+    inst_info.flags = 0;
+    inst_info.pApplicationInfo = &app_info;
+    inst_info.enabledLayerCount = info->instance_layer_count;
+    inst_info.ppEnabledLayerNames = info->instance_layer_names;
+    inst_info.enabledExtensionCount = (uint32_t)req_exts_count;
+    inst_info.ppEnabledExtensionNames = req_exts;
+    
+    IERRDO(ivk_load_protos(&inst_info, pfn));
+    
+    const ice_render_driver_vfp* const addr = &s_vfp;
+    memcpy(&driver->vfp, &addr, sizeof(void*));
+  } IERREND {
+    *driver = (ce_render_driver) {0};
+    if (vkp != NULL) {
+      ifree(vkp, sizeof(*vkp));
+    }
   }
   
-  driver->data.vk->unused = 0;
-  return CE_EOK;
+  ifree(req_exts, sizeof(*req_exts) * req_exts_count);
+  return IERRVAL;
 }

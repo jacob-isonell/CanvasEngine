@@ -16,59 +16,42 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#include "icore_global.h"
-#include <canvas/core/setup.h>
+#ifndef IVK_PROTO_H
+#define IVK_PROTO_H
 
-CE_API ce_err ce_core_set(const ce_core* ops) {
-  return ISET_OPS(&icore_ops, ops);
-}
+#include "ifx_vk.h"
+#include <canvas/core/library.h>
 
-#ifdef CANVAS_DEBUG
-ICE_API cebool ideblog_enabled = cetrue;
-CE_API void ce_disable_debug_logs(void) {
-  ideblog_enabled = cefalse;
-}
-#endif /* !CANVAS_DEBUG */
+CE_NAMESPACE_BEGIN
 
-ICE_API cebool ihas_initialized(void) {
-  return icore.init_count != 0;
-}
+#if CANVAS_PLATFORM_WINDOWS
+#define IVK_DLL_FILE "vulkan-1.dll"
+#elif CANVAS_PLATFORM_UNIX
+#define IVK_DLL_FILE "libvulkan.so.1"
+#endif
 
-static void* s_defalloc(size_t bytes, void* arg) {
-  (void)arg;
-  return malloc(bytes);
-}
+typedef struct ivk_protos {
+  ce_lib* libvulkan1;
+  VkInstance instance;
+  PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
+  
+  PFN_vkEnumerateInstanceVersion vkEnumerateInstanceVersion;
+  PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties;
+  PFN_vkEnumerateInstanceLayerProperties vkEnumerateInstanceLayerProperties;
+  PFN_vkCreateInstance vkCreateInstance;
+  
+  PFN_vkDestroyInstance vkDestroyInstance;
+} ivk_protos;
 
-static void s_deffree(void* addr, size_t bytes, void* arg) {
-  (void)bytes;
-  (void)arg;
-  free(addr);
-}
+ICE_API ce_err ivk_load_protos(
+  CE_IN  const VkInstanceCreateInfo* CE_RESTRICT info,
+  CE_OUT ivk_protos*                 CE_RESTRICT out
+);
 
-ICE_API ce_err icore_init(void) {
-  /* Nothing to do here for now. */
-  return CE_EOK;
-}
+ICE_API void ivk_unload_protos(
+  CE_INOUT ivk_protos* CE_RESTRICT protos
+);
 
-ICE_API void icore_shutdown(void) {
-  /* Nothing to do here for now. */
-}
+CE_NAMESPACE_END
 
-ICE_API ce_core icore_ops = {
-  .app_name = {0},
-  .app_version = 0,
-  .engine_name = {0},
-  .engine_version = 0,
-};
-
-ICE_API icore_t icore = {
-  .init_count = 0,
-  .mem = {
-    .alloc = {
-      .alloc = &s_defalloc,
-      .free = &s_deffree,
-      .user = NULL
-    },
-    .lck = CE_MTX_INIT_PLAIN
-  }
-};
+#endif /* !IVK_PROTO_H */

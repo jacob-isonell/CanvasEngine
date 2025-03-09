@@ -27,9 +27,6 @@
 
 CE_NAMESPACE_BEGIN
 
-ICE_API ce_err icore_unix_init(void);
-ICE_API void icore_unix_shutdown(void);
-
 CE_NAMESPACE_END
 
 #endif /* !ICORE_UNIX_H */

@@ -53,15 +53,16 @@ typedef struct ce_alloc_t {
 
 /**
  * @ingroup memory
- * @brief add documentation here!
+ * @brief Sets the allocation and deallocation methods used by CanvasEngine.
+ * @note This should be set once at the start of the program and never again.
+ *    Because if this were to be called mid program then memory that has already
+ *    been allocated will be deallocated with the incorrect deallocator
+ *    (e.x. by default CanvasEngine uses `malloc`/`free` for dynamic memory allocation,
+ *    but if this function was called with the C++ `new`/`delete` methods mid program
+ *    with already allocated memory then memory allocated with `malloc` would be
+ *    free-ed with `delete`).
  */
 CE_API ce_err ce_set_alloc(ce_alloc_t in);
-
-/**
- * @ingroup memory
- * @brief add documentation here!
- */
-CE_API void* ce_alloc_s(size_t bytes, ce_err* opt_err);
 
 /**
  * @ingroup memory
@@ -73,59 +74,77 @@ CE_API void* ce_alloc(size_t bytes);
  * @ingroup memory
  * @brief add documentation here!
  */
-CE_API void ce_free(void* addr);
+CE_API void* ce_alloc_s(
+          size_t bytes,
+  CE_OUT ce_err* opt_err
+);
 
 /**
  * @ingroup memory
  * @brief add documentation here!
  */
-#define ce_realloc(inout, new_size) /* implementation-defined */
+CE_API ce_err ce_realloc(
+  CE_INOUT void*  addr,
+           size_t new_size
+);
+
+/**
+ * @ingroup memory
+ * @brief add documentation here!
+ */
+CE_API void ce_free(
+  CE_IN void* addr
+);
 
 /**
  * @ingroup arrays
  * @brief add documentation here!
  */
-#define ce_arr(type) /* implementation-defined */
+#define ce_arr(type) type*
 
 /**
  * @ingroup arrays
  * @brief add documentation here!
  */
-#define CE_ARRINIT /* implementation-defined */
+#define CE_ARRINIT NULL
 
 /**
  * @ingroup arrays
  * @brief add documentation here!
  */
-#define ce_arr_free(arr) /* implementation-defined */
+CE_API void ce_arr_free(void* arr);
 
 /**
  * @ingroup arrays
  * @brief add documentation here!
  */
-#define ce_arr_size(arr) /* implementation-defined */
+CE_API size_t ce_arr_size(const void* arr);
 
 /**
  * @ingroup arrays
  * @brief add documentation here!
  */
-#define ce_arr_cap(arr) /* implementation-defined */
+CE_API size_t ce_arr_cap(const void* arr);
 
 /**
  * @ingroup arrays
  * @brief add documentation here!
  */
-#define ce_arr_resize(inout_array, new_size) /* implementation-defined */
+CE_API ce_err ce_arr_resize(
+  CE_INOUT void* arr,
+  size_t new_size,
+  size_t stride
+);
 
 /**
  * @ingroup arrays
  * @brief add documentation here!
  */
-#define ce_arr_reserve(inout_array, new_capacity) /* implementation-defined */
-
-#ifndef ICE_DOCS
-#include <canvas/core/details/memory.h.inl>
-#endif /* !ICE_DOCS */
+CE_API ce_err ce_arr_reserve(
+  CE_INOUT void* arr,
+  size_t new_size,
+  size_t stride
+);
 
 CE_NAMESPACE_END
 

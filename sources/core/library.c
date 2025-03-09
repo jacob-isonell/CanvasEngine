@@ -28,10 +28,6 @@ CE_API ce_err ce_lib_open(
   CE_IN  const ce_utf8* CE_RESTRICT filepath,
          ce_lib_flags               flags
 ) {
-  if (!ihas_initialized()) {
-    return CE_EPERM;
-  }
-  
   (void)flags;
   if (handle == NULL || filepath == NULL) {
     return CE_EINVAL;
@@ -65,10 +61,6 @@ CE_API ce_err ce_lib_load(
   CE_IN  const ce_utf8* CE_RESTRICT name,
   CE_OUT void*          CE_RESTRICT out
 ) {
-  if (!ihas_initialized()) {
-    return CE_EPERM;
-  }
-  
   if (handle == NULL || name == NULL || out == NULL) {
     return CE_EINVAL;
   }

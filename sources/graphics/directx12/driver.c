@@ -16,17 +16,43 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#include "ivk_proto/global.inl"
-#include "ivk_proto/1.0.inl"
-#ifdef VK_API_VERSION_1_1
-#include "ivk_proto/1.1.inl"
-#endif /* !VK_API_VERSION_1_1 */
-#ifdef VK_API_VERSION_1_2
-#include "ivk_proto/1.2.inl"
-#endif /* !VK_API_VERSION_1_2 */
-#ifdef VK_API_VERSION_1_3
-#include "ivk_proto/1.3.inl"
-#endif /* !VK_API_VERSION_1_3 */
-#ifdef VK_API_VERSION_1_4
-#include "ivk_proto/1.4.inl"
-#endif /* !VK_API_VERSION_1_4 */
+#include "ifx_dx12.h"
+
+struct ice_directx12_driver_data {
+  IDXGIFactory* fact;
+};
+
+static void irelease_driver(
+  CE_INOUT ce_render_driver* self
+) {
+  ifree(self->data.dx12, sizeof(*(self->data.dx12)));
+  *self = (ce_render_driver) {0};
+}
+
+static const ice_render_driver_vfp s_vfp = {
+  .release = &irelease_driver,
+  .fetch_gpu_devs = NULL,
+  .get_gpu_dev = NULL
+};
+
+CE_API ce_err ce_directx12_driver(
+  CE_OUT ce_render_driver* driver,
+  CE_IN  const ce_directx12_driver_create_info* info
+) {
+  if (driver == NULL || info == NULL) {
+    return CE_EINVAL;
+  }
+  
+  IDXGIFactory7* p = NULL;
+  
+  IERRBEGIN {
+    IERRDO(ifrom_hres(CreateDXGIFactory2(0, IDX_UUIDOF(p), (void**)&p)));
+  } IERREND {
+    
+  }
+  
+  if (p != NULL) {
+    p->lpVtbl->Release(p);
+  }
+  return IERRVAL;
+}

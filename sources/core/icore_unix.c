@@ -19,12 +19,4 @@
 #include "icore_base.h"
 #if CANVAS_PLATFORM_UNIX
 
-ICE_API ce_err icore_unix_init(void) {
-  return CE_EOK;
-}
-
-ICE_API void icore_unix_shutdown(void) {
-  
-}
-
 #endif /* !CANVAS_PLATFORM_UNIX */

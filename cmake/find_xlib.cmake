@@ -16,17 +16,13 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
-macro(ICEFindVulkan)
-  find_package(Vulkan)
-endmacro()
-
-macro(ICELinkVulkan out_target linking_kind)
-  ICEFindVulkan()
-  cmake_dependent_option(CANVAS_ENABLE_VULKAN "Enable support for VulkanAPI" ON "CANVAS_GRAPHICS;Vulkan_FOUND" OFF)
-  if (CANVAS_ENABLE_VULKAN)
-    target_link_libraries(${out_target} ${linking_kind}
-      Vulkan::Headers
-    )
-    set(ICE_VULKAN ON CACHE BOOL "ICE_VULKAN")
-  endif ()
-endmacro()
+find_package(X11 COMPONENTS Xrandr xcb xcb_randr)
+cmake_dependent_option(CANVAS_ENABLE_XLIB "Enable support for XLIB" ON "CANVAS_GRAPHICS;X11_FOUND" OFF)
+if (CANVAS_ENABLE_XLIB)
+  target_link_libraries(CanvasEngineDependencies INTERFACE
+    X11::X11
+    X11::Xrandr
+    X11::xcb
+    X11::xcb_randr
+  )
+endif ()

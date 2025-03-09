@@ -34,14 +34,13 @@ include(FindPackageHandleStandardArgs)
 include(CMakeDependentOption)
 include("cmake/configs.cmake")
 add_library(CanvasEngine ${CANVAS_LIBRARY_KIND})
+include("cmake/dependencies.cmake")
 include("cmake/options.cmake")
-add_subdirectory("cmake/dependencies")
 include("cmake/doxygen.cmake")
 
 set(ICE_HEADER_PATH "${CMAKE_CURRENT_SOURCE_DIR}/include" CACHE STRING "internal" FORCE)
 
 macro(ICE_ADDHEADERS)
-  # message(STATUS "dir : ${ARGV}")
   foreach (item ${ARGV})
     target_sources(CanvasEngine PRIVATE "${ICE_HEADER_PATH}/${item}")
   endforeach ()
@@ -59,3 +58,14 @@ configure_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/canvas_cmake_options.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/include/canvas_cmake_options.h"
 )
+
+message(STATUS "CanvasEngine configurations")
+message(STATUS "CANVAS_SHARED           : ${CANVAS_SHARED}")
+message(STATUS "CANVAS_ENABLE_LOGS      : ${CANVAS_ENABLE_LOGS}")
+message(STATUS "CANVAS_GRAPHICS         : ${CANVAS_GRAPHICS}")
+message(STATUS "CANVAS_ENABLE_XLIB      : ${CANVAS_ENABLE_XLIB}")
+message(STATUS "CANVAS_ENABLE_WAYLAND   : ${CANVAS_ENABLE_WAYLAND}")
+message(STATUS "CANVAS_ENABLE_VULKAN    : ${CANVAS_ENABLE_VULKAN}")
+message(STATUS "CANVAS_ENABLE_DIRECTX12 : ${CANVAS_ENABLE_DIRECTX12}")
+message(STATUS "CANVAS_AUDIO            : ${CANVAS_AUDIO}")
+message(STATUS "CANVAS_NETWORK          : ${CANVAS_NETWORK}")

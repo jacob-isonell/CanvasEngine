@@ -16,71 +16,27 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
+#ifndef IFX_DX12_H
+#define IFX_DX12_H
+
 #include "ifx_base.h"
-#include "ifx_vk.h"
-#include "icore_global.h"
-
-CE_API ce_err ce_graphics_set(const ce_graphics* ops) {
-  return ISET_OPS(&ifx_ops, ops);
-}
-
-#ifdef CANVAS_ENABLE_VULKAN
-
-#define IVK_SHUTDOWN() ivk_shutdown()
-static ce_err s_init_vk(void) {
-  IERRBEGIN {
-    IERRDO(ivk_init());
-  } IERREND { }
-  return IERRVAL;
-}
-
-#else
-
-#define IVK_SHUTDOWN() ((void)0)
-static ce_err s_init_vk(void) {
-  return CE_ENOTSUP;
-}
-
-#endif
+#include <canvas/graphics.h>
 
 #ifdef CANVAS_ENABLE_DIRECTX12
 
-#define IDX12_SHUTDOWN() ivk_shutdown()
-static ce_err s_init_dx12(void) {
-  return CE_NOSYS;
-}
+#include <dxgi1_6.h>
+#include <dxgicommon.h>
+#include <dxgidebug.h>
+#include <d3dcommon.h>
+#include <d3d12.h>
+#include <d3d12sdklayers.h>
+#include <d3d12shader.h>
+#include "idx12_uuid.h"
 
-#else
+CE_NAMESPACE_BEGIN
 
-#define IDX12_SHUTDOWN() ((void)0)
-static ce_err s_init_dx12(void) {
-  return CE_ENOTSUP;
-}
+CE_NAMESPACE_END
 
-#endif
+#endif /* !CANVAS_ENABLE_DIRECTX12 */
 
-ICE_API ce_err ifx_init(void) {
-  switch (ifx_ops.render_api) {
-  default: return CE_EINVAL;
-  case CE_VULKAN:    return s_init_vk();
-  case CE_DIRECTX12: return s_init_dx12();
-  }
-}
-
-ICE_API void ifx_shutdown(void) {
-  switch (ifx_ops.render_api) {
-  default: return;
-  case CE_VULKAN:    IVK_SHUTDOWN(); break;
-  case CE_DIRECTX12: IDX12_SHUTDOWN(); break;
-  }
-}
-
-ICE_API ce_graphics ifx_ops = {
-  .render_api = CE_VULKAN,
-  .vulkan = {
-    .inst_layers = NULL,
-    .inst_layers_len = 0,
-    .inst_exts = NULL,
-    .inst_exts_len = 0,
-  }
-};
+#endif /* !IFX_DX12_H */

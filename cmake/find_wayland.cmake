@@ -22,14 +22,14 @@ macro(ICEFindWaylandClient)
     find_path(ICE_WAYLAND_CLIENT_INCLUDE_DIR NAMES wayland-client.h)
     find_library(ICE_WAYLAND_CLIENT_LIBRARY NAMES wayland-client libwayland-client)
     
-    if ((DEFINED ICE_WAYLAND_CLIENT_INCLUDE_DIR) AND (DEFINED ICE_WAYLAND_CLIENT_LIBRARY))
+    if (ICE_WAYLAND_CLIENT_INCLUDE_DIR AND ICE_WAYLAND_CLIENT_LIBRARY)
       message(CHECK_PASS "found")
-      set(ICE_WAYLAND_CLIENT_FOUND ON CACHE INTERNAL "ICE_WAYLAND_CLIENT_FOUND" FORCE)
+      set(ICE_WAYLAND_CLIENT_FOUND ON)
       mark_as_advanced(ICE_WAYLAND_CLIENT_INCLUDE_DIR ICE_WAYLAND_CLIENT_LIBRARY)
     endif ()
   endif ()
   
-  if ((DEFINED ICE_WAYLAND_CLIENT_INCLUDE_DIR) AND (DEFINED ICE_WAYLAND_CLIENT_LIBRARY))
+  if (ICE_WAYLAND_CLIENT_INCLUDE_DIR AND ICE_WAYLAND_CLIENT_LIBRARY)
     add_library(ice_wayland::client UNKNOWN IMPORTED)
     
     set_target_properties(ice_wayland::client
@@ -47,14 +47,14 @@ macro(ICEFindWaylandServer)
     message(CHECK_START "Looking for wayland server")
     find_path(ICE_WAYLAND_SERVER_INCLUDE_DIR NAMES wayland-server.h)
     find_library(ICE_WAYLAND_SERVER_LIBRARY NAMES wayland-server libwayland-server)
-    if ((DEFINED ICE_WAYLAND_SERVER_INCLUDE_DIR) AND (DEFINED ICE_WAYLAND_SERVER_LIBRARY))
+    if (ICE_WAYLAND_SERVER_INCLUDE_DIR AND ICE_WAYLAND_SERVER_LIBRARY)
       message(CHECK_PASS "found")
-      set(ICE_WAYLAND_SERVER_FOUND ON CACHE INTERNAL "ICE_WAYLAND_SERVER_FOUND" FORCE)
+      set(ICE_WAYLAND_SERVER_FOUND ON)
       mark_as_advanced(ICE_WAYLAND_SERVER_INCLUDE_DIR ICE_WAYLAND_SERVER_LIBRARY)
     endif ()
   endif ()
   
-  if ((DEFINED ICE_WAYLAND_SERVER_INCLUDE_DIR) AND (DEFINED ICE_WAYLAND_SERVER_LIBRARY))
+  if (ICE_WAYLAND_SERVER_INCLUDE_DIR AND ICE_WAYLAND_SERVER_LIBRARY)
     add_library(ice_wayland::server UNKNOWN IMPORTED)
     
     set_target_properties(ice_wayland::server
@@ -67,12 +67,10 @@ macro(ICEFindWaylandServer)
   endif ()
 endmacro()
 
-macro(ICELinkWaylandClient out_target linking_kind)
-  ICEFindWaylandClient()
-  cmake_dependent_option(CANVAS_ENABLE_WAYLAND "Enable support for wayland" ON "CANVAS_GRAPHICS;ICE_WAYLAND_CLIENT_FOUND" OFF)
-  if (CANVAS_ENABLE_WAYLAND)
-    target_link_libraries(${out_target} ${linking_kind}
-      ice_wayland::client
-    )
-  endif ()
-endmacro()
+ICEFindWaylandClient()
+cmake_dependent_option(CANVAS_ENABLE_WAYLAND "Enable support for wayland" ON "CANVAS_GRAPHICS;ICE_WAYLAND_CLIENT_FOUND" OFF)
+if (CANVAS_ENABLE_WAYLAND)
+  target_link_libraries(CanvasEngineDependencies INTERFACE
+    ice_wayland::client
+  )
+endif ()

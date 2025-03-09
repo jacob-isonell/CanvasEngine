@@ -49,6 +49,11 @@
 #define ICE_API
 #endif
 
+#define CONCATX(a, b) a##b
+#define CONCAT(a, b) CONCATX(a, b)
+#define STRIFYX(in) #in
+#define STRIFY(in) STRIFYX(in)
+
 #ifdef CANVAS_DEBUG
 #define ICE_DEB(x) x
 #define ICE_NDEB(x)
@@ -63,7 +68,6 @@
 #endif
 
 #include <canvas/core/memory.h>
-#include <canvas/core/setup.h>
 #if CANVAS_PLATFORM_UNIX
 #  include <unistd.h>
 #  if _POSIX_VERSION < 200809L
@@ -86,6 +90,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <stdarg.h>
+#include "icore_ascii.h"
 
 /**
  * Naming scheme (this applies to regadless of capitalisation):
@@ -101,14 +106,6 @@
 
 CE_NAMESPACE_BEGIN
 
-ICE_API ce_err icore_init(void);
-ICE_API void icore_shutdown(void);
-
-/* Bool is the CanvasEngine library has been initalized (same as checking `icore.init_count > 0`).
- * Used for implementing `ICE_REQ_INIT` without including `icore_global.h`.
- */
-ICE_API cebool ihas_initialized(void);
-
 ICE_API void* ialloc(size_t bytes, ce_err* opt_err);
 ICE_API void ifree(void* addr, size_t bytes);
 
@@ -116,85 +113,8 @@ ICE_API void ifree(void* addr, size_t bytes);
 ICE_API ce_err ifrom_errno(int in);
 #define ierrno ifrom_errno(errno)
 
-ICE_API extern ce_core icore_ops;
-
-CE_INLINE ce_err iset_ops(void* dst, const void* src, size_t c) {
-  if (ihas_initialized()) {
-    return CE_EPERM;
-  }
-  
-  if (src == NULL) {
-    return CE_EINVAL;
-  }
-  
-  memcpy(dst, src, c);
-  return CE_EOK;
-}
-#define ISET_OPS(dest, src) iset_ops((dest), (src), (ICE_ASSERT(sizeof(*(dest)) == sizeof(*(src))), sizeof(*(dest))))
-
 #define ISTRIFYX(in) #in
 #define ISTRIFY(in) ISTRIFYX(in)
-
-#define IASCII_ESCAPE "\x1B"
-#define IASCII_BLACK         IASCII_ESCAPE "[0;30m"
-#define IASCII_RED           IASCII_ESCAPE "[0;31m"
-#define IASCII_GREEN         IASCII_ESCAPE "[0;32m"
-#define IASCII_YELLOW        IASCII_ESCAPE "[0;33m"
-#define IASCII_BLUE          IASCII_ESCAPE "[0;34m"
-#define IASCII_PURPLE        IASCII_ESCAPE "[0;35m"
-#define IASCII_CYAN          IASCII_ESCAPE "[0;36m"
-#define IASCII_WHITE         IASCII_ESCAPE "[0;37m"
-#define IASCII_BOLD_BLACK    IASCII_ESCAPE "[1;30m"
-#define IASCII_BOLD_RED      IASCII_ESCAPE "[1;31m"
-#define IASCII_BOLD_GREEN    IASCII_ESCAPE "[1;32m"
-#define IASCII_BOLD_YELLOW   IASCII_ESCAPE "[1;33m"
-#define IASCII_BOLD_BLUE     IASCII_ESCAPE "[1;34m"
-#define IASCII_BOLD_PURPLE   IASCII_ESCAPE "[1;35m"
-#define IASCII_BOLD_CYAN     IASCII_ESCAPE "[1;36m"
-#define IASCII_BOLD_WHITE    IASCII_ESCAPE "[1;37m"
-#define IASCII_UL_BLACK      IASCII_ESCAPE "[4;30m"
-#define IASCII_UL_RED        IASCII_ESCAPE "[4;31m"
-#define IASCII_UL_GREEN      IASCII_ESCAPE "[4;32m"
-#define IASCII_UL_YELLOW     IASCII_ESCAPE "[4;33m"
-#define IASCII_UL_BLUE       IASCII_ESCAPE "[4;34m"
-#define IASCII_UL_PURPLE     IASCII_ESCAPE "[4;35m"
-#define IASCII_UL_CYAN       IASCII_ESCAPE "[4;36m"
-#define IASCII_UL_WHITE      IASCII_ESCAPE "[4;37m"
-#define IASCII_BG_BLACK      IASCII_ESCAPE "[40m"
-#define IASCII_BG_RED        IASCII_ESCAPE "[41m"
-#define IASCII_BG_GREEN      IASCII_ESCAPE "[42m"
-#define IASCII_BG_YELLOW     IASCII_ESCAPE "[43m"
-#define IASCII_BG_BLUE       IASCII_ESCAPE "[44m"
-#define IASCII_BG_PURPLE     IASCII_ESCAPE "[45m"
-#define IASCII_BG_CYAN       IASCII_ESCAPE "[46m"
-#define IASCII_BG_WHITE      IASCII_ESCAPE "[47m"
-#define IASCII_HI_BLACK      IASCII_ESCAPE "[0;90m"
-#define IASCII_HI_RED        IASCII_ESCAPE "[0;91m"
-#define IASCII_HI_GREEN      IASCII_ESCAPE "[0;92m"
-#define IASCII_HI_YELLOW     IASCII_ESCAPE "[0;93m"
-#define IASCII_HI_BLUE       IASCII_ESCAPE "[0;94m"
-#define IASCII_HI_PURPLE     IASCII_ESCAPE "[0;95m"
-#define IASCII_HI_CYAN       IASCII_ESCAPE "[0;96m"
-#define IASCII_HI_WHITE      IASCII_ESCAPE "[0;97m"
-#define IASCII_HIBOLD_BLACK  IASCII_ESCAPE "[1;90m"
-#define IASCII_HIBOLD_RED    IASCII_ESCAPE "[1;91m"
-#define IASCII_HIBOLD_GREEN  IASCII_ESCAPE "[1;92m"
-#define IASCII_HIBOLD_YELLOW IASCII_ESCAPE "[1;93m"
-#define IASCII_HIBOLD_BLUE   IASCII_ESCAPE "[1;94m"
-#define IASCII_HIBOLD_PURPLE IASCII_ESCAPE "[1;95m"
-#define IASCII_HIBOLD_CYAN   IASCII_ESCAPE "[1;96m"
-#define IASCII_HIBOLD_WHITE  IASCII_ESCAPE "[1;97m"
-#define IASCII_HIBG_BLACK    IASCII_ESCAPE "[0;100m"
-#define IASCII_HIBG_RED      IASCII_ESCAPE "[0;101m"
-#define IASCII_HIBG_GREEN    IASCII_ESCAPE "[0;102m"
-#define IASCII_HIBG_YELLOW   IASCII_ESCAPE "[0;103m"
-#define IASCII_HIBG_BLUE     IASCII_ESCAPE "[0;104m"
-#define IASCII_HIBG_PURPLE   IASCII_ESCAPE "[0;105m"
-#define IASCII_HIBG_CYAN     IASCII_ESCAPE "[0;106m"
-#define IASCII_HIBG_WHITE    IASCII_ESCAPE "[0;107m"
-#define IASCII_RESET         IASCII_ESCAPE "[0m"
-
-#define ICE_REQ_INIT() ICE_ASSERT(ihas_initialized())
 
 /* Starts an error checking scope (similar to a try/catch scope).
  */

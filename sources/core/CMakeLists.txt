@@ -24,7 +24,6 @@ ICE_ADDHEADERS(
   "canvas/core/library.h"
   "canvas/core/memory.h"
   "canvas/core/random.h"
-  "canvas/core/setup.h"
   "canvas/core/signal.h"
   "canvas/core/string.h"
   "canvas/core/time.h"
@@ -32,16 +31,13 @@ ICE_ADDHEADERS(
   
   "canvas/core/details/base_def.inl"
   "canvas/core/details/base_macros.inl"
-  "canvas/core/details/memory.h.inl"
   "canvas/core/details/time.h.inl"
 )
 
 target_sources(CanvasEngine
 PRIVATE
-  "setup.c"
-  "init_and_shutdown.c"
+  "configs.c"
   "icore_base.h"
-  "icore_global.h"
   "icore_unix.h"
     "icore_unix.c"
   "icore_win32.h"

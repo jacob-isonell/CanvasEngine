@@ -63,7 +63,6 @@ PRIVATE
   "$<$<PLATFORM_ID:Windows>:shlwapi>"
   "$<$<PLATFORM_ID:Windows>:rpcrt4>"
   "$<$<PLATFORM_ID:Windows>:ntdll>"
-  
   "$<$<C_COMPILER_ID:GNU,Clang>:-luuid>"
   
   CanvasEngineDependencies
@@ -158,6 +157,16 @@ set(ICE_COMPILER_SANITIZER_FLAGS ${ICE_COMMON_SANITIZER_FLAGS}
   "$<$<C_COMPILER_ID:GNU>:-Wanalyzer-use-after-free>"
   "$<$<C_COMPILER_ID:GNU>:-Wanalyzer-free-of-non-heap>"
 )
+
+if (CANVAS_ENABLE_DIRECTX12)
+  target_link_libraries(CanvasEngine
+  PRIVATE
+    "d3d12"
+    "d3d11"
+    "dxgi"
+    "dxguid"
+  )
+endif ()
 
 if (ICE_DEVMODE)
   target_compile_options(CanvasEngine PUBLIC ${ICE_COMPILER_SANITIZER_FLAGS})

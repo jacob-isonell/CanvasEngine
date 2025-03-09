@@ -22,22 +22,23 @@
 #if CANVAS_PLATFORM_WINDOWS
 #include <winternl.h>
 
-static unsigned long long s_perf_count_int(void) {
-  LARGE_INTEGER i;
-  QueryPerformanceCounter(&i);
-  return i.QuadPart;
-}
-
 static ce_time_t s_perf_freq(void) {
+  LARGE_INTEGER i;
+  QueryPerformanceFrequency(&i);
+  const double f = 1.0 / (double)i.QuadPart;
   const ce_time_t out = {
-    .sec = (unsigned long long)ihiperf_clock_factor,
-    .nsec = (unsigned long long)(ihiperf_clock_factor * 1000000000.0) % 1000000000,
+    .sec = (unsigned long long)f,
+    .nsec = (unsigned long long)(f * 1000000000.0) % 1000000000,
   };
   return out;
 }
 
 static ce_time_t s_perf_count(void) {
-  const double dur = s_perf_count_int() * ihiperf_clock_factor;
+  LARGE_INTEGER i;
+  QueryPerformanceFrequency(&i);
+  const double f = (double)i.QuadPart;
+  QueryPerformanceCounter(&i);
+  const double dur = i.QuadPart / f;
   const ce_time_t out = {
     .sec = (unsigned long long)dur,
     .nsec = (unsigned long long)(dur * 1000000000.0) % 1000000000,
@@ -48,10 +49,6 @@ static ce_time_t s_perf_count(void) {
 #endif
 
 CE_API ce_err ce_time_res(ce_clock clock, ce_time_t* out) {
-  if (!ihas_initialized()) {
-    return CE_EPERM;
-  }
-  
   if (out == NULL) {
     return CE_EINVAL;
   }
@@ -95,10 +92,6 @@ CE_API ce_err ce_time_res(ce_clock clock, ce_time_t* out) {
 }
 
 CE_API ce_err ce_time_get(ce_clock clock, ce_time_t* out) {
-  if (!ihas_initialized()) {
-    return CE_EPERM;
-  }
-  
   if (out == NULL) {
     return CE_EINVAL;
   }

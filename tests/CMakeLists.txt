@@ -31,7 +31,5 @@ macro(ICEAddTest target)
 endmacro()
 
 ICEAddTest(CanvasTest_Error error.c)
-ICEAddTest(CanvasTest_BasicInit basic_init.c)
-ICEAddTest(CanvasTest_AdvanceInit advance_init.c)
 ICEAddTest(CanvasTest_Array array.c)
 ICEAddTest(CanvasTest_Memory memory.c)

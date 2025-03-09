@@ -41,13 +41,6 @@
 
 CE_NAMESPACE_BEGIN
 
-ICE_API extern ce_graphics ifx_ops;
-ICE_API ce_err ifx_init(void);
-ICE_API void ifx_shutdown(void);
-
-#define IFX_GET_VK_HANDLE(hndl) (ICE_ASSERT(hndl.type == ICEFX_VULKAN), hndl.handle.vk)
-#define IFX_GET_DX12_HANDLE(hndl) (ICE_ASSERT(hndl.type == ICEFX_DIRECTX12), hndl.handle.dx12)
-
 CE_NAMESPACE_END
 
 #endif /* !IFX_BASE_H */

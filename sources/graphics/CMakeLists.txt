@@ -21,7 +21,6 @@ ICE_ADDHEADERS(
   
   "canvas/graphics/driver.h"
   "canvas/graphics/graphics.h"
-  "canvas/graphics/setup.h"
   
   "canvas/graphics/details/graphics.inl"
 )
@@ -30,11 +29,11 @@ target_sources(CanvasEngine
 PRIVATE
   "ifx_base.h"
   "ifx_vk.h"
-  
-PRIVATE
-  "setup.c"
 )
 
-if (ICE_VULKAN)
+if (CANVAS_ENABLE_VULKAN)
   ICE_ADDDIR("vulkan")
+endif ()
+if (CANVAS_ENABLE_DIRECTX12)
+  ICE_ADDDIR("directx12")
 endif ()
