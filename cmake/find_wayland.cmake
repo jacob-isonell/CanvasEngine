@@ -67,7 +67,9 @@ macro(ICEFindWaylandServer)
   endif ()
 endmacro()
 
-ICEFindWaylandClient()
+if (UNIX)
+  ICEFindWaylandClient()
+endif ()
 cmake_dependent_option(CANVAS_ENABLE_WAYLAND "Enable support for wayland" ON "CANVAS_GRAPHICS;ICE_WAYLAND_CLIENT_FOUND" OFF)
 if (CANVAS_ENABLE_WAYLAND)
   target_link_libraries(CanvasEngineDependencies INTERFACE

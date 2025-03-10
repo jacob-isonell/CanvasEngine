@@ -34,16 +34,24 @@
  */
 
 #include <canvas/core.h>
-#ifdef CANVAS_GRAPHICS
+#ifndef CANVAS_NO_MATH_API
+#include <canvas/math.h>
+#endif
+#ifndef CANVAS_NO_THREADS_API
+#include <canvas/threads.h>
+#endif
+
+#if defined(CANVAS_GRAPHICS) && !defined(CANVAS_NO_GRAPHICS_API)
 #include <canvas/graphics.h>
 #endif
-#ifdef CANVAS_AUDIO
+#if defined(CANVAS_AUDIO) && !defined(CANVAS_NO_AUDIO_API)
 #include <canvas/audio.h>
 #endif
-#ifdef CANVAS_NETWORK
+#if defined(CANVAS_NETWORK) && !defined(CANVAS_NO_NETWORK_API)
 #include <canvas/network.h>
 #endif
-#include <canvas/math.h>
-#include <canvas/threads.h>
+#if defined(CANVAS_INPUT) && !defined(CANVAS_NO_INPUT_API)
+#include <canvas/input.h>
+#endif
 
 #endif /* !CANVAS_H */

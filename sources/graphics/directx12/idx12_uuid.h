@@ -19,6 +19,8 @@
 #ifndef IDX12_UUID_H
 #define IDX12_UUID_H
 
+#include "ifx_dx12.h"
+
 #define IDX_UUIDOF(ptr) _Generic((ptr), \
   IDXGIAdapter*: &IID_IDXGIAdapter, \
   IDXGIAdapter1*: &IID_IDXGIAdapter1, \
@@ -82,10 +84,6 @@
   ID3D12Device8*: &IID_ID3D12Device8, \
   ID3D12Device9*: &IID_ID3D12Device9, \
   ID3D12Device10*: &IID_ID3D12Device10, \
-  ID3D12Device11*: &IID_ID3D12Device11, \
-  ID3D12Device12*: &IID_ID3D12Device12, \
-  ID3D12Device13*: &IID_ID3D12Device13, \
-  ID3D12Device14*: &IID_ID3D12Device14, \
   ID3D12DeviceChild*: &IID_ID3D12DeviceChild, \
   ID3D12DeviceRemovedExtendedData*: &IID_ID3D12DeviceRemovedExtendedData, \
   ID3D12DeviceRemovedExtendedDataSettings*: &IID_ID3D12DeviceRemovedExtendedDataSettings, \
@@ -123,10 +121,6 @@
   ID3D12Debug3*: &IID_ID3D12Debug3, \
   ID3D12Debug4*: &IID_ID3D12Debug4, \
   ID3D12Debug5*: &IID_ID3D12Debug5, \
-  ID3D12Debug6*: &IID_ID3D12Debug6, \
-  ID3D12DebugCommandList*: &IID_ID3D12DebugCommandList, \
-  ID3D12DebugCommandList1*: &IID_ID3D12DebugCommandList1, \
-  ID3D12DebugCommandQueue*: &IID_ID3D12DebugCommandQueue, \
   ID3D12DebugDevice*: &IID_ID3D12DebugDevice, \
   ID3D12DebugDevice1*: &IID_ID3D12DebugDevice1, \
   ID3D12InfoQueue*: &IID_ID3D12InfoQueue, \
@@ -139,5 +133,16 @@
   ID3D12ShaderReflectionType*: &IID_ID3D12ShaderReflectionType, \
   ID3D12ShaderReflectionVariable*: &IID_ID3D12ShaderReflectionVariable \
 )
+
+#if 0
+ID3D12Device11*: &IID_ID3D12Device11,
+ID3D12Device12*: &IID_ID3D12Device12,
+ID3D12Device13*: &IID_ID3D12Device13,
+ID3D12Device14*: &IID_ID3D12Device14,
+ID3D12Debug6*: &IID_ID3D12Debug6,
+ID3D12DebugCommandList*: &IID_ID3D12DebugCommandList,
+ID3D12DebugCommandList1*: &IID_ID3D12DebugCommandList1,
+ID3D12DebugCommandQueue*: &IID_ID3D12DebugCommandQueue,
+#endif
 
 #endif /* !IDX12_UUID_H */

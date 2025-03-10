@@ -28,6 +28,8 @@ CE_API ce_err ce_rand(
   unsigned int* CE_RESTRICT out
 );
 
+#define CE_RANDMAX 0x7FFFFFFF
+
 CE_NAMESPACE_END
 
 #endif /* !CANVAS_CORE_RANDOM_H */

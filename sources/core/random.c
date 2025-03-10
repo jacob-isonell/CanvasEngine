@@ -29,7 +29,7 @@ CE_API ce_err ce_rand(unsigned int* seed, unsigned int* out) {
     s = 1;
   }
   
-  s = (0x5E61A729 * s) % 0x7FFFFFFF;
+  s = (0x5E61A729 * s) % CE_RANDMAX;
   
   *out = s;
   if (seed) {

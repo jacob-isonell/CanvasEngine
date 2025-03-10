@@ -24,8 +24,6 @@ ICE_ADDHEADERS(
   "canvas/core/library.h"
   "canvas/core/memory.h"
   "canvas/core/random.h"
-  "canvas/core/signal.h"
-  "canvas/core/string.h"
   "canvas/core/time.h"
   "canvas/core/uuid.h"
   
@@ -48,6 +46,5 @@ PRIVATE
   "library.c"
   "memory.c"
   "random.c"
-  "string.c"
   "time.c"
 )

@@ -38,7 +38,7 @@ static ce_time_t s_perf_count(void) {
   QueryPerformanceFrequency(&i);
   const double f = (double)i.QuadPart;
   QueryPerformanceCounter(&i);
-  const double dur = i.QuadPart / f;
+  const double dur = (double)i.QuadPart / f;
   const ce_time_t out = {
     .sec = (unsigned long long)dur,
     .nsec = (unsigned long long)(dur * 1000000000.0) % 1000000000,
@@ -127,10 +127,10 @@ CE_API ce_err ce_time_get(ce_clock clock, ce_time_t* out) {
      * This function converts it to 1st of January 1970 like unix.
      * 1970 - 1601 = 369 years = 11644754400 seconds.
      */
-    #define SUB_369_YEARS 11644754400ULL
+    #define SUB_369_YEARS 11644754400LL
     
-    out->nsec = (i.QuadPart * 100) % ICE_NANO2SEC_V;
-    out->sec = (i.QuadPart / (ICE_NANO2SEC_V / 100)) - SUB_369_YEARS;
+    out->nsec = (unsigned long long)((i.QuadPart * 100) % ICE_NANO2SEC_V);
+    out->sec = (unsigned long long)((i.QuadPart / (ICE_NANO2SEC_V / 100)) - SUB_369_YEARS);
     return CE_EOK;
   } break;
   case CE_CLOCK_PERF: {

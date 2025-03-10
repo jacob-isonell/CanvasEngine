@@ -16,5 +16,9 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#include "icore_base.h"
-#include <canvas/core/string.h>
+#ifndef CANVAS_INPUT_H
+#define CANVAS_INPUT_H
+
+#include <canvas/input/input.h>
+
+#endif /* !CANVAS_INPUT_H */

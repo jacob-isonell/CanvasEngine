@@ -394,6 +394,8 @@
 #  define CE_VECCALL ICE_FASTCALL
 #endif
 
+#define CE_CALL CE_CDECL
+
 #if CANVAS_COMPILER_MSVC
 #  define CE_ATTR_DLLEXPORT __declspec(dllexport)
 #  define CE_ATTR_DLLIMPORT __declspec(dllimport)

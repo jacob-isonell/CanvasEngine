@@ -16,8 +16,7 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
-set(ICE_DEVMODE OFF CACHE INTERNAL "Enable CanvasEngine development mode")
-
+### User options
 option(CANVAS_ENABLE_LOGS "add description here" OFF)
 option(CANVAS_GRAPHICS    "add description here" ON)
 option(CANVAS_AUDIO       "add description here" ON)
@@ -32,4 +31,5 @@ else ()
   set(CANVAS_SHARED BUILD_SHARED_LIBS)
 endif ()
 
-find_package(Doxygen)
+### Advance options
+option(ICANVAS_DEBUG "Enables strict compiler options for warnings and additional checks when compiling CanvasEngine" OFF)

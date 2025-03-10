@@ -27,7 +27,28 @@
 
 CE_NAMESPACE_BEGIN
 
-
+/**
+ * @todo
+ * Audio APIS to support/consider:
+ * 
+ * | ------------- | --------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+ * | API           | Languages | Platforms      | Sources/Documentations                                                                                                           |
+ * | ============= | ========= | ============== | ================================================================================================================================ |
+ * | JACK          | C         | Win32, Linux   | https://jackaudio.org/                                                                                                           |
+ * | JACK2         | C++       | Win32, Linux   | https://github.com/jackaudio/jack2                                                                                               |
+ * | PulseAudio    |           | Linux          | https://www.freedesktop.org/wiki/Software/PulseAudio/                                                                            |
+ * | ALSA          |           | Linux          | https://www.alsa-project.org/wiki/Main_Page                                                                                      |
+ * | CoreAudio     |           | MacOS          | https://developer.apple.com/library/archive/documentation/MusicAudio/Conceptual/CoreAudioOverview/Introduction/Introduction.html |
+ * | XAudio2       | C/C++     | Win32          | https://learn.microsoft.com/en-us/windows/win32/xaudio2                                                                          |
+ * | PortAudio     |           | Cross-platform | https://www.portaudio.com/                                                                                                       |
+ * | libsoundio    |           | Cross-platform | https://github.com/andrewrk/libsoundio                                                                                           |
+ * | CoreAudioAPIS | C         | Win32          | https://learn.microsoft.com/en-us/windows/win32/api/_coreaudio/                                                                  |
+ * | WASAPI        | C         | Win32          | https://learn.microsoft.com/en-us/windows/win32/coreaudio/wasapi                                                                 |
+ * | ------------- | --------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+ * 
+ * JACK1 is C while JACK2 is C++, but JACK2 is suppose to not be as restrictive as JACK1
+ * 
+ */
 
 CE_NAMESPACE_END
 

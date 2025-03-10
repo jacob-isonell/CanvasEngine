@@ -20,15 +20,17 @@
 
 ICE_API ce_err ivk_load_protos(
   CE_IN  const VkInstanceCreateInfo* CE_RESTRICT info,
-  CE_OUT ivk_protos*                 CE_RESTRICT out
+  CE_OUT VkInstance*                 CE_RESTRICT out_inst,
+  CE_OUT ivk_protos*                 CE_RESTRICT out_proto
 ) {
   ICE_ASSERT(info != NULL);
-  ICE_ASSERT(out != NULL);
+  ICE_ASSERT(out_inst != NULL);
+  ICE_ASSERT(out_proto != NULL);
   
-  *out = (ivk_protos) {0};
+  *out_proto = (ivk_protos) {0};
   IERRBEGIN {
-    IERRDO(ce_lib_open(&out->libvulkan1, IVK_DLL_FILE, CE_LIB_FLAG_NONE));
-    IERRDO(ce_lib_load(out->libvulkan1, "vkGetInstanceProcAddr", &out->vkGetInstanceProcAddr));
+    IERRDO(ce_lib_open(&out_proto->libvulkan1, IVK_DLL_FILE, CE_LIB_FLAG_NONE));
+    IERRDO(ce_lib_load(out_proto->libvulkan1, "vkGetInstanceProcAddr", &out_proto->vkGetInstanceProcAddr));
     
     printf(IASCII_CYAN 
       "Enabled layers :\n"
@@ -50,33 +52,34 @@ ICE_API ce_err ivk_load_protos(
     }
     puts(IASCII_RESET);
     
-  #define LOAD(name) out->name = (CONCAT(PFN_, name))out->vkGetInstanceProcAddr(NULL, #name)
+  #define LOAD(name) out_proto->name = (CONCAT(PFN_, name))out_proto->vkGetInstanceProcAddr(NULL, #name)
     
     LOAD(vkEnumerateInstanceVersion);
     LOAD(vkEnumerateInstanceExtensionProperties);
     LOAD(vkEnumerateInstanceLayerProperties);
     LOAD(vkCreateInstance);
     
-    IERRDO(ifrom_vk(out->vkCreateInstance(info, IVK_ALLOC, &out->instance)));
+    IERRDO(ifrom_vk(out_proto->vkCreateInstance(info, IVK_ALLOC, out_inst)));
     
   #undef LOAD
-  #define LOAD(name) out->name = (CONCAT(PFN_, name))out->vkGetInstanceProcAddr(out->instance, #name)
+  #define LOAD(name) out_proto->name = (CONCAT(PFN_, name))out_proto->vkGetInstanceProcAddr(*out_inst, #name)
     LOAD(vkDestroyInstance);
     
   } IERREND {
-    ce_lib_close(out->libvulkan1);
-    *out = (ivk_protos) {0};
+    ce_lib_close(out_proto->libvulkan1);
+    *out_proto = (ivk_protos) {0};
   }
   return IERRVAL;
 }
 
 ICE_API void ivk_unload_protos(
+  CE_INOUT VkInstance              inst,
   CE_INOUT ivk_protos* CE_RESTRICT protos
 ) {
   ICE_ASSERT(protos != NULL);
   
   if (protos->vkDestroyInstance) {
-    protos->vkDestroyInstance(protos->instance, IVK_ALLOC);
+    protos->vkDestroyInstance(inst, IVK_ALLOC);
   }
   
   ce_lib_close(protos->libvulkan1);

@@ -34,16 +34,13 @@ static const char* s_req_inst_exts[] = {
 #endif
 };
 
-struct ice_vulkan_driver_data {
-  ivk_protos pfn;
-};
-
 static void irelease_driver(
   CE_INOUT ce_render_driver* self
 ) {
-  ivk_protos* const p = &(self->data.vk->pfn);
-  ivk_unload_protos(p);
-  ifree(self->data.vk, sizeof(*(self->data.vk)));
+  ice_vulkan_driver_data* const data = self->data.vk;
+  ivk_protos* const p = &(data->pfn);
+  ivk_unload_protos(data->instance, p);
+  ifree(data, sizeof(*(data)));
   *self = (ce_render_driver) {0};
 }
 
@@ -97,10 +94,10 @@ CE_API ce_err ce_vulkan_driver(
     inst_info.enabledExtensionCount = (uint32_t)req_exts_count;
     inst_info.ppEnabledExtensionNames = req_exts;
     
-    IERRDO(ivk_load_protos(&inst_info, pfn));
+    IERRDO(ivk_load_protos(&inst_info, &vkp->instance, pfn));
     
     const ice_render_driver_vfp* const addr = &s_vfp;
-    memcpy(&driver->vfp, &addr, sizeof(void*));
+    memcpy(&driver->vfp, &addr, sizeof(addr));
   } IERREND {
     *driver = (ce_render_driver) {0};
     if (vkp != NULL) {

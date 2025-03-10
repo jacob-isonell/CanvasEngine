@@ -20,7 +20,7 @@ add_library(CanvasEngineDependencies INTERFACE)
 include(FindPackageHandleStandardArgs)
 
 ### Core module dependencies
-
+find_package(Doxygen)
 
 ### Graphics module dependencies
 

@@ -84,7 +84,7 @@ CE_API ce_err ce_vulkan_driver(
 
 #ifdef CANVAS_ENABLE_DIRECTX12
 typedef struct ce_directx12_driver_create_info {
-  int unused;
+  cebool enable_debug;
 } ce_directx12_driver_create_info;
 
 CE_API ce_err ce_directx12_driver(

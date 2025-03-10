@@ -19,6 +19,50 @@
 #include "icore_base.h"
 #if CANVAS_PLATFORM_WINDOWS
 
+static size_t s_copy_narrow(char* dest, const char* src, size_t len) {
+  size_t n = 0;
+  while (len) {
+    switch (*src) {
+    case '\n':
+    case '\r':
+      break;
+    case '%':
+      ++src;
+    default:
+      *dest = *src;
+      ++dest;
+      ++n;
+      break;
+    }
+    --len;
+    ++src;
+  }
+  *dest = '\0';
+  return n;
+}
+
+static size_t s_copy_wide(wchar_t* dest, const wchar_t* src, size_t len) {
+  size_t n = 0;
+  while (len) {
+    switch (*src) {
+    case L'\n':
+    case L'\r':
+      break;
+    case L'%':
+      ++src;
+    default:
+      *dest = *src;
+      ++dest;
+      ++n;
+      break;
+    }
+    --len;
+    ++src;
+  }
+  *dest = L'\0';
+  return n;
+}
+
 ICE_API const char* ice_win32err(DWORD errcode, DWORD langid) {
   char* buffer = NULL;
   char* out = NULL;
@@ -33,13 +77,49 @@ ICE_API const char* ice_win32err(DWORD errcode, DWORD langid) {
   
   if (buffer != NULL) {
     const size_t len = strlen(buffer);
-    out = ialloc(len + 1, NULL);
+    out = ce_alloc(len + 1);
     if (out) {
-      strcpy(out, buffer);
+      s_copy_narrow(out, buffer, len);
     }
     LocalFree((HLOCAL)buffer);
   }
   return out;
+}
+
+ICE_API size_t ice_win32err_s(
+  char* buff,
+  size_t bufflen,
+  DWORD errcode,
+  DWORD langid
+) {
+  char* msg = NULL;
+  FormatMessageA(
+    FORMAT_MESSAGE_ALLOCATE_BUFFER
+    | FORMAT_MESSAGE_FROM_SYSTEM
+    | FORMAT_MESSAGE_IGNORE_INSERTS,
+    NULL, errcode, langid,
+    (char*)&msg, 0,
+    NULL
+  );
+  
+  if (msg != NULL) {
+    const size_t maxlen = strlen(msg);
+    if (buff == NULL) {
+      LocalFree((HLOCAL)msg);
+      return maxlen;
+    }
+    
+    const size_t len = bufflen < maxlen
+      ? bufflen
+      : maxlen;
+    
+    const size_t out = s_copy_narrow(buff, msg, len);
+    LocalFree((HLOCAL)msg);
+    return out;
+  }
+  
+  IDEBWARN("Failed to get Win32 message\n");
+  return SIZE_MAX;
 }
 
 ICE_API const wchar_t* ice_wwin32err(DWORD errcode, DWORD langid) {
@@ -56,13 +136,49 @@ ICE_API const wchar_t* ice_wwin32err(DWORD errcode, DWORD langid) {
   
   if (buffer != NULL) {
     const size_t len = wcslen(buffer);
-    out = ialloc(len + 1, NULL);
+    out = ce_alloc(len + 1);
     if (out) {
-      wcscpy(out, buffer);
+      s_copy_wide(out, buffer, len);
     }
     LocalFree((HLOCAL)buffer);
   }
   return out;
+}
+
+ICE_API size_t ice_wwin32err_s(
+  wchar_t* buff,
+  size_t bufflen,
+  DWORD errcode,
+  DWORD langid
+) {
+  wchar_t* msg = NULL;
+  FormatMessageW(
+    FORMAT_MESSAGE_ALLOCATE_BUFFER
+    | FORMAT_MESSAGE_FROM_SYSTEM
+    | FORMAT_MESSAGE_IGNORE_INSERTS,
+    NULL, errcode, langid,
+    (wchar_t*)&msg, 0,
+    NULL
+  );
+  
+  if (msg != NULL) {
+    const size_t maxlen = wcslen(msg);
+    if (buff == NULL) {
+      LocalFree((HLOCAL)msg);
+      return maxlen;
+    }
+    
+    const size_t len = bufflen < maxlen
+      ? bufflen
+      : maxlen;
+    
+    const size_t out = s_copy_wide(buff, msg, len);
+    LocalFree((HLOCAL)msg);
+    return out;
+  }
+  
+  IDEBWARN("Failed to get Win32 message\n");
+  return SIZE_MAX;
 }
 
 ICE_API ce_err ifrom_hres(HRESULT in) {

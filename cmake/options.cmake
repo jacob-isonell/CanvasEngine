@@ -168,7 +168,7 @@ if (CANVAS_ENABLE_DIRECTX12)
   )
 endif ()
 
-if (ICE_DEVMODE)
+if (ICANVAS_DEBUG)
   target_compile_options(CanvasEngine PUBLIC ${ICE_COMPILER_SANITIZER_FLAGS})
   target_link_options(CanvasEngine PUBLIC ${ICE_COMMON_SANITIZER_FLAGS})
 endif ()

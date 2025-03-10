@@ -16,28 +16,31 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
-#ifndef CANVAS_NETWORK_NETWORK_H
-#define CANVAS_NETWORK_NETWORK_H
+#ifndef CANVAS_INPUT_INPUT_H
+#define CANVAS_INPUT_INPUT_H
 
 #include <canvas/core/error.h>
 
-#ifndef CANVAS_NETWORK
-#error the network module for CanvasEngine has been disabled
+#ifndef CANVAS_INPUT
+#error the input module for CanvasEngine has been disabled
 #endif
 
 CE_NAMESPACE_BEGIN
 
 /**
  * @todo
- * Network APIS to support/consider:
+ * Input APIS to support/consider:
  * 
- * | ------ | ----------- | ----------------------- |
- * | API    | Platforms   | Sources/Documentations  |
- * | ====== | =========== | ======================= |
- * | *NAME* | *PLATFORMS* | *LINK*                  |
- * | ------ | ----------- | ----------------------- |
+ * | ---------------- | --------- | ----------- | ------------------------------------------------------------------------------------------------------------------------- |
+ * | API              | Languages | Platforms   | Sources/Documentations                                                                                                    |
+ * | ================ | ========= | =========== | ========================================================================================================================= |
+ * | Steam Networking | C++       | Any         | https://partner.steamgames.com/doc/features/multiplayer/networking https://github.com/ValveSoftware/GameNetworkingSockets |
+ * | nng              | C         | Any         | https://github.com/nanomsg/nng                                                                                            |
+ * | ---------------- | --------- | ----------- | ------------------------------------------------------------------------------------------------------------------------- |
+ * 
+ * A list of C/C++ network APIs: https://stackoverflow.com/a/118968
  */
 
 CE_NAMESPACE_END
 
-#endif /* !CANVAS_NETWORK_NETWORK_H */
+#endif /* !CANVAS_INPUT_INPUT_H */

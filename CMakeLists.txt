@@ -38,7 +38,7 @@ include("cmake/dependencies.cmake")
 include("cmake/options.cmake")
 include("cmake/doxygen.cmake")
 
-set(ICE_HEADER_PATH "${CMAKE_CURRENT_SOURCE_DIR}/include" CACHE STRING "internal" FORCE)
+set(ICE_HEADER_PATH "${CMAKE_CURRENT_SOURCE_DIR}/include" CACHE INTERNAL "internal" FORCE)
 
 macro(ICE_ADDHEADERS)
   foreach (item ${ARGV})

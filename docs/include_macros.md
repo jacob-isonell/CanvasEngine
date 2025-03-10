@@ -19,3 +19,21 @@ Exposes native access to Xlib objects used by CanvasEngine. This requires manual
 
 #### CANVAS_NO_MUTEX_ATOMICS ([`canvas/threads/atomic.h`](@ref canvas/threads/atomic.h))
 If no atomics implementation is available, a mutex is used to lock the variable. Defining this macro disables this behaviour and no atomics API will be available.
+
+#### CANVAS_NO_MATH_API ([`canvas.h`](@ref canvas.h))
+Prevents `canvas.h` from including the `canvas/math.h` file.
+
+#### CANVAS_NO_THREADS_API ([`canvas.h`](@ref canvas.h))
+Prevents `canvas.h` from including the `canvas/threads.h` file.
+
+#### CANVAS_NO_GRAPHICS_API ([`canvas.h`](@ref canvas.h))
+Prevents `canvas.h` from including the `canvas/graphics.h` file.
+
+#### CANVAS_NO_AUDIO_API ([`canvas.h`](@ref canvas.h))
+Prevents `canvas.h` from including the `canvas/audio.h` file.
+
+#### CANVAS_NO_NETWORK_API ([`canvas.h`](@ref canvas.h))
+Prevents `canvas.h` from including the `canvas/network.h` file.
+
+#### CANVAS_NO_INPUT_API ([`canvas.h`](@ref canvas.h))
+Prevents `canvas.h` from including the `canvas/input.h` file.

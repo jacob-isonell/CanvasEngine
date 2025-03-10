@@ -32,7 +32,6 @@ CE_NAMESPACE_BEGIN
 
 typedef struct ivk_protos {
   ce_lib* libvulkan1;
-  VkInstance instance;
   PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
   
   PFN_vkEnumerateInstanceVersion vkEnumerateInstanceVersion;
@@ -43,12 +42,19 @@ typedef struct ivk_protos {
   PFN_vkDestroyInstance vkDestroyInstance;
 } ivk_protos;
 
+struct ice_vulkan_driver_data {
+  VkInstance instance;
+  ivk_protos pfn;
+};
+
 ICE_API ce_err ivk_load_protos(
   CE_IN  const VkInstanceCreateInfo* CE_RESTRICT info,
-  CE_OUT ivk_protos*                 CE_RESTRICT out
+  CE_OUT VkInstance*                 CE_RESTRICT out_inst,
+  CE_OUT ivk_protos*                 CE_RESTRICT out_proto
 );
 
 ICE_API void ivk_unload_protos(
+  CE_INOUT VkInstance              inst,
   CE_INOUT ivk_protos* CE_RESTRICT protos
 );
 

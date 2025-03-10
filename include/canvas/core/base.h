@@ -311,6 +311,12 @@
  * @ingroup utility
  * @brief add documentation here
  */
+#define CE_CALL
+
+/**
+ * @ingroup utility
+ * @brief add documentation here
+ */
 #define CE_ATTR_DLLEXPORT
 
 /**

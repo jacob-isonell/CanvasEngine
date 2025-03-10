@@ -27,8 +27,11 @@
 
 CE_NAMESPACE_BEGIN
 
+#define ICE_DEFLANG MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT)
 ICE_API const char* ice_win32err(DWORD errcode, DWORD langid);
+ICE_API size_t ice_win32err_s(char* buff, size_t bufflen, DWORD errcode, DWORD langid);
 ICE_API const wchar_t* ice_wwin32err(DWORD errcode, DWORD langid);
+ICE_API size_t ice_wwin32err_s(wchar_t* buff, size_t bufflen, DWORD errcode, DWORD langid);
 ICE_API ce_err ifrom_hres(HRESULT in);
 
 CE_NAMESPACE_END
