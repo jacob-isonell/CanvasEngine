@@ -335,9 +335,9 @@ float ce_dist_vec4f32(
   ce_vec4f32 rhs
 );
 
-#ifndef ICE_DOCS
+#ifndef ICE_DOXY
 #include <canvas/math/details/vec.h.inl>
-#endif /* !ICE_DOCS */
+#endif /* !ICE_DOXY */
 
 CE_NAMESPACE_END
 

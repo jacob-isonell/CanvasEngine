@@ -16,6 +16,10 @@
 ** along with this program. If not, see <https://www.gnu.org/licenses/>. **
 **************************************************************************/
 
+#ifdef __INTELLISENSE__
+#define ICE_INTELLI
+#endif
+
 #if defined(__GNUC__)
 #  define CANVAS_COMPILER_GNU 1
 #  if defined(__clang__)
@@ -451,3 +455,5 @@
 #define CE_IN_OPT
 #define CE_INOUT
 #define CE_INOUT_OPT
+
+#define ICE_NOIMPL() abort()

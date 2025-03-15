@@ -20,9 +20,9 @@
 #define CANVAS_THREADS_ATOMIC_H
 
 #include <canvas/threads/mutex.h>
-#ifndef ICE_DOCS
+#ifndef ICE_DOXY
 #include <canvas/threads/details/atomic_order.inl>
-#endif /* !ICE_DOCS */
+#endif /* !ICE_DOXY */
 
 /**
  * @ingroup atomic_types
@@ -385,8 +385,8 @@ typedef enum ce_memord {
  */
 #define ce_kill_dependency(in) /* implementation-defined */
 
-#ifndef ICE_DOCS
+#ifndef ICE_DOXY
 #include <canvas/threads/details/atomic.h.inl>
-#endif /* !ICE_DOCS */
+#endif /* !ICE_DOXY */
 
 #endif /* !CANVAS_THREADS_ATOMIC_H */

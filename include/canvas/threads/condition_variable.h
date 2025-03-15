@@ -27,9 +27,9 @@
  */
 #define CE_COND_INIT /* implementation-defined */
 
-#ifndef ICE_DOCS
+#ifndef ICE_DOXY
 #include <canvas/threads/details/condition_variable.h.inl>
-#endif /* !ICE_DOCS */
+#endif /* !ICE_DOXY */
 
 /**
  * @ingroup threading_objects

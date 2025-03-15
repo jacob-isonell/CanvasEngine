@@ -27,15 +27,8 @@
 
 CE_NAMESPACE_BEGIN
 
-#define ICE_FX_HANDLE(name)
-#define CE_NULL_HANDLE {0}
+#ifdef ICE_DOXY
 
-typedef enum ce_render_api {
-  CE_VULKAN,
-  CE_DIRECTX12,
-} ce_render_api;
-
-#ifdef ICE_DOCS
 typedef void* ice_win32_hwnd;
 typedef void* ice_wl_surface;
 typedef long ice_xlib_window;
@@ -51,9 +44,65 @@ typedef union ce_wnd_handle {
   ice_wl_surface wl;
   ice_xlib_window xlib;
 } ce_wnd_handle;
+
+#else
+
+#ifdef CANVAS_ENABLE_VULKAN
+#define ICE_GX_VK_HANDLE(name) typedef struct name name;
+#define ICE_GX_VK_ENABLE(x) x
+#else
+#define ICE_GX_VK_HANDLE(name)
+#define ICE_GX_VK_ENABLE(x)
 #endif
 
-#include <canvas/graphics/details/graphics.inl>
+#ifdef CANVAS_ENABLE_DIRECTX12
+#define ICE_GX_DX12_HANDLE(name) typedef struct name name;
+#define ICE_GX_DX12_ENABLE(x) x
+#else
+#define ICE_GX_DX12_HANDLE(name)
+#define ICE_GX_DX12_ENABLE(x)
+#endif
+
+#define ICE_GX_HANDLE(name) \
+  ICE_GX_VK_HANDLE(i##name##_vk) \
+  ICE_GX_DX12_HANDLE(i##name##_dx12) \
+  typedef union name { \
+    ICE_GX_VK_ENABLE(i##name##_vk* vk;) \
+    ICE_GX_DX12_ENABLE(i##name##_dx12* dx12;) \
+  } name
+
+#ifdef CANVAS_EXPOSE_WIN32
+typedef HWND ice_win32_hwnd;
+#else
+typedef void* ice_win32_hwnd;
+#endif
+
+#ifdef CANVAS_EXPOSE_WAYLAND
+typedef struct wl_surface* ice_wl_surface;
+#else
+typedef void* ice_wl_surface;
+#endif
+
+#ifdef CANVAS_EXPOSE_XLIB
+typedef Window ice_xlib_window;
+#else
+typedef long ice_xlib_window;
+#endif
+
+typedef union ce_wnd_handle {
+#if CANVAS_PLATFORM_WINDOWS
+  ice_win32_hwnd win32;
+#else
+#ifdef CANVAS_ENABLE_WAYLAND
+  ice_wl_surface wl;
+#endif
+#ifdef CANVAS_ENABLE_XLIB
+  ice_xlib_window xlib;
+#endif
+#endif
+} ce_wnd_handle;
+
+#endif
 
 CE_NAMESPACE_END
 

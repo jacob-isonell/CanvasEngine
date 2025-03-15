@@ -19,16 +19,16 @@
 #ifndef CANVAS_GRAPHICS_DRIVER_H
 #define CANVAS_GRAPHICS_DRIVER_H
 
-#include <canvas/core/error.h>
+#include <canvas/graphics/graphics.h>
 #include <stdint.h>
 
 CE_NAMESPACE_BEGIN
 
-typedef struct ce_gpu_dev ce_gpu_dev;
-
 typedef struct ce_render_driver ce_render_driver;
+ICE_GX_HANDLE(ce_gpu_adapter);
+ICE_GX_HANDLE(ce_gpu_dev);
 
-typedef struct ice_render_driver_vfp ice_render_driver_vfp;
+typedef struct ce_render_driver_vfp ce_render_driver_vfp;
 
 #ifdef CANVAS_ENABLE_VULKAN
 typedef struct ice_vulkan_driver_data ice_vulkan_driver_data;
@@ -37,22 +37,58 @@ typedef struct ice_vulkan_driver_data ice_vulkan_driver_data;
 typedef struct ice_directx12_driver_data ice_directx12_driver_data;
 #endif
 
-struct ice_render_driver_vfp {
+/**
+ * @brief 
+ *  See [`DXGI_GPU_PREFERENCE`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_6/ne-dxgi1_6-dxgi_gpu_preference) for meaning.
+ */
+typedef enum ce_gpu_adapter_pref {
+  CE_GPU_ADAPTER_PREF_UNSPECIFIED,
+  CE_GPU_ADAPTER_PREF_PERFORMANCE,
+  CE_GPU_ADAPTER_PREF_MINPOWER,
+} ce_gpu_adapter_pref;
+
+/**
+ * @brief add documentation here!
+ */
+struct ce_render_driver_vfp {
+  
+  /**
+   * @brief add documentation here!
+   * @param self add documentation here!
+   */
   void (*release)(
     CE_INOUT ce_render_driver* self
   );
   
-  ce_err (*fetch_gpu_devs)(
-    CE_INOUT ce_render_driver* self
+  /**
+   * @brief add documentation here!
+   * @param self add documentation here!
+   * @param order_pref The preferred method to order them in.
+   */
+  ce_err (*fetch_gpu_adapters)(
+    CE_INOUT ce_render_driver*   self,
+             ce_gpu_adapter_pref order_pref
   );
   
-  ce_err (*get_gpu_dev)(
-    CE_IN  const ce_render_driver* self,
-    CE_OUT ce_gpu_dev** out
+  /**
+   * @brief add documentation here!
+   * @param self add documentation here!
+   * @param buffer add documentation here!
+   * @param bufflen add documentation here!
+   * @param index add documentation here!
+   * @param out_len add documentation here!
+   */
+  ce_err (*get_gpu_adapters)(
+    CE_IN      const ce_render_driver* CE_RESTRICT self,
+    CE_OUT     ce_gpu_adapter*         CE_RESTRICT buffer,
+               size_t                              bufflen,
+               size_t                              index,
+    CE_OUT_OPT size_t*                 CE_RESTRICT out_len
   );
 };
 
 struct ce_render_driver {
+  const ce_render_driver_vfp* vfp;
   union {
   #ifdef CANVAS_ENABLE_VULKAN
     ice_vulkan_driver_data* vk;
@@ -61,7 +97,6 @@ struct ce_render_driver {
     ice_directx12_driver_data* dx12;
   #endif
   } data;
-  const ice_render_driver_vfp* vfp;
 };
 
 #ifdef CANVAS_ENABLE_VULKAN

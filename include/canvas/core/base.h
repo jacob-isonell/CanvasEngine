@@ -19,11 +19,7 @@
 #ifndef CANVAS_CORE_BASE_H
 #define CANVAS_CORE_BASE_H
 
-#if defined(ICE_DOXY) /* || defined(__INTELLISENSE__) */
-#define ICE_DOCS
-#endif
-
-#ifdef ICE_DOCS
+#ifdef ICE_DOXY
 
 /**
  * @ingroup utility
@@ -382,8 +378,8 @@ typedef unsigned char icebool;
 
 #else
 #include <canvas_cmake_options.h>
-#include <canvas/core/details/base_def.inl>
-#endif /* !ICE_DOCS */
+#include <canvas/core/details/base.h.inl>
+#endif /* !ICE_DOXY */
 
 #include <stddef.h>
 #include <stdint.h>
@@ -443,7 +439,7 @@ typedef struct ce_version {
  * @ingroup utility
  * @brief add documentation here!
  */
-#define CE_CURRVER /* implementation-defined */
+#define CE_CURRVER CE_VERSION(ICE_VERSION_MAJOR, ICE_VERSION_MINOR, ICE_VERSION_PATCH)
 
 /**
  * @ingroup utility
@@ -451,11 +447,7 @@ typedef struct ce_version {
  */
 #define CE_ARRLEN(arr) (sizeof(arr) / sizeof(*(arr)))
 
-#ifndef ICE_DOCS
-#include <canvas/core/details/base_macros.inl>
-#endif /* !ICE_DOCS */
-
-#if defined(CANVAS_DEBUG) || defined(ICE_DOCS)
+#if defined(CANVAS_DEBUG) || defined(ICE_INTELLI) || defined(ICE_DOXY)
 
 /**
  * @brief
@@ -465,7 +457,7 @@ CE_API void ce_disable_debug_logs(void);
 
 #else
 #define ce_disable_debug_logs() ((void)0)
-#endif /* !CANVAS_DEBUG */
+#endif /* !ICE_INTELLI */
 
 CE_NAMESPACE_END
 

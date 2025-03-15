@@ -78,13 +78,18 @@ CE_API ce_err ce_thrd_create(ce_thrd* out, int (*func)(void*), void* arg) {
   
 #elif defined(ICE_THREADS_WIN32)
   
-  uintptr_t thrd_handle = _beginthreadex(NULL, 0, &i_thread_start, data, 0, NULL);
-  if (thrd_handle == UINTPTR_MAX) {
+  union {
+    uintptr_t in;
+    ce_thrd out;
+  } thrd_handle;
+  
+  thrd_handle.in = _beginthreadex(NULL, 0, &i_thread_start, data, 0, NULL);
+  if (thrd_handle.in == UINTPTR_MAX) {
     ifree(data, sizeof(*data));
     return ierrno;
   }
   
-  memcpy(&out, &thrd_handle, sizeof(thrd_handle));
+  *out = thrd_handle.out;
   return CE_EOK;
   
 #endif

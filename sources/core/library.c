@@ -39,21 +39,19 @@ CE_API ce_err ce_lib_open(
   if (mod == NULL) {
     return CE_EFAULT;
   }
-  memcpy(handle, &mod, sizeof(mod));
-  return CE_EOK;
   
 #elif CANVAS_PLATFORM_UNIX
   
   void* const mod = dlopen(filepath, RTLD_NOW | RTLD_GLOBAL);
-  if (mod != NULL) {
-    memcpy(handle, &mod, sizeof(mod));
-    return CE_EOK;
+  if (mod == NULL) {
+    IDEBERROR("dlopen failed (\"%s\")\n", dlerror());
+    return CE_ENOENT;
   }
   
-  IDEBERROR("dlopen failed (\"%s\")\n", dlerror());
-  return CE_ENOENT;
-  
 #endif
+  
+  *handle = (ce_lib*)mod;
+  return CE_EOK;
 }
 
 CE_API ce_err ce_lib_load(
@@ -71,8 +69,6 @@ CE_API ce_err ce_lib_load(
   if (p == NULL) {
     return CE_ENODATA;
   }
-  memcpy(out, &p, sizeof(void*));
-  return CE_EOK;
   
 #elif CANVAS_PLATFORM_UNIX
   
@@ -81,15 +77,15 @@ CE_API ce_err ce_lib_load(
   void* const p = dlsym((void*)handle, name);
   const char* const errstr = dlerror();
   
-  if (errstr == NULL) {
-    memcpy(out, &p, sizeof(p));
-    return CE_EOK;
+  if (errstr != NULL) {
+    IDEBERROR("dlclose failed (\"%s\")\n", errstr);
+    return CE_ENOENT;
   }
   
-  IDEBERROR("dlclose failed (\"%s\")\n", errstr);
-  return CE_ENOENT;
-  
 #endif
+  
+  memcpy(out, &p, sizeof(void*));
+  return CE_EOK;
 }
 
 CE_API void ce_lib_close(

@@ -36,18 +36,21 @@ static const char* s_req_inst_exts[] = {
 
 static void irelease_driver(
   CE_INOUT ce_render_driver* self
-) {
-  ice_vulkan_driver_data* const data = self->data.vk;
-  ivk_protos* const p = &(data->pfn);
-  ivk_unload_protos(data->instance, p);
-  ifree(data, sizeof(*(data)));
-  *self = (ce_render_driver) {0};
-}
+);
+  
+static ce_err ifetch_gpu_adapters(
+  CE_INOUT ce_render_driver*   self,
+           ce_gpu_adapter_pref order_pref
+);
 
-static const ice_render_driver_vfp s_vfp = {
+#define IFX_GPU_ADAPTER_TYPE ice_gpu_adapter_vk
+#define IFX_GPU_ADAPTER_VAR vk
+#include "ifx_get_adapters.inl"
+
+static const ce_render_driver_vfp s_vfp = {
   .release = &irelease_driver,
-  .fetch_gpu_devs = NULL,
-  .get_gpu_dev = NULL
+  .fetch_gpu_adapters = &ifetch_gpu_adapters,
+  .get_gpu_adapters = &iget_gpu_adapters,
 };
 
 CE_API ce_err ce_vulkan_driver(
@@ -70,10 +73,11 @@ CE_API ce_err ce_vulkan_driver(
     vkp = ialloc(sizeof(ice_vulkan_driver_data), &IERRVAL);
     driver->data.vk = vkp;
     IERRDO(IERRVAL);
+    *vkp = (ice_vulkan_driver_data) {0};
+    ivk_protos* const pfn = &vkp->pfn;
     
     memcpy(req_exts, s_req_inst_exts, CE_ARRLEN(s_req_inst_exts) * sizeof(char*));
     memcpy(req_exts + CE_ARRLEN(s_req_inst_exts), info->instance_extension_names, info->instance_extension_count * sizeof(char*));
-    ivk_protos* pfn = &vkp->pfn;
     
     VkApplicationInfo app_info;
     app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -96,15 +100,58 @@ CE_API ce_err ce_vulkan_driver(
     
     IERRDO(ivk_load_protos(&inst_info, &vkp->instance, pfn));
     
-    const ice_render_driver_vfp* const addr = &s_vfp;
-    memcpy(&driver->vfp, &addr, sizeof(addr));
+    driver->vfp = &s_vfp;
   } IERREND {
     *driver = (ce_render_driver) {0};
-    if (vkp != NULL) {
-      ifree(vkp, sizeof(*vkp));
-    }
+    ifree(vkp, sizeof(*vkp));
   }
   
   ifree(req_exts, sizeof(*req_exts) * req_exts_count);
+  return IERRVAL;
+}
+
+static void irelease_driver(
+  CE_INOUT ce_render_driver* self
+) {
+  ice_vulkan_driver_data* const vkp = self->data.vk;
+  ivk_protos* const p = &(vkp->pfn);
+  
+  ce_arr_free(vkp->gpu_adapters);
+  ivk_unload_protos(vkp->instance, p);
+  ifree(vkp, sizeof(*(vkp)));
+  
+  *self = (ce_render_driver) {0};
+}
+
+static ce_err ifetch_gpu_adapters(
+  CE_INOUT ce_render_driver*   self,
+           ce_gpu_adapter_pref order_pref
+) {
+  (void)order_pref; /* This parameter is only used in DX12. */
+  
+  ice_vulkan_driver_data* const vkp = self->data.vk;
+  const ivk_protos* const pfn = &vkp->pfn;
+  ce_arr(ice_gpu_adapter_vk)* adapters = &vkp->gpu_adapters;
+  
+  VkPhysicalDevice* phys_devs = NULL;
+  uint32_t count;
+  
+  IERRBEGIN {
+    
+    IERRDO(ifrom_vk(pfn->vkEnumeratePhysicalDevices(vkp->instance, &count, NULL)));
+    
+    phys_devs = ialloc(sizeof(*phys_devs) * count, &IERRVAL);
+    IERRDO(ce_arr_resize(adapters, count, sizeof(**adapters)));
+    
+    IERRDO(ifrom_vk(pfn->vkEnumeratePhysicalDevices(vkp->instance, &count, phys_devs)));
+    
+    for (uint32_t i = 0; i < count; ++i) {
+      (*adapters)[i].dev = phys_devs[i];
+    }
+    
+  } IERREND { }
+  
+  ifree(phys_devs, sizeof(*phys_devs) * count);
+  
   return IERRVAL;
 }

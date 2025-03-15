@@ -33,7 +33,7 @@
 
 #include <canvas/core/time.h>
 
-#ifndef ICE_DOCS
+#ifndef ICE_DOXY
 #include <canvas/threads/details/check.inl>
 #include <canvas/threads/details/thread.h.inl>
 #else
@@ -44,7 +44,7 @@ typedef struct ice_thrd { int unused; } ice_thrd;
 /** @internal */
 typedef struct ice_once_flag { int unused; } ice_once_flag;
 
-#endif /* !ICE_DOCS */
+#endif /* !ICE_DOXY */
 
 /**
  * @ingroup threading_objects

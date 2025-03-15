@@ -46,6 +46,10 @@ ICE_API ce_err ivk_inst_exts(
 
 ICE_API ce_err ifrom_vk(VkResult res);
 
+struct ice_gpu_adapter_vk {
+  VkPhysicalDevice dev;
+};
+
 CE_NAMESPACE_END
 
 #endif /* !CANVAS_ENABLE_VULKAN */

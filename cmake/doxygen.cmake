@@ -48,7 +48,7 @@ if (CANVAS_GENERATE_DOXYGEN)
     "CE_C11_STD=1"
     "CE_C17_STD=1"
     "CE_C23_STD=1"
-    "ICE_FXHANDLE(x)=typedef struct x x"
+    "ICE_GX_HANDLE(x)=typedef struct x x"
   )
 
   set(DOXYGEN_FILE_PATTERNS

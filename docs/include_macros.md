@@ -11,6 +11,9 @@ to ensure the compiler is able to compile the CanvasEngine library.
 #### CANVAS_EXPOSE_VULKAN ([`canvas/graphics/graphics.h`](@ref canvas/graphics/graphics.h))
 Exposes native access to VulkanAPI objects used by CanvasEngine. This requires manually including the VulkanAPI headers before including the CanvasEngine headers.
 
+#### CANVAS_EXPOSE_DIRECTX12 ([`canvas/graphics/graphics.h`](@ref canvas/graphics/graphics.h))
+Exposes native access to DirectX12 objects used by CanvasEngine. This requires manually including the DirectX12 headers before including the CanvasEngine headers.
+
 #### CANVAS_EXPOSE_WAYLAND ([`canvas/graphics/graphics.h`](@ref canvas/graphics/graphics.h))
 Exposes native access to Wayland objects used by CanvasEngine. This requires manually including the Wayland headers before including the CanvasEngine headers.
 

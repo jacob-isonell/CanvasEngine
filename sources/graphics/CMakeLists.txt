@@ -21,8 +21,6 @@ ICE_ADDHEADERS(
   
   "canvas/graphics/driver.h"
   "canvas/graphics/graphics.h"
-  
-  "canvas/graphics/details/graphics.inl"
 )
 
 target_sources(CanvasEngine

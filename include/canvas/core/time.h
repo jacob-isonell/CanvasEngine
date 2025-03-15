@@ -265,9 +265,9 @@ CE_INLINE ce_time_t ce_time_lmilli(long double in);
  */
 CE_INLINE ce_time_t ce_time_lseconds(long double in);
 
-#ifndef ICE_DOCS
+#ifndef ICE_DOXY
 #include <canvas/core/details/time.h.inl>
-#endif /* !ICE_DOCS */
+#endif /* !ICE_DOXY */
 
 CE_NAMESPACE_END
 

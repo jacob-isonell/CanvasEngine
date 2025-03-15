@@ -23,7 +23,7 @@
 #include <canvas/threads/mutex.h>
 #include <canvas/threads/condition_variable.h>
 
-#if defined(ICE_DOCS) || CE_CXX11_STD || CE_C11_STD
+#if defined(ICE_DOXY) || CE_CXX11_STD || CE_C11_STD
 #include <canvas/threads/atomic.h>
 #endif
 

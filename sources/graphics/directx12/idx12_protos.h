@@ -106,6 +106,7 @@ typedef struct idx12_protos {
 struct ice_directx12_driver_data {
   idx12_protos pfn;
   IDXGIFactory2* fact;
+  ce_arr(ice_gpu_adapter_dx12) gpu_adapters;
 };
 
 #endif /* !IDX12_PROTOS_H */

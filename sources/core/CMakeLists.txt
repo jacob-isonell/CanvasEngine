@@ -27,8 +27,7 @@ ICE_ADDHEADERS(
   "canvas/core/time.h"
   "canvas/core/uuid.h"
   
-  "canvas/core/details/base_def.inl"
-  "canvas/core/details/base_macros.inl"
+  "canvas/core/details/base.h.inl"
   "canvas/core/details/time.h.inl"
 )
 

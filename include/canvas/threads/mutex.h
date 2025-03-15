@@ -56,9 +56,9 @@ typedef enum ce_mtx_kind {
 
 #include <canvas/threads/thread.h>
 
-#ifndef ICE_DOCS
+#ifndef ICE_DOXY
 #include <canvas/threads/details/mutex.h.inl>
-#endif /* !ICE_DOCS */
+#endif /* !ICE_DOXY */
 
 /**
  * @ingroup threading_objects

@@ -32,6 +32,9 @@ ICE_API ce_err ivk_load_protos(
     IERRDO(ce_lib_open(&out_proto->libvulkan1, IVK_DLL_FILE, CE_LIB_FLAG_NONE));
     IERRDO(ce_lib_load(out_proto->libvulkan1, "vkGetInstanceProcAddr", &out_proto->vkGetInstanceProcAddr));
     
+  #ifdef CANVAS_DEBUG
+    
+    /* TEMPORARY */
     printf(IASCII_CYAN 
       "Enabled layers :\n"
       "================\n"
@@ -52,6 +55,8 @@ ICE_API ce_err ivk_load_protos(
     }
     puts(IASCII_RESET);
     
+  #endif /* CANVAS_DEBUG */
+    
   #define LOAD(name) out_proto->name = (CONCAT(PFN_, name))out_proto->vkGetInstanceProcAddr(NULL, #name)
     
     LOAD(vkEnumerateInstanceVersion);
@@ -63,7 +68,7 @@ ICE_API ce_err ivk_load_protos(
     
   #undef LOAD
   #define LOAD(name) out_proto->name = (CONCAT(PFN_, name))out_proto->vkGetInstanceProcAddr(*out_inst, #name)
-    LOAD(vkDestroyInstance);
+    #include "ivk_protos_funcs.inl"
     
   } IERREND {
     ce_lib_close(out_proto->libvulkan1);

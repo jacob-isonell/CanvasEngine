@@ -61,9 +61,7 @@ static iarr_t* s_get_arr(void* in) {
     iarr_t* out;
   } p;
   
-  if (in == NULL) {
-    return NULL;
-  }
+  ICE_ASSERT(in != NULL);
   
   p.in = in;
   p.shift -= offsetof(iarr_t, buffer);
@@ -77,27 +75,38 @@ static const iarr_t* s_get_carr(const void* in) {
     const iarr_t* out;
   } p;
   
-  if (in == NULL) {
-    return NULL;
-  }
+  ICE_ASSERT(in != NULL);
   
   p.in = in;
   p.shift -= offsetof(iarr_t, buffer);
   return p.out;
 }
 
-static iarr_t* s_get_to_arr(void* in) {
+static ce_err s_get_to_arr(
+  CE_IN  void* const* CE_RESTRICT in,
+  CE_OUT iarr_t**     CE_RESTRICT out
+) {
   union {
     void* in;
-    void** out;
+    unsigned char* shift;
+    iarr_t* out;
   } p;
   
+  ICE_ASSERT(out != NULL);
+  
   if (in == NULL) {
-    return NULL;
+    return CE_EINVAL;
   }
   
-  p.in = in;
-  return s_get_arr(*p.out);
+  if (*in == NULL) {
+    *out = NULL;
+  } else {
+    p.in = *in;
+    p.shift -= offsetof(iarr_t, buffer);
+    *out = p.out;
+  }
+  
+  return CE_EOK;
 }
 
 static void* s_defalloc(size_t bytes, void* arg) {
@@ -261,19 +270,25 @@ CE_API void ce_arr_free(void* array) {
   ce_mtx_unlock(&s_lock);
 }
 
-CE_API ce_err ce_arr_resize(void* inout_arr, size_t stride, size_t new_size) {
-  const ce_err err = ce_arr_reserve(inout_arr, stride, new_size);
+CE_API ce_err ce_arr_resize(void* inout_arr, size_t new_size, size_t stride) {
+  const ce_err err = ce_arr_reserve(inout_arr, new_size, stride);
   if (ce_failure(err)) {
     return err;
   }
   
-  iarr_t* const data = s_get_to_arr(inout_arr);
+  iarr_t* data;
+  (void)s_get_to_arr((void**)inout_arr, &data);
   data->len = new_size;
   return CE_EOK;
 }
 
-CE_API ce_err ce_arr_reserve(void* inout_arr, size_t stride, size_t new_capacity) {
-  iarr_t* const data = s_get_to_arr(inout_arr);
+CE_API ce_err ce_arr_reserve(void* inout_arr, size_t new_capacity, size_t stride) {
+  iarr_t* data;
+  ce_err err = s_get_to_arr((void**)inout_arr, &data);
+  if (ce_failure(err)) {
+    return err;
+  }
+  
   if (data) {
     /* Enough storage, reserve doesn't shrink storage. */
     if (new_capacity <= data->cap) {
@@ -293,7 +308,7 @@ CE_API ce_err ce_arr_reserve(void* inout_arr, size_t stride, size_t new_capacity
     return CE_ERANGE;
   }
     
-  const ce_err err = ce_mtx_lock(&s_lock);
+  err = ce_mtx_lock(&s_lock);
   if (ce_failure(err)) {
     return err;
   }
@@ -316,7 +331,8 @@ CE_API ce_err ce_arr_reserve(void* inout_arr, size_t stride, size_t new_capacity
   if (data) {
     s_dofree(data, (data->cap * stride) + offsetof(iarr_t, buffer));
   }
-  memcpy(inout_arr, new_buffer->buffer, sizeof(void*));
+  
+  *(void**)inout_arr = new_buffer->buffer;
   return ce_mtx_unlock(&s_lock);
 }
 

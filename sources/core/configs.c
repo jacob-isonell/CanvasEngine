@@ -19,8 +19,10 @@
 #include "icore_base.h"
 
 #ifdef CANVAS_DEBUG
+
 ICE_API cebool ideblog_enabled = cetrue;
 CE_API void ce_disable_debug_logs(void) {
   ideblog_enabled = cefalse;
 }
+
 #endif /* !CANVAS_DEBUG */

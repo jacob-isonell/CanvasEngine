@@ -182,9 +182,12 @@ ICE_API size_t ice_wwin32err_s(
 }
 
 ICE_API ce_err ifrom_hres(HRESULT in) {
+  if (SUCCEEDED(in)) {
+    return CE_EOK;
+  }
+  
   switch (in) {
   default: return CE_EUNKNOWN;
-  case S_OK: return CE_EOK;
   }
 }
 

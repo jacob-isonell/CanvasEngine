@@ -35,6 +35,11 @@
 
 CE_NAMESPACE_BEGIN
 
+struct ice_gpu_adapter_dx12 {
+  IDXGIAdapter* adap;
+  cebool is_warp;
+};
+
 CE_NAMESPACE_END
 
 #endif /* !CANVAS_ENABLE_DIRECTX12 */
