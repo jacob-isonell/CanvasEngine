@@ -16,10 +16,20 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
-target_sources(CanvasEngine
-PRIVATE
-  "driver.c"
-  "ifx_vk.c"
-  "ivk_protos.h"
-    "ivk_protos.c"
-)
+### User options
+option(CANVAS_ENABLE_LOGS "add description here" OFF)
+option(CANVAS_GRAPHICS    "add description here" ON)
+option(CANVAS_AUDIO       "add description here" ON)
+option(CANVAS_NETWORK     "add description here" ON)
+set(CANVAS_LIBRARY_KIND "" CACHE STRING "add description here")
+
+if (CANVAS_LIBRARY_KIND STREQUAL "SHARED")
+  set(CANVAS_SHARED ON)
+elseif (CANVAS_LIBRARY_KIND STREQUAL "STATIC")
+  set(CANVAS_SHARED OFF)
+else ()
+  set(CANVAS_SHARED BUILD_SHARED_LIBS)
+endif ()
+
+### Advance options
+option(ICANVAS_DEBUG "Enables strict compiler options for warnings and additional checks when compiling CanvasEngine" OFF)

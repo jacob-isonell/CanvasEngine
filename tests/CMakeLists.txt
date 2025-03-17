@@ -16,10 +16,20 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
-target_sources(CanvasEngine
-PRIVATE
-  "driver.c"
-  "ifx_vk.c"
-  "ivk_protos.h"
-    "ivk_protos.c"
-)
+macro(ICEAddTest target)
+  add_executable(${target} ${ARGN})
+  target_link_libraries(${target} PRIVATE CanvasEngine)
+  target_compile_features(${target} PRIVATE c_std_11)
+  set_target_properties(${target}
+  PROPERTIES
+    FOLDER "CanvasEngine"
+  )
+  add_test(
+    NAME ${target}
+    COMMAND "$<TARGET_FILE:${target}>"
+  )
+endmacro()
+
+ICEAddTest(CanvasTest_Error error.c)
+ICEAddTest(CanvasTest_Array array.c)
+ICEAddTest(CanvasTest_Memory memory.c)

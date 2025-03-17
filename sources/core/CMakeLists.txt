@@ -16,10 +16,34 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
+ICE_ADDHEADERS(
+  "canvas/core.h"
+  
+  "canvas/core/base.h"
+  "canvas/core/error.h"
+  "canvas/core/library.h"
+  "canvas/core/memory.h"
+  "canvas/core/random.h"
+  "canvas/core/time.h"
+  "canvas/core/uuid.h"
+  
+  "canvas/core/details/base.h.inl"
+  "canvas/core/details/time.h.inl"
+)
+
 target_sources(CanvasEngine
 PRIVATE
-  "driver.c"
-  "ifx_vk.c"
-  "ivk_protos.h"
-    "ivk_protos.c"
+  "configs.c"
+  "icore_base.h"
+  "icore_unix.h"
+    "icore_unix.c"
+  "icore_win32.h"
+    "icore_win32.c"
+  
+PRIVATE
+  "error.c"
+  "library.c"
+  "memory.c"
+  "random.c"
+  "time.c"
 )

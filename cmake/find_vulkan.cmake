@@ -16,10 +16,11 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
-target_sources(CanvasEngine
-PRIVATE
-  "driver.c"
-  "ifx_vk.c"
-  "ivk_protos.h"
-    "ivk_protos.c"
-)
+find_package(Vulkan)
+
+cmake_dependent_option(CANVAS_ENABLE_VULKAN "Enable support for VulkanAPI" ON "CANVAS_GRAPHICS;Vulkan_FOUND" OFF)
+if (CANVAS_ENABLE_VULKAN)
+  target_link_libraries(CanvasEngineDependencies INTERFACE
+    Vulkan::Headers
+  )
+endif ()

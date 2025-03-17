@@ -16,10 +16,15 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
+ICE_ADDHEADERS(
+  "canvas/math.h"
+  
+  "canvas/math/math.h"
+  "canvas/math/vec.h"
+  
+  "canvas/math/details/vec.h.inl"
+)
+
 target_sources(CanvasEngine
 PRIVATE
-  "driver.c"
-  "ifx_vk.c"
-  "ivk_protos.h"
-    "ivk_protos.c"
 )

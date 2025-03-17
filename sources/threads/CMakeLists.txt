@@ -16,10 +16,25 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
+ICE_ADDHEADERS(
+  "canvas/threads.h"
+  
+  "canvas/threads/atomic.h"
+  "canvas/threads/condition_variable.h"
+  "canvas/threads/mutex.h"
+  "canvas/threads/thread.h"
+  
+  "canvas/threads/details/atomic_order.inl"
+  "canvas/threads/details/atomic.h.inl"
+  "canvas/threads/details/check.inl"
+  "canvas/threads/details/condition_variable.h.inl"
+  "canvas/threads/details/mutex.h.inl"
+  "canvas/threads/details/thread.h.inl"
+)
+
 target_sources(CanvasEngine
 PRIVATE
-  "driver.c"
-  "ifx_vk.c"
-  "ivk_protos.h"
-    "ivk_protos.c"
+  "threads.c"
+  "mutex.c"
+  "condition_variable.c"
 )

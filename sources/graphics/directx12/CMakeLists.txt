@@ -19,7 +19,4 @@
 target_sources(CanvasEngine
 PRIVATE
   "driver.c"
-  "ifx_vk.c"
-  "ivk_protos.h"
-    "ivk_protos.c"
 )

@@ -16,10 +16,12 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
+ICE_ADDHEADERS(
+  "canvas/network.h"
+  
+  "canvas/network/network.h"
+)
+
 target_sources(CanvasEngine
 PRIVATE
-  "driver.c"
-  "ifx_vk.c"
-  "ivk_protos.h"
-    "ivk_protos.c"
 )

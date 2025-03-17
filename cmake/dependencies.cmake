@@ -16,10 +16,21 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
-target_sources(CanvasEngine
-PRIVATE
-  "driver.c"
-  "ifx_vk.c"
-  "ivk_protos.h"
-    "ivk_protos.c"
-)
+add_library(CanvasEngineDependencies INTERFACE)
+include(FindPackageHandleStandardArgs)
+
+### Core module dependencies
+find_package(Doxygen)
+
+### Graphics module dependencies
+
+include("cmake/find_xlib.cmake")
+include("cmake/find_wayland.cmake")
+include("cmake/find_vulkan.cmake")
+
+cmake_dependent_option(CANVAS_ENABLE_DIRECTX12 "Enable support for DirectX12 API" ON "CANVAS_GRAPHICS;WIN32" OFF)
+if (CANVAS_GRAPHICS)
+  if (UNIX AND NOT CANVAS_ENABLE_WAYLAND AND NOT CANVAS_ENABLE_XLIB)
+    message(FATAL_ERROR "CanvasEngine requires support for either xLib or Wayland on Linux but neither could be found or both were disabled")
+  endif ()
+endif (CANVAS_GRAPHICS)
