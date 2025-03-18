@@ -120,18 +120,21 @@ CE_API ce_err ce_time_get(ce_clock clock, ce_time_t* out) {
   switch (clock) {
   default: return CE_EINVAL;
   case CE_CLOCK_UTC: {
-    LARGE_INTEGER i;
-    NtQuerySystemTime(&i);
+    union {
+      FILETIME ft;
+      ULARGE_INTEGER u;
+    } now;
     
-    /* NtQuerySystemTime returns the number of 100 nanoseconds since 1st of January 1601.
-     * This function converts it to 1st of January 1970 like unix.
-     * 1970 - 1601 = 369 years = 11644754400 seconds.
+    /* GetSystemTimeAsFileTime returns the number of 100 nanoseconds since 1st of January 1601 UTC (in ticks, aka 100ns).
+     * This function converts it to 1st of January 1970 UTC (aka, unix time).
      */
-    #define SUB_369_YEARS 11644754400LL
+    const unsigned long long epoch_start = 11644473598;
+  
+    GetSystemTimeAsFileTime(&now.ft);
     
-    const unsigned long long nanosec = (unsigned long long)(i.QuadPart * 100 - SUB_369_YEARS);
+    const unsigned long long nanosec = now.u.QuadPart * 100;
     out->nsec = nanosec % ICE_NANO2SEC_V;
-    out->sec = nanosec / ICE_NANO2SEC_V;
+    out->sec = (nanosec / ICE_NANO2SEC_V) - epoch_start;
     return CE_EOK;
   } break;
   case CE_CLOCK_PERF: {
