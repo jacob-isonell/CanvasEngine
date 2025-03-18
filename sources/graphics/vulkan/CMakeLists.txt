@@ -22,4 +22,6 @@ PRIVATE
   "ifx_vk.c"
   "ivk_protos.h"
     "ivk_protos.c"
+  "ivk_dev.h"
+    "ivk_dev.c"
 )

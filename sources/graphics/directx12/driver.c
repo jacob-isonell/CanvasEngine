@@ -117,9 +117,8 @@ CE_API ce_err ce_directx12_driver(
   IERRBEGIN {
     driver->vfp = &s_vfp;
     
-    dxp = ialloc(sizeof(*dxp), &IERRVAL);
+    dxp = IERRALLOC_TYPE(ice_directx12_driver_data);
     driver->data.dx12 = dxp;
-    IERRDO(IERRVAL);
     *dxp = (ice_directx12_driver_data) {0};
     
     idx12_protos* const pfn = &dxp->pfn;

@@ -136,6 +136,12 @@ while (0); IERR_ERRTHROW:\
   goto IERR_ERRTHROW; \
 } while (0)
 
+#define IERRALLOC(bytes) ialloc(bytes, &IERRVAL); IERRDO(IERRVAL)
+
+#define IERRALLOC_TYPE(type) ((type*)ialloc(sizeof(type), &IERRVAL)); IERRDO(IERRVAL)
+#define IALLOC_TYPE(type, opt_err) ((type*)ialloc(sizeof(type), (opt_err)))
+#define IFREE_TYPE(in) ifree((in), sizeof(*(in)))
+
 #ifdef CANVAS_DEBUG
 
 ICE_API extern cebool ideblog_enabled;

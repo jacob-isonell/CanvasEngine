@@ -16,21 +16,4 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #########################################################################
 
-### User options
-option(CANVAS_ENABLE_LOGS    "add description here" OFF)
-option(CANVAS_BUILD_EXAMPLES "Builds the example projects" ON)
-option(CANVAS_GRAPHICS       "Enables the graphics module" ON)
-option(CANVAS_AUDIO          "Enables the audio module" ON)
-option(CANVAS_NETWORK        "Enables the network module" ON)
-set(CANVAS_LIBRARY_KIND "" CACHE STRING "The library kind to build. \"STATIC\" to build a statically linked library, \"SHARED\" to build a dynamically linked library, or leave as empty to follow the value of \"BUILD_SHARED_LIBS\"")
-
-if (CANVAS_LIBRARY_KIND STREQUAL "SHARED")
-  set(CANVAS_SHARED ON)
-elseif (CANVAS_LIBRARY_KIND STREQUAL "STATIC")
-  set(CANVAS_SHARED OFF)
-else ()
-  set(CANVAS_SHARED BUILD_SHARED_LIBS)
-endif ()
-
-### Advance options
-option(ICANVAS_DEBUG "Enables strict compiler options for warnings, treats warnings as errors, and additional checks when compiling CanvasEngine" OFF)
+add_subdirectory("basic")

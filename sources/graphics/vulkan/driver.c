@@ -18,6 +18,7 @@
 
 #include "ifx_vk.h"
 #include "ivk_protos.h"
+#include "ivk_dev.h"
 
 static const char* s_req_inst_exts[] = {
   VK_KHR_DISPLAY_EXTENSION_NAME,
@@ -51,6 +52,8 @@ static const ce_render_driver_vfp s_vfp = {
   .release = &irelease_driver,
   .fetch_gpu_adapters = &ifetch_gpu_adapters,
   .get_gpu_adapters = &iget_gpu_adapters,
+  .dev_create = &ivk_dev_create,
+  .dev_destroy = &ivk_dev_destroy,
 };
 
 CE_API ce_err ce_vulkan_driver(
@@ -67,12 +70,9 @@ CE_API ce_err ce_vulkan_driver(
   ice_vulkan_driver_data* vkp = NULL;
   IERRBEGIN {
     
-    req_exts = ialloc(sizeof(*req_exts) * req_exts_count, &IERRVAL);
-    IERRDO(IERRVAL);
-    
-    vkp = ialloc(sizeof(ice_vulkan_driver_data), &IERRVAL);
+    req_exts = IERRALLOC(sizeof(*req_exts) * req_exts_count);
+    vkp = IERRALLOC(sizeof(ice_vulkan_driver_data));
     driver->data.vk = vkp;
-    IERRDO(IERRVAL);
     *vkp = (ice_vulkan_driver_data) {0};
     ivk_protos* const pfn = &vkp->pfn;
     
@@ -140,7 +140,7 @@ static ce_err ifetch_gpu_adapters(
     
     IERRDO(ifrom_vk(pfn->vkEnumeratePhysicalDevices(vkp->instance, &count, NULL)));
     
-    phys_devs = ialloc(sizeof(*phys_devs) * count, &IERRVAL);
+    phys_devs = IERRALLOC(sizeof(*phys_devs) * count);
     IERRDO(ce_arr_resize(adapters, count, sizeof(**adapters)));
     
     IERRDO(ifrom_vk(pfn->vkEnumeratePhysicalDevices(vkp->instance, &count, phys_devs)));

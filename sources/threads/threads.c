@@ -53,14 +53,12 @@ static unsigned int CE_STDCALL i_thread_start(void* in) {
 #endif
 
 CE_API ce_err ce_thrd_create(ce_thrd* out, int (*func)(void*), void* arg) {
-  ce_err err;
-  i_thread_start_data_t* data;
-  
   if (func == NULL || out == NULL) {
     return CE_EINVAL;
   }
   
-  data = (i_thread_start_data_t*)ialloc(sizeof(*data), &err);
+  ce_err err;
+  i_thread_start_data_t* const data = IALLOC_TYPE(i_thread_start_data_t, &err);
   if (ce_failure(err)) {
     return err;
   }

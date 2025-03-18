@@ -47,6 +47,10 @@ typedef enum ce_gpu_adapter_pref {
   CE_GPU_ADAPTER_PREF_MINPOWER,
 } ce_gpu_adapter_pref;
 
+typedef struct ce_dev_create_info {
+  ce_gpu_adapter adapter;
+} ce_dev_create_info;
+
 /**
  * @brief add documentation here!
  */
@@ -84,6 +88,17 @@ struct ce_render_driver_vfp {
                size_t                              bufflen,
                size_t                              index,
     CE_OUT_OPT size_t*                 CE_RESTRICT out_len
+  );
+  
+  ce_err (*dev_create)(
+    CE_IN  const ce_render_driver*   CE_RESTRICT self,
+    CE_OUT ce_gpu_dev*               CE_RESTRICT out,
+    CE_IN  const ce_dev_create_info* CE_RESTRICT info
+  );
+  
+  void (*dev_destroy)(
+    CE_IN    const ce_render_driver* self,
+    CE_INOUT ce_gpu_dev dev
   );
 };
 

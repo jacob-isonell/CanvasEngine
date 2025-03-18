@@ -129,8 +129,9 @@ CE_API ce_err ce_time_get(ce_clock clock, ce_time_t* out) {
      */
     #define SUB_369_YEARS 11644754400LL
     
-    out->nsec = (unsigned long long)((i.QuadPart * 100) % ICE_NANO2SEC_V);
-    out->sec = (unsigned long long)((i.QuadPart / (ICE_NANO2SEC_V / 100)) - SUB_369_YEARS);
+    const unsigned long long nanosec = (unsigned long long)(i.QuadPart * 100 - SUB_369_YEARS);
+    out->nsec = nanosec % ICE_NANO2SEC_V;
+    out->sec = nanosec / ICE_NANO2SEC_V;
     return CE_EOK;
   } break;
   case CE_CLOCK_PERF: {
